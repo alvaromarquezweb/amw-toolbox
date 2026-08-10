@@ -1,0 +1,96 @@
+/* ─────────────────────────────────────────
+   AMW Toolbox — settings page
+   Enqueued only on Settings → AMW Toolbox.
+   Tabs and form controls reuse the native
+   wp-admin styles; this file only adds the
+   brand header and the tab show/hide.
+   (Mirrors AMW Simple Login's admin-settings.css)
+───────────────────────────────────────── */
+
+/* ── Brand header ── */
+.amw-settings .amw-admin-header {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin: 12px 0 16px;
+}
+.amw-settings .amw-brand-chip {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	background: #0a0a0a;
+	border-radius: 12px;
+	flex: 0 0 auto;
+	text-decoration: none;
+}
+.amw-settings .amw-brand-chip svg {
+	height: 34px;
+	width: auto;
+	display: block;
+}
+.amw-settings .amw-brand-meta h1 {
+	margin: 0;
+	padding: 0;
+	line-height: 1.2;
+}
+.amw-settings .amw-ver {
+	font-size: 12px;
+	font-weight: 400;
+	color: #646970;
+	vertical-align: middle;
+}
+.amw-settings .amw-brand-meta p {
+	margin: 4px 0 0;
+}
+.amw-settings .amw-dot {
+	color: #646970;
+}
+
+/* ── Tabs ── */
+.amw-settings .amw-tabs {
+	margin-bottom: 20px;
+}
+.amw-settings .amw-tab-panel {
+	display: none;
+}
+.amw-settings .amw-tab-panel.amw-active {
+	display: block;
+}
+/* Trim the top gap on the first heading inside a panel. */
+.amw-settings .amw-tab-panel > h2:first-child {
+	margin-top: 6px;
+}
+
+/* ── Purge confirmation modal ── */
+.amw-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.5);
+}
+.amw-modal[hidden] {
+	display: none;
+}
+.amw-modal-box {
+	background: #fff;
+	border-radius: 8px;
+	padding: 20px 24px;
+	max-width: 440px;
+	width: calc(100% - 40px);
+	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+}
+.amw-modal-box h2 {
+	margin-top: 0;
+}
+.amw-modal-actions {
+	margin: 18px 0 0;
+	text-align: right;
+}
+.amw-modal-actions .button {
+	margin-left: 8px;
+}

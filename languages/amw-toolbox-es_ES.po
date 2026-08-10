@@ -1,0 +1,456 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: AMW Toolbox\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: amw-toolbox\n"
+
+msgid "WordPress logo"
+msgstr "Logo de WordPress"
+
+msgid "Site name"
+msgstr "Nombre del sitio"
+
+msgid "Comments bubble"
+msgstr "Burbuja de comentarios"
+
+msgid "\"+ New\" button"
+msgstr "Botón «+ Nuevo»"
+
+msgid "Updates"
+msgstr "Actualizaciones"
+
+msgid "Front-end search"
+msgstr "Búsqueda del front"
+
+msgid "About WordPress"
+msgstr "Acerca de WordPress"
+
+msgid "WordPress.org"
+msgstr "WordPress.org"
+
+msgid "Documentation"
+msgstr "Documentación"
+
+msgid "Support forums"
+msgstr "Foros de soporte"
+
+msgid "Send feedback"
+msgstr "Enviar comentarios"
+
+msgid "At a Glance"
+msgstr "De un vistazo"
+
+msgid "Activity"
+msgstr "Actividad"
+
+msgid "Recent Comments"
+msgstr "Comentarios recientes"
+
+msgid "Quick Draft"
+msgstr "Borrador rápido"
+
+msgid "WordPress News & Events"
+msgstr "Noticias y eventos de WordPress"
+
+msgid "Elementor Overview"
+msgstr "Resumen de Elementor"
+
+msgid "Divi"
+msgstr "Divi"
+
+msgid "Settings"
+msgstr "Ajustes"
+
+msgid "AMW Toolbox"
+msgstr "AMW Toolbox"
+
+msgid "Deleting…"
+msgstr "Borrando…"
+
+msgid "Delete revisions"
+msgstr "Borrar revisiones"
+
+msgid "Deleted %d revisions"
+msgstr "%d revisiones borradas"
+
+msgid "Something went wrong. Please try again."
+msgstr "Algo ha ido mal. Inténtalo de nuevo."
+
+msgid "Hide"
+msgstr "Ocultar"
+
+msgid "Buy me a coffee"
+msgstr "Invítame a un café"
+
+msgid "Settings sections"
+msgstr "Secciones de ajustes"
+
+msgid "Admin Area"
+msgstr "Administración"
+
+msgid "Head & Security"
+msgstr "Head y seguridad"
+
+msgid "Performance"
+msgstr "Rendimiento"
+
+msgid "WooCommerce"
+msgstr "WooCommerce"
+
+msgid "Admin menu items"
+msgstr "Elementos del menú de administración"
+
+msgid "Check the top-level menus you want to hide from the sidebar. This list reflects the menus present on this site. Settings stays visible so you can always reach this panel."
+msgstr "Marca los menús principales que quieras ocultar de la barra lateral. Esta lista refleja los menús presentes en este sitio. Ajustes permanece visible para que siempre puedas volver a este panel."
+
+msgid "Admin bar"
+msgstr "Barra de administración"
+
+msgid "Check the top bar items you want to hide."
+msgstr "Marca los elementos de la barra superior que quieras ocultar."
+
+msgid "Dashboard widgets"
+msgstr "Widgets del escritorio"
+
+msgid "Check the dashboard widgets you want to hide."
+msgstr "Marca los widgets del escritorio que quieras ocultar."
+
+msgid "Comments"
+msgstr "Comentarios"
+
+msgid "Disable comments completely"
+msgstr "Desactivar los comentarios por completo"
+
+msgid "Removes comment support, its menu, and closes comments on the front end."
+msgstr "Quita el soporte de comentarios, su menú y los cierra en el front."
+
+msgid "Admin experience"
+msgstr "Experiencia de administración"
+
+msgid "Front admin bar"
+msgstr "Barra en el front"
+
+msgid "Hide the admin bar on the front end"
+msgstr "Ocultar la barra de administración en el front"
+
+msgid "Hides the top toolbar on the site for everyone except administrators."
+msgstr "Oculta la barra superior del sitio para todos menos los administradores."
+
+msgid "Welcome panel"
+msgstr "Panel de bienvenida"
+
+msgid "Hide the dashboard welcome panel"
+msgstr "Ocultar el panel de bienvenida del escritorio"
+
+msgid "Removes the \"Welcome to WordPress\" box from the dashboard."
+msgstr "Quita la caja «Bienvenido a WordPress» del escritorio."
+
+msgid "Admin notices"
+msgstr "Avisos de administración"
+
+msgid "Hide admin notices for non-administrators"
+msgstr "Ocultar avisos de administración a los no administradores"
+
+msgid "A cleaner admin for clients: users who cannot manage options stop seeing plugin and theme notices."
+msgstr "Una administración más limpia para clientes: los usuarios que no pueden gestionar opciones dejan de ver los avisos de plugins y temas."
+
+msgid "Block widgets"
+msgstr "Widgets de bloques"
+
+msgid "Disable the block-based widgets screen"
+msgstr "Desactivar la pantalla de widgets con bloques"
+
+msgid "Restores the classic widgets screen instead of the block editor."
+msgstr "Restaura la pantalla clásica de widgets en lugar del editor de bloques."
+
+msgid "Default theme check"
+msgstr "Comprobación del tema por defecto"
+
+msgid "Hide the \"default theme available\" Site Health check"
+msgstr "Ocultar la comprobación «Tener un tema por defecto disponible» de Salud del sitio"
+
+msgid "Removes the Site Health recommendation to keep a default (Twenty*) theme installed as a fallback."
+msgstr "Quita la recomendación de Salud del sitio que pide mantener un tema por defecto (Twenty*) instalado como respaldo."
+
+msgid "WordPress version"
+msgstr "Versión de WordPress"
+
+msgid "Hide the WordPress version"
+msgstr "Ocultar la versión de WordPress"
+
+msgid "Removes the version from the head, RSS feeds and HTTP headers."
+msgstr "Quita la versión del head, los feeds RSS y las cabeceras HTTP."
+
+msgid "X-Powered-By"
+msgstr "X-Powered-By"
+
+msgid "Remove the X-Powered-By header"
+msgstr "Quitar la cabecera X-Powered-By"
+
+msgid "Hides the PHP fingerprint sent in the response headers."
+msgstr "Oculta la huella de PHP que se envía en las cabeceras de respuesta."
+
+msgid "<head> cleanup"
+msgstr "Limpieza del <head>"
+
+msgid "Clean up the <head>"
+msgstr "Limpiar el <head>"
+
+msgid "Removes RSD, WLW, shortlinks and feed links."
+msgstr "Quita RSD, WLW, shortlinks y enlaces de feeds."
+
+msgid "XML-RPC"
+msgstr "XML-RPC"
+
+msgid "Disable XML-RPC"
+msgstr "Desactivar XML-RPC"
+
+msgid "Blocks a common attack vector. Leave off if you use the WP app or Jetpack."
+msgstr "Bloquea un vector de ataque habitual. Déjalo desactivado si usas la app de WordPress o Jetpack."
+
+msgid "File editor"
+msgstr "Editor de archivos"
+
+msgid "Disable the theme/plugin file editor"
+msgstr "Desactivar el editor de archivos de temas y plugins"
+
+msgid "Defines DISALLOW_FILE_EDIT so code cannot be edited from the admin."
+msgstr "Define DISALLOW_FILE_EDIT para que no se pueda editar código desde el administrador."
+
+msgid "User enumeration"
+msgstr "Enumeración de usuarios"
+
+msgid "Block user enumeration"
+msgstr "Bloquear la enumeración de usuarios"
+
+msgid "Blocks ?author=N scans and the public REST users endpoints for logged-out visitors."
+msgstr "Bloquea los escaneos ?author=N y los endpoints REST de usuarios públicos para visitantes no identificados."
+
+msgid "Application Passwords"
+msgstr "Contraseñas de aplicación"
+
+msgid "Disable Application Passwords"
+msgstr "Desactivar las contraseñas de aplicación"
+
+msgid "Turns off the WordPress Application Passwords feature."
+msgstr "Desactiva la función de contraseñas de aplicación de WordPress."
+
+msgid "X-Content-Type-Options"
+msgstr "X-Content-Type-Options"
+
+msgid "Send the nosniff header"
+msgstr "Enviar la cabecera nosniff"
+
+msgid "Stops browsers from MIME-sniffing responses away from the declared content type."
+msgstr "Impide que los navegadores adivinen (MIME-sniffing) un tipo de contenido distinto al declarado."
+
+msgid "X-Frame-Options"
+msgstr "X-Frame-Options"
+
+msgid "Send SAMEORIGIN"
+msgstr "Enviar SAMEORIGIN"
+
+msgid "Blocks other sites from framing yours (clickjacking). Leave off if you embed this site elsewhere."
+msgstr "Impide que otros sitios enmarquen el tuyo (clickjacking). Déjalo desactivado si incrustas este sitio en otro sitio."
+
+msgid "Referrer-Policy"
+msgstr "Referrer-Policy"
+
+msgid "Send strict-origin-when-cross-origin"
+msgstr "Enviar strict-origin-when-cross-origin"
+
+msgid "Sends only the origin as the referrer when navigating to other sites."
+msgstr "Envía solo el origen como referente al navegar a otros sitios."
+
+msgid "Heartbeat API"
+msgstr "API Heartbeat"
+
+msgid "Leave as default"
+msgstr "Dejar por defecto"
+
+msgid "Slow down (~60s)"
+msgstr "Ralentizar (~60s)"
+
+msgid "Disable completely"
+msgstr "Desactivar por completo"
+
+msgid "Controls the periodic AJAX pings. \"Disable\" also turns off autosave and post locking."
+msgstr "Controla las peticiones AJAX periódicas. «Desactivar por completo» también apaga el autoguardado y el bloqueo de entradas."
+
+msgid "Block editor CSS"
+msgstr "CSS del editor de bloques"
+
+msgid "Remove the front-end block (Gutenberg) CSS"
+msgstr "Quitar el CSS de bloques (Gutenberg) en el front"
+
+msgid "Dequeues wp-block-library, global styles and classic theme styles on the front. Leave off if any page uses core blocks."
+msgstr "Quita wp-block-library, los estilos globales y los estilos clásicos del tema en el front. Déjalo desactivado si alguna página usa bloques del núcleo."
+
+msgid "Dashicons"
+msgstr "Dashicons"
+
+msgid "Disable Dashicons on the front end"
+msgstr "Desactivar Dashicons en el front"
+
+msgid "Removes the Dashicons CSS for logged-out visitors. Kept for logged-in users (admin bar)."
+msgstr "Quita el CSS de Dashicons para visitantes no identificados. Se mantiene para usuarios identificados (barra de administración)."
+
+msgid "oEmbed"
+msgstr "oEmbed"
+
+msgid "Disable oEmbed"
+msgstr "Desactivar oEmbed"
+
+msgid "Removes the discovery links and the front-end wp-embed.js. Leave off if you embed external content in posts."
+msgstr "Quita los enlaces de descubrimiento y el wp-embed.js del front. Déjalo desactivado si incrustas contenido externo en las entradas."
+
+msgid "Large image scaling"
+msgstr "Escalado de imágenes grandes"
+
+msgid "Disable automatic scaling of big images"
+msgstr "Desactivar el escalado automático de imágenes grandes"
+
+msgid "Stops WordPress from creating a downscaled \"-scaled\" copy of uploads above ~2560px."
+msgstr "Impide que WordPress cree una copia «-scaled» reducida de las subidas por encima de ~2560px."
+
+msgid "Version query string"
+msgstr "Parámetro de versión (?ver)"
+
+msgid "Strip the ?ver query string"
+msgstr "Quitar el parámetro ?ver"
+
+msgid "Removes ?ver from front-end and login CSS/JS (also hides the version hint there). Note: it also busts browser caches."
+msgstr "Quita ?ver del CSS/JS del front y del login (también oculta ahí la pista de la versión). Nota: además rompe la caché del navegador."
+
+msgid "Emojis"
+msgstr "Emojis"
+
+msgid "Disable emojis"
+msgstr "Desactivar los emojis"
+
+msgid "Removes the emoji script, styles, TinyMCE plugin, feed/email filters and the s.w.org dns-prefetch."
+msgstr "Quita el script y los estilos de emojis, el plugin de TinyMCE, los filtros de feed/correo y el dns-prefetch a s.w.org."
+
+msgid "jQuery Migrate"
+msgstr "jQuery Migrate"
+
+msgid "Remove jQuery Migrate"
+msgstr "Quitar jQuery Migrate"
+
+msgid "Drops jquery-migrate from the front-end jQuery. WARNING: can break older themes or plugins that rely on deprecated jQuery, so test the front end."
+msgstr "Quita jquery-migrate del jQuery del front. AVISO: puede romper temas o plugins antiguos que dependan de jQuery obsoleto, así que prueba el front."
+
+msgid "Post revisions"
+msgstr "Revisiones de entradas"
+
+msgid "New revisions"
+msgstr "Revisiones nuevas"
+
+msgid "Keep only the latest…"
+msgstr "Conservar solo las últimas…"
+
+msgid "Disable revisions"
+msgstr "Desactivar las revisiones"
+
+msgid "How many revisions WordPress keeps per post from now on. Uses the WP_POST_REVISIONS constant, and is skipped if it is already defined in wp-config.php."
+msgstr "Cuántas revisiones conserva WordPress por entrada a partir de ahora. Usa la constante WP_POST_REVISIONS y se omite si ya está definida en wp-config.php."
+
+msgid "Existing revisions"
+msgstr "Revisiones existentes"
+
+msgid "Delete existing revisions"
+msgstr "Borrar las revisiones existentes"
+
+msgid "Permanently removes revisions already stored in the database. Manual and irreversible; make sure you have a backup."
+msgstr "Elimina de forma permanente las revisiones ya guardadas en la base de datos. Manual e irreversible; asegúrate de tener una copia de seguridad."
+
+msgid "Image sizes"
+msgstr "Tamaños de imagen"
+
+msgid "Check the image sizes you do NOT want WordPress to generate on new uploads. Existing images are not affected. Note: thumbnail and medium are used by the admin and most themes; leave them unless you are sure."
+msgstr "Marca los tamaños de imagen que NO quieres que WordPress genere en las nuevas subidas. Las imágenes existentes no se ven afectadas. Nota: el administrador y la mayoría de temas usan thumbnail y medium; déjalos salvo que sepas lo que haces."
+
+msgid "Skip"
+msgstr "Omitir"
+
+msgid "Viewport"
+msgstr "Viewport"
+
+msgid "Fix the Divi viewport (allow zoom)"
+msgstr "Corregir el viewport de Divi (permitir zoom)"
+
+msgid "Replaces Divi's viewport tag so users can pinch-to-zoom."
+msgstr "Sustituye la etiqueta viewport de Divi para que los usuarios puedan hacer zoom con los dedos."
+
+msgid "These options only appear and act while WooCommerce is active."
+msgstr "Estas opciones solo aparecen y actúan mientras WooCommerce está activo."
+
+msgid "Analytics"
+msgstr "Analytics"
+
+msgid "Disable WooCommerce Analytics"
+msgstr "Desactivar WooCommerce Analytics"
+
+msgid "Removes the Analytics feature and its menu."
+msgstr "Quita la función Analytics y su menú."
+
+msgid "Marketplace ads"
+msgstr "Anuncios del Marketplace"
+
+msgid "Hide marketing and promotion notices"
+msgstr "Ocultar avisos de marketing y promociones"
+
+msgid "Removes the admin inbox promotions and the payment/extension suggestions."
+msgstr "Quita las promociones de la bandeja de administración y las sugerencias de pasarelas/extensiones."
+
+msgid "Marketplace suggestions"
+msgstr "Sugerencias del Marketplace"
+
+msgid "Hide Marketplace suggestions and product ads"
+msgstr "Ocultar las sugerencias del Marketplace y los anuncios de productos"
+
+msgid "Removes the in-admin extension and marketplace suggestions."
+msgstr "Quita las sugerencias de extensiones y del marketplace dentro del administrador."
+
+msgid "Usage tracking"
+msgstr "Seguimiento de uso"
+
+msgid "Disable the WooCommerce tracker"
+msgstr "Desactivar el tracker de WooCommerce"
+
+msgid "Forces WooCommerce usage tracking off."
+msgstr "Fuerza la desactivación del seguimiento de uso de WooCommerce."
+
+msgid "Extensions menu"
+msgstr "Menú Extensiones"
+
+msgid "Hide the WooCommerce Extensions (Marketplace) submenu"
+msgstr "Ocultar el submenú Extensiones (Marketplace) de WooCommerce"
+
+msgid "Removes WooCommerce -> Extensions from the admin menu."
+msgstr "Quita WooCommerce → Extensiones del menú de administración."
+
+msgid "Store styles"
+msgstr "Estilos de la tienda"
+
+msgid "Load WooCommerce styles only on store pages"
+msgstr "Cargar los estilos de WooCommerce solo en las páginas de la tienda"
+
+msgid "Dequeues WooCommerce CSS everywhere except shop, cart, checkout and account. Leave off if you use Woo shortcodes or blocks on other pages."
+msgstr "Quita el CSS de WooCommerce en todas partes salvo tienda, carrito, pago y cuenta. Déjalo desactivado si usas shortcodes o bloques de Woo en otras páginas."
+
+msgid "Delete all post revisions?"
+msgstr "¿Borrar todas las revisiones de entradas?"
+
+msgid "This will permanently delete %s revisions. This cannot be undone."
+msgstr "Esto borrará de forma permanente %s revisiones. No se puede deshacer."
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Cleanup and hardening toolbox for WordPress: hides the WP fingerprint, disables comments, trims the &lt;head&gt;, tightens a few defaults and fixes the Divi viewport. Everything is toggleable from Settings &rarr; AMW Toolbox."
+msgstr "Caja de herramientas de limpieza y hardening para WordPress: oculta la huella de WP, desactiva los comentarios, recorta el &lt;head&gt;, ajusta algunos valores por defecto y corrige el viewport de Divi. Todo se activa desde Ajustes &rarr; AMW Toolbox."

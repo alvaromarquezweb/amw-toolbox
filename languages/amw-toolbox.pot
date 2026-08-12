@@ -99,6 +99,9 @@ msgstr ""
 msgid "WooCommerce"
 msgstr ""
 
+msgid "Elementor"
+msgstr ""
+
 msgid "Admin menu items"
 msgstr ""
 
@@ -375,6 +378,9 @@ msgstr ""
 msgid "Skip"
 msgstr ""
 
+msgid "These options only appear and act while Divi is active."
+msgstr ""
+
 msgid "Viewport"
 msgstr ""
 
@@ -439,6 +445,24 @@ msgid "Load WooCommerce styles only on store pages"
 msgstr ""
 
 msgid "Dequeues WooCommerce CSS everywhere except shop, cart, checkout and account. Leave off if you use Woo shortcodes or blocks on other pages."
+msgstr ""
+
+msgid "These options only appear and act while Elementor is active."
+msgstr ""
+
+msgid "Disable Elementor usage tracking"
+msgstr ""
+
+msgid "Forces Elementor usage data collection off."
+msgstr ""
+
+msgid "Default styles"
+msgstr ""
+
+msgid "Disable default colors and fonts"
+msgstr ""
+
+msgid "Lets your theme control colors and typography instead of Elementor's defaults."
 msgstr ""
 
 msgid "Delete all post revisions?"

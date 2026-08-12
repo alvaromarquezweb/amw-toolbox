@@ -101,6 +101,9 @@ msgstr "Rendimiento"
 msgid "WooCommerce"
 msgstr "WooCommerce"
 
+msgid "Elementor"
+msgstr "Elementor"
+
 msgid "Admin menu items"
 msgstr "Elementos del menú de administración"
 
@@ -377,6 +380,9 @@ msgstr "Marca los tamaños de imagen que NO quieres que WordPress genere en las 
 msgid "Skip"
 msgstr "Omitir"
 
+msgid "These options only appear and act while Divi is active."
+msgstr "Estas opciones solo aparecen y actúan mientras Divi está activo."
+
 msgid "Viewport"
 msgstr "Viewport"
 
@@ -442,6 +448,24 @@ msgstr "Cargar los estilos de WooCommerce solo en las páginas de la tienda"
 
 msgid "Dequeues WooCommerce CSS everywhere except shop, cart, checkout and account. Leave off if you use Woo shortcodes or blocks on other pages."
 msgstr "Quita el CSS de WooCommerce en todas partes salvo tienda, carrito, pago y cuenta. Déjalo desactivado si usas shortcodes o bloques de Woo en otras páginas."
+
+msgid "These options only appear and act while Elementor is active."
+msgstr "Estas opciones solo aparecen y actúan mientras Elementor está activo."
+
+msgid "Disable Elementor usage tracking"
+msgstr "Desactivar el seguimiento de uso de Elementor"
+
+msgid "Forces Elementor usage data collection off."
+msgstr "Fuerza la desactivación de la recopilación de datos de uso de Elementor."
+
+msgid "Default styles"
+msgstr "Estilos por defecto"
+
+msgid "Disable default colors and fonts"
+msgstr "Desactivar colores y fuentes por defecto"
+
+msgid "Lets your theme control colors and typography instead of Elementor's defaults."
+msgstr "Deja que tu tema controle los colores y la tipografía en lugar de los valores por defecto de Elementor."
 
 msgid "Delete all post revisions?"
 msgstr "¿Borrar todas las revisiones de entradas?"

@@ -103,6 +103,10 @@ function amw_toolbox_defaults() {
 		'wc_disable_tracker'                 => false,
 		'wc_hide_marketplace_menu'           => false,
 		'wc_conditional_styles'              => false,
+
+		// Elementor (only applied when Elementor is active)
+		'el_disable_tracking'        => false,
+		'el_disable_default_schemes' => false,
 	);
 }
 
@@ -134,7 +138,6 @@ function amw_toolbox_bool_keys() {
 		'disable_big_image_scaling',
 		'disable_emojis',
 		'remove_jquery_migrate',
-		'fix_divi_viewport',
 	);
 }
 
@@ -150,6 +153,40 @@ function amw_toolbox_woo_keys() {
 		'wc_hide_marketplace_menu',
 		'wc_conditional_styles',
 	);
+}
+
+/**
+ * Divi feature keys (only surfaced when Divi is active).
+ */
+function amw_toolbox_divi_keys() {
+	return array(
+		'fix_divi_viewport',
+	);
+}
+
+/**
+ * Elementor feature keys (only surfaced when Elementor is active).
+ */
+function amw_toolbox_elementor_keys() {
+	return array(
+		'el_disable_tracking',
+		'el_disable_default_schemes',
+	);
+}
+
+/**
+ * Is Divi active? True for the Divi or Extra theme and for the Divi Builder plugin.
+ * Reliable on admin/front once the theme is loaded (not at plugin-load time).
+ */
+function amw_toolbox_is_divi_active() {
+	return defined( 'ET_CORE_VERSION' ) || function_exists( 'et_setup_theme' );
+}
+
+/**
+ * Is Elementor active?
+ */
+function amw_toolbox_is_elementor_active() {
+	return defined( 'ELEMENTOR_VERSION' );
 }
 
 /**
@@ -241,6 +278,19 @@ function amw_toolbox_sanitize( $input ) {
 	}
 	foreach ( amw_toolbox_woo_keys() as $key ) {
 		$clean[ $key ] = $woo_active ? ! empty( $input[ $key ] ) : ! empty( $existing[ $key ] );
+	}
+
+	// Divi toggles: only editable (tab rendered) when Divi is active. Preserve
+	// otherwise, so they are not wiped while Divi is off.
+	$divi_active = amw_toolbox_is_divi_active();
+	foreach ( amw_toolbox_divi_keys() as $key ) {
+		$clean[ $key ] = $divi_active ? ! empty( $input[ $key ] ) : ! empty( $existing[ $key ] );
+	}
+
+	// Elementor toggles: same rule.
+	$elementor_active = amw_toolbox_is_elementor_active();
+	foreach ( amw_toolbox_elementor_keys() as $key ) {
+		$clean[ $key ] = $elementor_active ? ! empty( $input[ $key ] ) : ! empty( $existing[ $key ] );
 	}
 
 	return $clean;

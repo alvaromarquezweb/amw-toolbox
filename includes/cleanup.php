@@ -396,6 +396,12 @@ if ( $amw_toolbox_o['fix_divi_viewport'] ) {
 }
 
 function amw_toolbox_fix_divi_viewport() {
+	// Guarded here (not at plugin-load) because the theme loads after plugins;
+	// on wp_head this is reliable, and it avoids emitting a stray viewport tag
+	// on non-Divi sites.
+	if ( ! amw_toolbox_is_divi_active() ) {
+		return;
+	}
 	remove_action( 'wp_head', 'et_add_viewport_meta' );
 	echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">' . "\n";
 }
@@ -466,4 +472,28 @@ function amw_toolbox_wc_conditional_styles() {
 	wp_dequeue_style( 'woocommerce-smallscreen' );
 	wp_dequeue_style( 'woocommerce-general' );
 	wp_dequeue_style( 'wc-blocks-style' );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   7. ELEMENTOR  (pre_option filters no-op when Elementor is inactive, since only
+      Elementor reads these options)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+// Force Elementor usage data collection off.
+if ( $amw_toolbox_o['el_disable_tracking'] ) {
+	add_filter( 'pre_option_elementor_allow_tracking', 'amw_toolbox_el_disable_tracking' );
+}
+
+// Let the theme control colours and typography instead of Elementor's defaults.
+if ( $amw_toolbox_o['el_disable_default_schemes'] ) {
+	add_filter( 'pre_option_elementor_disable_color_schemes', 'amw_toolbox_el_yes' );
+	add_filter( 'pre_option_elementor_disable_typography_schemes', 'amw_toolbox_el_yes' );
+}
+
+function amw_toolbox_el_disable_tracking() {
+	return 'no';
+}
+
+function amw_toolbox_el_yes() {
+	return 'yes';
 }

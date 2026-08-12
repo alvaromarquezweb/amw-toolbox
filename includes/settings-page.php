@@ -267,7 +267,9 @@ function amw_toolbox_render_settings() {
 
 	$rev_count = amw_toolbox_count_revisions();
 
-	$woo_active = class_exists( 'WooCommerce' );
+	$woo_active       = class_exists( 'WooCommerce' );
+	$divi_active      = amw_toolbox_is_divi_active();
+	$elementor_active = amw_toolbox_is_elementor_active();
 	?>
 	<div class="wrap amw-settings">
 
@@ -292,9 +294,14 @@ function amw_toolbox_render_settings() {
 			<a href="#" class="nav-tab nav-tab-active" data-amw-tab="admin"       id="amw-tab-admin"       role="tab" aria-controls="amw-panel-admin"       aria-selected="true"  tabindex="0"><?php esc_html_e( 'Admin Area', 'amw-toolbox' ); ?></a>
 			<a href="#" class="nav-tab"                data-amw-tab="head"        id="amw-tab-head"        role="tab" aria-controls="amw-panel-head"        aria-selected="false" tabindex="-1"><?php esc_html_e( 'Head & Security', 'amw-toolbox' ); ?></a>
 			<a href="#" class="nav-tab"                data-amw-tab="performance" id="amw-tab-performance" role="tab" aria-controls="amw-panel-performance" aria-selected="false" tabindex="-1"><?php esc_html_e( 'Performance', 'amw-toolbox' ); ?></a>
+			<?php if ( $divi_active ) : ?>
 			<a href="#" class="nav-tab"                data-amw-tab="divi"        id="amw-tab-divi"        role="tab" aria-controls="amw-panel-divi"        aria-selected="false" tabindex="-1"><?php esc_html_e( 'Divi', 'amw-toolbox' ); ?></a>
+			<?php endif; ?>
 			<?php if ( $woo_active ) : ?>
 			<a href="#" class="nav-tab"                data-amw-tab="woocommerce" id="amw-tab-woocommerce" role="tab" aria-controls="amw-panel-woocommerce" aria-selected="false" tabindex="-1"><?php esc_html_e( 'WooCommerce', 'amw-toolbox' ); ?></a>
+			<?php endif; ?>
+			<?php if ( $elementor_active ) : ?>
+			<a href="#" class="nav-tab"                data-amw-tab="elementor"   id="amw-tab-elementor"   role="tab" aria-controls="amw-panel-elementor"   aria-selected="false" tabindex="-1"><?php esc_html_e( 'Elementor', 'amw-toolbox' ); ?></a>
 			<?php endif; ?>
 		</nav>
 
@@ -428,14 +435,17 @@ function amw_toolbox_render_settings() {
 				?>
 			</div>
 
+			<?php if ( $divi_active ) : ?>
 			<div class="amw-tab-panel" data-amw-panel="divi" id="amw-panel-divi" role="tabpanel" aria-labelledby="amw-tab-divi" tabindex="0">
 				<h2><?php esc_html_e( 'Divi', 'amw-toolbox' ); ?></h2>
+				<p class="description" style="max-width:640px;"><?php esc_html_e( 'These options only appear and act while Divi is active.', 'amw-toolbox' ); ?></p>
 				<table class="form-table" role="presentation">
 					<?php
 					amw_toolbox_bool_row( $o, 'fix_divi_viewport', __( 'Viewport', 'amw-toolbox' ), __( 'Fix the Divi viewport (allow zoom)', 'amw-toolbox' ), __( 'Replaces Divi\'s viewport tag so users can pinch-to-zoom.', 'amw-toolbox' ) );
 					?>
 				</table>
 			</div>
+			<?php endif; ?>
 
 			<?php if ( $woo_active ) : ?>
 			<div class="amw-tab-panel" data-amw-panel="woocommerce" id="amw-panel-woocommerce" role="tabpanel" aria-labelledby="amw-tab-woocommerce" tabindex="0">
@@ -449,6 +459,19 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'wc_disable_tracker', __( 'Usage tracking', 'amw-toolbox' ), __( 'Disable the WooCommerce tracker', 'amw-toolbox' ), __( 'Forces WooCommerce usage tracking off.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'wc_hide_marketplace_menu', __( 'Extensions menu', 'amw-toolbox' ), __( 'Hide the WooCommerce Extensions (Marketplace) submenu', 'amw-toolbox' ), __( 'Removes WooCommerce -> Extensions from the admin menu.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'wc_conditional_styles', __( 'Store styles', 'amw-toolbox' ), __( 'Load WooCommerce styles only on store pages', 'amw-toolbox' ), __( 'Dequeues WooCommerce CSS everywhere except shop, cart, checkout and account. Leave off if you use Woo shortcodes or blocks on other pages.', 'amw-toolbox' ) );
+					?>
+				</table>
+			</div>
+			<?php endif; ?>
+
+			<?php if ( $elementor_active ) : ?>
+			<div class="amw-tab-panel" data-amw-panel="elementor" id="amw-panel-elementor" role="tabpanel" aria-labelledby="amw-tab-elementor" tabindex="0">
+				<h2><?php esc_html_e( 'Elementor', 'amw-toolbox' ); ?></h2>
+				<p class="description" style="max-width:640px;"><?php esc_html_e( 'These options only appear and act while Elementor is active.', 'amw-toolbox' ); ?></p>
+				<table class="form-table" role="presentation">
+					<?php
+					amw_toolbox_bool_row( $o, 'el_disable_tracking', __( 'Usage tracking', 'amw-toolbox' ), __( 'Disable Elementor usage tracking', 'amw-toolbox' ), __( 'Forces Elementor usage data collection off.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'el_disable_default_schemes', __( 'Default styles', 'amw-toolbox' ), __( 'Disable default colors and fonts', 'amw-toolbox' ), __( 'Lets your theme control colors and typography instead of Elementor\'s defaults.', 'amw-toolbox' ) );
 					?>
 				</table>
 			</div>

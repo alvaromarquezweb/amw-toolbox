@@ -65,6 +65,18 @@ msgstr "Divi"
 msgid "Settings"
 msgstr "Ajustes"
 
+msgid "You are not allowed to do this."
+msgstr "No tienes permiso para hacer esto."
+
+msgid "Settings imported."
+msgstr "Ajustes importados."
+
+msgid "Settings reset to defaults."
+msgstr "Ajustes restablecidos a los valores por defecto."
+
+msgid "Could not import: the file is not a valid AMW Toolbox export."
+msgstr "No se pudo importar: el archivo no es una exportación válida de AMW Toolbox."
+
 msgid "AMW Toolbox"
 msgstr "AMW Toolbox"
 
@@ -86,6 +98,12 @@ msgstr "Ocultar"
 msgid "Buy me a coffee"
 msgstr "Invítame a un café"
 
+msgid "Active optimizations: %d"
+msgstr "Optimizaciones activas: %d"
+
+msgid "Detected:"
+msgstr "Detectado:"
+
 msgid "Settings sections"
 msgstr "Secciones de ajustes"
 
@@ -103,6 +121,9 @@ msgstr "WooCommerce"
 
 msgid "Elementor"
 msgstr "Elementor"
+
+msgid "Tools"
+msgstr "Herramientas"
 
 msgid "Admin menu items"
 msgstr "Elementos del menú de administración"
@@ -178,6 +199,15 @@ msgstr "Ocultar la comprobación «Tener un tema por defecto disponible» de Sal
 
 msgid "Removes the Site Health recommendation to keep a default (Twenty*) theme installed as a fallback."
 msgstr "Quita la recomendación de Salud del sitio que pide mantener un tema por defecto (Twenty*) instalado como respaldo."
+
+msgid "On uninstall"
+msgstr "Al desinstalar"
+
+msgid "Keep settings when the plugin is uninstalled"
+msgstr "Conservar los ajustes al desinstalar el plugin"
+
+msgid "By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall."
+msgstr "Por defecto, borrar el plugin elimina sus ajustes. Actívalo para conservarlos para una futura reinstalación."
 
 msgid "WordPress version"
 msgstr "Versión de WordPress"
@@ -466,6 +496,42 @@ msgstr "Desactivar colores y fuentes por defecto"
 
 msgid "Lets your theme control colors and typography instead of Elementor's defaults."
 msgstr "Deja que tu tema controle los colores y la tipografía en lugar de los valores por defecto de Elementor."
+
+msgid "Import, export & reset"
+msgstr "Importar, exportar y restablecer"
+
+msgid "Copy this site's configuration to another site, or start over. All settings live in a single option, so a whole configuration is one small JSON file."
+msgstr "Copia la configuración de este sitio a otro, o empieza de cero. Todos los ajustes viven en una sola opción, así que una configuración entera es un pequeño archivo JSON."
+
+msgid "Export"
+msgstr "Exportar"
+
+msgid "Download settings (JSON)"
+msgstr "Descargar ajustes (JSON)"
+
+msgid "Downloads your current configuration as a JSON file."
+msgstr "Descarga tu configuración actual como un archivo JSON."
+
+msgid "Import"
+msgstr "Importar"
+
+msgid "Import settings"
+msgstr "Importar ajustes"
+
+msgid "Upload a JSON file exported from AMW Toolbox. Imported values are validated against the known options before being saved."
+msgstr "Sube un archivo JSON exportado desde AMW Toolbox. Los valores importados se validan contra las opciones conocidas antes de guardarse."
+
+msgid "Reset"
+msgstr "Restablecer"
+
+msgid "Reset all AMW Toolbox settings to their defaults? Everything will be turned off."
+msgstr "¿Restablecer todos los ajustes de AMW Toolbox a sus valores por defecto? Se apagará todo."
+
+msgid "Reset to defaults"
+msgstr "Restablecer a valores por defecto"
+
+msgid "Turns every option off and clears all hide lists. This cannot be undone."
+msgstr "Apaga todas las opciones y vacía las listas de ocultación. No se puede deshacer."
 
 msgid "Delete all post revisions?"
 msgstr "¿Borrar todas las revisiones de entradas?"

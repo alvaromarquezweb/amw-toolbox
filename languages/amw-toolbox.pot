@@ -63,6 +63,18 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+msgid "You are not allowed to do this."
+msgstr ""
+
+msgid "Settings imported."
+msgstr ""
+
+msgid "Settings reset to defaults."
+msgstr ""
+
+msgid "Could not import: the file is not a valid AMW Toolbox export."
+msgstr ""
+
 msgid "AMW Toolbox"
 msgstr ""
 
@@ -84,6 +96,12 @@ msgstr ""
 msgid "Buy me a coffee"
 msgstr ""
 
+msgid "Active optimizations: %d"
+msgstr ""
+
+msgid "Detected:"
+msgstr ""
+
 msgid "Settings sections"
 msgstr ""
 
@@ -100,6 +118,9 @@ msgid "WooCommerce"
 msgstr ""
 
 msgid "Elementor"
+msgstr ""
+
+msgid "Tools"
 msgstr ""
 
 msgid "Admin menu items"
@@ -175,6 +196,15 @@ msgid "Hide the \"default theme available\" Site Health check"
 msgstr ""
 
 msgid "Removes the Site Health recommendation to keep a default (Twenty*) theme installed as a fallback."
+msgstr ""
+
+msgid "On uninstall"
+msgstr ""
+
+msgid "Keep settings when the plugin is uninstalled"
+msgstr ""
+
+msgid "By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall."
 msgstr ""
 
 msgid "WordPress version"
@@ -463,6 +493,42 @@ msgid "Disable default colors and fonts"
 msgstr ""
 
 msgid "Lets your theme control colors and typography instead of Elementor's defaults."
+msgstr ""
+
+msgid "Import, export & reset"
+msgstr ""
+
+msgid "Copy this site's configuration to another site, or start over. All settings live in a single option, so a whole configuration is one small JSON file."
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Download settings (JSON)"
+msgstr ""
+
+msgid "Downloads your current configuration as a JSON file."
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Import settings"
+msgstr ""
+
+msgid "Upload a JSON file exported from AMW Toolbox. Imported values are validated against the known options before being saved."
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Reset all AMW Toolbox settings to their defaults? Everything will be turned off."
+msgstr ""
+
+msgid "Reset to defaults"
+msgstr ""
+
+msgid "Turns every option off and clears all hide lists. This cannot be undone."
 msgstr ""
 
 msgid "Delete all post revisions?"

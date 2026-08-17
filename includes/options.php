@@ -67,6 +67,7 @@ function amw_toolbox_defaults() {
 		'hide_welcome_panel'        => false,
 		'disable_block_widgets'     => false,
 		'hide_default_theme_notice' => false,
+		'keep_on_uninstall'         => false,
 
 		// Head & security
 		'hide_wp_version'           => false,
@@ -121,6 +122,7 @@ function amw_toolbox_bool_keys() {
 		'hide_welcome_panel',
 		'disable_block_widgets',
 		'hide_default_theme_notice',
+		'keep_on_uninstall',
 		'hide_wp_version',
 		'remove_powered_by',
 		'clean_head_tags',
@@ -187,6 +189,46 @@ function amw_toolbox_is_divi_active() {
  */
 function amw_toolbox_is_elementor_active() {
 	return defined( 'ELEMENTOR_VERSION' );
+}
+
+/**
+ * How many optimisations are currently enabled (for the panel summary).
+ * Counts toggled booleans plus non-empty hide lists and non-default selects.
+ * The keep_on_uninstall preference is not counted as an optimisation.
+ */
+function amw_toolbox_active_count() {
+	$o     = amw_toolbox_get_options();
+	$count = 0;
+
+	$bools = array_merge(
+		amw_toolbox_bool_keys(),
+		amw_toolbox_woo_keys(),
+		amw_toolbox_divi_keys(),
+		amw_toolbox_elementor_keys()
+	);
+	foreach ( $bools as $key ) {
+		if ( 'keep_on_uninstall' === $key ) {
+			continue;
+		}
+		if ( ! empty( $o[ $key ] ) ) {
+			$count++;
+		}
+	}
+
+	foreach ( array( 'hidden_menus', 'hidden_adminbar', 'hidden_dashboard', 'disabled_image_sizes' ) as $key ) {
+		if ( ! empty( $o[ $key ] ) ) {
+			$count++;
+		}
+	}
+
+	if ( 'default' !== $o['heartbeat_mode'] ) {
+		$count++;
+	}
+	if ( 'default' !== $o['revisions_mode'] ) {
+		$count++;
+	}
+
+	return $count;
 }
 
 /**

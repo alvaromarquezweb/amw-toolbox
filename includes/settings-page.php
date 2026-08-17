@@ -15,6 +15,10 @@ add_action( 'admin_enqueue_scripts', 'amw_toolbox_enqueue_assets' );
 add_action( 'admin_menu', 'amw_toolbox_snapshot_admin_menu', 9998 );
 add_action( 'wp_ajax_amw_toolbox_purge_revisions', 'amw_toolbox_ajax_purge_revisions' );
 add_filter( 'plugin_action_links_' . AMW_TOOLBOX_BASENAME, 'amw_toolbox_settings_link' );
+add_action( 'admin_post_amw_toolbox_export', 'amw_toolbox_handle_export' );
+add_action( 'admin_post_amw_toolbox_import', 'amw_toolbox_handle_import' );
+add_action( 'admin_post_amw_toolbox_reset', 'amw_toolbox_handle_reset' );
+add_action( 'admin_notices', 'amw_toolbox_tools_notices' );
 
 /**
  * Add a "Settings" link to the plugin's row on the Plugins screen.
@@ -24,6 +28,121 @@ function amw_toolbox_settings_link( $links ) {
 	$link = '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Settings', 'amw-toolbox' ) . '</a>';
 	array_unshift( $links, $link );
 	return $links;
+}
+
+/**
+ * Export the current settings as a downloadable JSON file.
+ */
+function amw_toolbox_handle_export() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'You are not allowed to do this.', 'amw-toolbox' ) );
+	}
+	check_admin_referer( 'amw_toolbox_export' );
+
+	$options = get_option( AMW_TOOLBOX_OPTION, array() );
+	$payload = array(
+		'plugin'   => 'amw-toolbox',
+		'version'  => AMW_TOOLBOX_VERSION,
+		'exported' => gmdate( 'c' ),
+		'options'  => is_array( $options ) ? $options : array(),
+	);
+
+	nocache_headers();
+	header( 'Content-Type: application/json; charset=utf-8' );
+	header( 'Content-Disposition: attachment; filename="amw-toolbox-settings-' . gmdate( 'Ymd-His' ) . '.json"' );
+	echo wp_json_encode( $payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+	exit;
+}
+
+/**
+ * Import settings from an uploaded JSON file. Values run through the normal
+ * sanitiser, so only known keys and valid values are ever stored.
+ */
+function amw_toolbox_handle_import() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'You are not allowed to do this.', 'amw-toolbox' ) );
+	}
+	check_admin_referer( 'amw_toolbox_import' );
+
+	$redirect = admin_url( 'options-general.php?page=amw-toolbox' );
+
+	if ( empty( $_FILES['amw_import_file']['tmp_name'] ) || ! is_uploaded_file( $_FILES['amw_import_file']['tmp_name'] ) ) {
+		wp_safe_redirect( add_query_arg( 'amw_notice', 'import_error', $redirect ) );
+		exit;
+	}
+
+	$raw  = file_get_contents( $_FILES['amw_import_file']['tmp_name'] ); // phpcs:ignore
+	$data = json_decode( (string) $raw, true );
+
+	// Accept either the wrapped export format or a bare options array.
+	$options = null;
+	if ( is_array( $data ) && isset( $data['options'] ) && is_array( $data['options'] ) ) {
+		$options = $data['options'];
+	} elseif ( is_array( $data ) ) {
+		$options = $data;
+	}
+
+	if ( null === $options ) {
+		wp_safe_redirect( add_query_arg( 'amw_notice', 'import_error', $redirect ) );
+		exit;
+	}
+
+	update_option( AMW_TOOLBOX_OPTION, amw_toolbox_sanitize( $options ) );
+	wp_safe_redirect( add_query_arg( 'amw_notice', 'imported', $redirect ) );
+	exit;
+}
+
+/**
+ * Reset every option back to its default (everything off).
+ */
+function amw_toolbox_handle_reset() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'You are not allowed to do this.', 'amw-toolbox' ) );
+	}
+	check_admin_referer( 'amw_toolbox_reset' );
+
+	delete_option( AMW_TOOLBOX_OPTION );
+	wp_safe_redirect( add_query_arg( 'amw_notice', 'reset', admin_url( 'options-general.php?page=amw-toolbox' ) ) );
+	exit;
+}
+
+/**
+ * Show a notice after an import or reset action.
+ */
+function amw_toolbox_tools_notices() {
+	if ( ! isset( $_GET['page'], $_GET['amw_notice'] ) || 'amw-toolbox' !== $_GET['page'] ) {
+		return;
+	}
+	$notice = sanitize_key( wp_unslash( $_GET['amw_notice'] ) );
+	$map    = array(
+		'imported'     => array( 'success', __( 'Settings imported.', 'amw-toolbox' ) ),
+		'reset'        => array( 'success', __( 'Settings reset to defaults.', 'amw-toolbox' ) ),
+		'import_error' => array( 'error', __( 'Could not import: the file is not a valid AMW Toolbox export.', 'amw-toolbox' ) ),
+	);
+	if ( ! isset( $map[ $notice ] ) ) {
+		return;
+	}
+	printf(
+		'<div class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>',
+		esc_attr( $map[ $notice ][0] ),
+		esc_html( $map[ $notice ][1] )
+	);
+}
+
+/**
+ * A small coloured pill showing whether a framework was detected.
+ */
+function amw_toolbox_framework_pill( $label, $active ) {
+	$bg   = $active ? '#e6f4ea' : '#f0f0f1';
+	$fg   = $active ? '#1e7e34' : '#8c8f94';
+	$mark = $active ? '&#10003;' : '&#10007;';
+	return sprintf(
+		'<span style="display:inline-block; padding:1px 8px; margin:0 2px; border-radius:10px; font-size:12px; line-height:1.8; background:%1$s; color:%2$s;">%3$s %4$s</span>',
+		esc_attr( $bg ),
+		esc_attr( $fg ),
+		esc_html( $label ),
+		$mark // phpcs:ignore -- static HTML entity, not user input.
+	);
 }
 
 /**
@@ -290,6 +409,16 @@ function amw_toolbox_render_settings() {
 			</div>
 		</div>
 
+		<p class="amw-status" style="margin:.2em 0 1.2em; color:#50575e; font-size:13px;">
+			<strong><?php printf( esc_html__( 'Active optimizations: %d', 'amw-toolbox' ), (int) amw_toolbox_active_count() ); ?></strong>
+			<span style="margin-left:1.2em;"><?php esc_html_e( 'Detected:', 'amw-toolbox' ); ?></span>
+			<?php
+			echo amw_toolbox_framework_pill( 'Divi', $divi_active ); // phpcs:ignore -- escaped inside helper.
+			echo amw_toolbox_framework_pill( 'WooCommerce', $woo_active ); // phpcs:ignore
+			echo amw_toolbox_framework_pill( 'Elementor', $elementor_active ); // phpcs:ignore
+			?>
+		</p>
+
 		<nav class="nav-tab-wrapper amw-tabs" role="tablist" aria-label="<?php esc_attr_e( 'Settings sections', 'amw-toolbox' ); ?>">
 			<a href="#" class="nav-tab nav-tab-active" data-amw-tab="admin"       id="amw-tab-admin"       role="tab" aria-controls="amw-panel-admin"       aria-selected="true"  tabindex="0"><?php esc_html_e( 'Admin Area', 'amw-toolbox' ); ?></a>
 			<a href="#" class="nav-tab"                data-amw-tab="head"        id="amw-tab-head"        role="tab" aria-controls="amw-panel-head"        aria-selected="false" tabindex="-1"><?php esc_html_e( 'Head & Security', 'amw-toolbox' ); ?></a>
@@ -303,6 +432,7 @@ function amw_toolbox_render_settings() {
 			<?php if ( $elementor_active ) : ?>
 			<a href="#" class="nav-tab"                data-amw-tab="elementor"   id="amw-tab-elementor"   role="tab" aria-controls="amw-panel-elementor"   aria-selected="false" tabindex="-1"><?php esc_html_e( 'Elementor', 'amw-toolbox' ); ?></a>
 			<?php endif; ?>
+			<a href="#" class="nav-tab"                data-amw-tab="tools"       id="amw-tab-tools"       role="tab" aria-controls="amw-panel-tools"       aria-selected="false" tabindex="-1"><?php esc_html_e( 'Tools', 'amw-toolbox' ); ?></a>
 		</nav>
 
 		<form method="post" action="options.php">
@@ -350,6 +480,7 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'hide_notices_for_clients', __( 'Admin notices', 'amw-toolbox' ), __( 'Hide admin notices for non-administrators', 'amw-toolbox' ), __( 'A cleaner admin for clients: users who cannot manage options stop seeing plugin and theme notices.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_block_widgets', __( 'Block widgets', 'amw-toolbox' ), __( 'Disable the block-based widgets screen', 'amw-toolbox' ), __( 'Restores the classic widgets screen instead of the block editor.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'hide_default_theme_notice', __( 'Default theme check', 'amw-toolbox' ), __( 'Hide the "default theme available" Site Health check', 'amw-toolbox' ), __( 'Removes the Site Health recommendation to keep a default (Twenty*) theme installed as a fallback.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'keep_on_uninstall', __( 'On uninstall', 'amw-toolbox' ), __( 'Keep settings when the plugin is uninstalled', 'amw-toolbox' ), __( 'By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall.', 'amw-toolbox' ) );
 					?>
 				</table>
 			</div>
@@ -479,6 +610,44 @@ function amw_toolbox_render_settings() {
 
 			<div class="amw-submit"><?php submit_button(); ?></div>
 		</form>
+
+		<div class="amw-tab-panel" data-amw-panel="tools" id="amw-panel-tools" role="tabpanel" aria-labelledby="amw-tab-tools" tabindex="0">
+			<h2><?php esc_html_e( 'Import, export & reset', 'amw-toolbox' ); ?></h2>
+			<p class="description" style="max-width:640px;"><?php esc_html_e( 'Copy this site\'s configuration to another site, or start over. All settings live in a single option, so a whole configuration is one small JSON file.', 'amw-toolbox' ); ?></p>
+
+			<table class="form-table" role="presentation">
+				<tr>
+					<th scope="row"><?php esc_html_e( 'Export', 'amw-toolbox' ); ?></th>
+					<td>
+						<a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=amw_toolbox_export' ), 'amw_toolbox_export' ) ); ?>"><?php esc_html_e( 'Download settings (JSON)', 'amw-toolbox' ); ?></a>
+						<p class="description"><?php esc_html_e( 'Downloads your current configuration as a JSON file.', 'amw-toolbox' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php esc_html_e( 'Import', 'amw-toolbox' ); ?></th>
+					<td>
+						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" enctype="multipart/form-data" style="margin:0;">
+							<input type="hidden" name="action" value="amw_toolbox_import">
+							<?php wp_nonce_field( 'amw_toolbox_import' ); ?>
+							<input type="file" name="amw_import_file" accept="application/json,.json" required>
+							<?php submit_button( __( 'Import settings', 'amw-toolbox' ), 'secondary', 'submit', false ); ?>
+						</form>
+						<p class="description"><?php esc_html_e( 'Upload a JSON file exported from AMW Toolbox. Imported values are validated against the known options before being saved.', 'amw-toolbox' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php esc_html_e( 'Reset', 'amw-toolbox' ); ?></th>
+					<td>
+						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin:0;" onsubmit="return confirm('<?php echo esc_js( __( 'Reset all AMW Toolbox settings to their defaults? Everything will be turned off.', 'amw-toolbox' ) ); ?>');">
+							<input type="hidden" name="action" value="amw_toolbox_reset">
+							<?php wp_nonce_field( 'amw_toolbox_reset' ); ?>
+							<?php submit_button( __( 'Reset to defaults', 'amw-toolbox' ), 'secondary', 'submit', false ); ?>
+						</form>
+						<p class="description"><?php esc_html_e( 'Turns every option off and clears all hide lists. This cannot be undone.', 'amw-toolbox' ); ?></p>
+					</td>
+				</tr>
+			</table>
+		</div>
 
 		<div id="amw-purge-modal" class="amw-modal" hidden>
 			<div class="amw-modal-box" role="dialog" aria-modal="true" aria-labelledby="amw-purge-title">

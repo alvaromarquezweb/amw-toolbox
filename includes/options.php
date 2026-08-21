@@ -68,6 +68,7 @@ function amw_toolbox_defaults() {
 		'disable_block_widgets'     => false,
 		'hide_default_theme_notice' => false,
 		'keep_on_uninstall'         => false,
+		'disable_admin_email_check' => false,
 
 		// Head & security
 		'hide_wp_version'           => false,
@@ -80,6 +81,8 @@ function amw_toolbox_defaults() {
 		'header_nosniff'            => false,
 		'header_frame'              => false,
 		'header_referrer'           => false,
+		'header_hsts'               => false,
+		'login_errors_generic'      => false,
 
 		// Performance
 		'heartbeat_mode'            => 'default', // default | slow | off
@@ -90,9 +93,12 @@ function amw_toolbox_defaults() {
 		'disable_big_image_scaling' => false,
 		'disable_emojis'            => false,
 		'remove_jquery_migrate'     => false,
+		'disable_remote_block_patterns' => false,
 		'disabled_image_sizes'      => array(),
 		'revisions_mode'            => 'default', // default | limit | disable
 		'revisions_limit'           => 5,
+		'empty_trash_mode'          => 'default', // default | days
+		'empty_trash_days'          => 30,
 
 		// Divi
 		'fix_divi_viewport'   => false,
@@ -123,6 +129,7 @@ function amw_toolbox_bool_keys() {
 		'disable_block_widgets',
 		'hide_default_theme_notice',
 		'keep_on_uninstall',
+		'disable_admin_email_check',
 		'hide_wp_version',
 		'remove_powered_by',
 		'clean_head_tags',
@@ -133,6 +140,8 @@ function amw_toolbox_bool_keys() {
 		'header_nosniff',
 		'header_frame',
 		'header_referrer',
+		'header_hsts',
+		'login_errors_generic',
 		'strip_version_query',
 		'remove_block_css',
 		'disable_dashicons',
@@ -140,6 +149,7 @@ function amw_toolbox_bool_keys() {
 		'disable_big_image_scaling',
 		'disable_emojis',
 		'remove_jquery_migrate',
+		'disable_remote_block_patterns',
 	);
 }
 
@@ -227,6 +237,9 @@ function amw_toolbox_active_count() {
 	if ( 'default' !== $o['revisions_mode'] ) {
 		$count++;
 	}
+	if ( 'default' !== $o['empty_trash_mode'] ) {
+		$count++;
+	}
 
 	return $count;
 }
@@ -298,6 +311,11 @@ function amw_toolbox_sanitize( $input ) {
 	$rev = isset( $input['revisions_mode'] ) ? sanitize_key( $input['revisions_mode'] ) : 'default';
 	$clean['revisions_mode']  = in_array( $rev, array( 'default', 'limit', 'disable' ), true ) ? $rev : 'default';
 	$clean['revisions_limit'] = isset( $input['revisions_limit'] ) ? max( 1, absint( $input['revisions_limit'] ) ) : 5;
+
+	// Trash auto-empty: mode + days.
+	$trash = isset( $input['empty_trash_mode'] ) ? sanitize_key( $input['empty_trash_mode'] ) : 'default';
+	$clean['empty_trash_mode'] = in_array( $trash, array( 'default', 'days' ), true ) ? $trash : 'default';
+	$clean['empty_trash_days'] = isset( $input['empty_trash_days'] ) ? max( 0, absint( $input['empty_trash_days'] ) ) : 30;
 
 	// Image sizes to skip generating (dynamic list; keep exact names).
 	$clean['disabled_image_sizes'] = array();

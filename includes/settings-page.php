@@ -18,6 +18,7 @@ add_filter( 'plugin_action_links_' . AMW_TOOLBOX_BASENAME, 'amw_toolbox_settings
 add_action( 'admin_post_amw_toolbox_export', 'amw_toolbox_handle_export' );
 add_action( 'admin_post_amw_toolbox_import', 'amw_toolbox_handle_import' );
 add_action( 'admin_post_amw_toolbox_reset', 'amw_toolbox_handle_reset' );
+add_action( 'admin_post_amw_toolbox_purge_transients', 'amw_toolbox_handle_purge_transients' );
 add_action( 'admin_notices', 'amw_toolbox_tools_notices' );
 
 /**
@@ -107,6 +108,73 @@ function amw_toolbox_handle_reset() {
 }
 
 /**
+ * Delete expired transients from the options table and report how many were removed.
+ */
+function amw_toolbox_handle_purge_transients() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'You are not allowed to do this.', 'amw-toolbox' ) );
+	}
+	check_admin_referer( 'amw_toolbox_purge_transients' );
+
+	$deleted = amw_toolbox_delete_expired_transients();
+
+	$url = add_query_arg(
+		array(
+			'amw_notice' => 'transients',
+			'amw_count'  => $deleted,
+		),
+		admin_url( 'options-general.php?page=amw-toolbox' )
+	);
+	wp_safe_redirect( $url );
+	exit;
+}
+
+/**
+ * Delete every expired transient (value + timeout pair). Returns the count.
+ */
+function amw_toolbox_delete_expired_transients() {
+	global $wpdb;
+
+	$now     = time();
+	$timeout = $wpdb->esc_like( '_transient_timeout_' ) . '%';
+
+	$names = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s AND option_value < %d",
+			$timeout,
+			$now
+		)
+	);
+
+	$deleted = 0;
+	foreach ( $names as $timeout_name ) {
+		$transient = substr( $timeout_name, strlen( '_transient_timeout_' ) );
+		delete_transient( $transient );
+		$deleted++;
+	}
+
+	return $deleted;
+}
+
+/**
+ * Count the expired transients currently stored (for the panel button).
+ */
+function amw_toolbox_count_expired_transients() {
+	global $wpdb;
+
+	$now     = time();
+	$timeout = $wpdb->esc_like( '_transient_timeout_' ) . '%';
+
+	return (int) $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE %s AND option_value < %d",
+			$timeout,
+			$now
+		)
+	);
+}
+
+/**
  * Show a notice after an import or reset action.
  */
 function amw_toolbox_tools_notices() {
@@ -114,6 +182,16 @@ function amw_toolbox_tools_notices() {
 		return;
 	}
 	$notice = sanitize_key( wp_unslash( $_GET['amw_notice'] ) );
+
+	if ( 'transients' === $notice ) {
+		$n = isset( $_GET['amw_count'] ) ? absint( $_GET['amw_count'] ) : 0;
+		printf(
+			'<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+			esc_html( sprintf( __( 'Deleted %d expired transients.', 'amw-toolbox' ), $n ) )
+		);
+		return;
+	}
+
 	$map    = array(
 		'imported'     => array( 'success', __( 'Settings imported.', 'amw-toolbox' ) ),
 		'reset'        => array( 'success', __( 'Settings reset to defaults.', 'amw-toolbox' ) ),
@@ -481,6 +559,7 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'disable_block_widgets', __( 'Block widgets', 'amw-toolbox' ), __( 'Disable the block-based widgets screen', 'amw-toolbox' ), __( 'Restores the classic widgets screen instead of the block editor.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'hide_default_theme_notice', __( 'Default theme check', 'amw-toolbox' ), __( 'Hide the "default theme available" Site Health check', 'amw-toolbox' ), __( 'Removes the Site Health recommendation to keep a default (Twenty*) theme installed as a fallback.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'keep_on_uninstall', __( 'On uninstall', 'amw-toolbox' ), __( 'Keep settings when the plugin is uninstalled', 'amw-toolbox' ), __( 'By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'disable_admin_email_check', __( 'Admin email check', 'amw-toolbox' ), __( 'Disable the periodic admin email verification', 'amw-toolbox' ), __( 'Stops the "Is this admin email still correct?" screen that WordPress shows every few months.', 'amw-toolbox' ) );
 					?>
 				</table>
 			</div>
@@ -499,6 +578,8 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'header_nosniff', __( 'X-Content-Type-Options', 'amw-toolbox' ), __( 'Send the nosniff header', 'amw-toolbox' ), __( 'Stops browsers from MIME-sniffing responses away from the declared content type.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'header_frame', __( 'X-Frame-Options', 'amw-toolbox' ), __( 'Send SAMEORIGIN', 'amw-toolbox' ), __( 'Blocks other sites from framing yours (clickjacking). Leave off if you embed this site elsewhere.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'header_referrer', __( 'Referrer-Policy', 'amw-toolbox' ), __( 'Send strict-origin-when-cross-origin', 'amw-toolbox' ), __( 'Sends only the origin as the referrer when navigating to other sites.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'header_hsts', __( 'HSTS', 'amw-toolbox' ), __( 'Send Strict-Transport-Security (HSTS)', 'amw-toolbox' ), __( 'Forces HTTPS for a year, including subdomains. WARNING: only enable on sites fully served over HTTPS; a wrong setup can make the site unreachable for a while. Only sent on HTTPS requests.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'login_errors_generic', __( 'Login errors', 'amw-toolbox' ), __( 'Use a generic login error message', 'amw-toolbox' ), __( 'Hides whether the username or the password was wrong, giving less information to brute-force attempts.', 'amw-toolbox' ) );
 					?>
 				</table>
 			</div>
@@ -525,6 +606,7 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'strip_version_query', __( 'Version query string', 'amw-toolbox' ), __( 'Strip the ?ver query string', 'amw-toolbox' ), __( 'Removes ?ver from front-end and login CSS/JS (also hides the version hint there). Note: it also busts browser caches.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_emojis', __( 'Emojis', 'amw-toolbox' ), __( 'Disable emojis', 'amw-toolbox' ), __( 'Removes the emoji script, styles, TinyMCE plugin, feed/email filters and the s.w.org dns-prefetch.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'remove_jquery_migrate', __( 'jQuery Migrate', 'amw-toolbox' ), __( 'Remove jQuery Migrate', 'amw-toolbox' ), __( 'Drops jquery-migrate from the front-end jQuery. WARNING: can break older themes or plugins that rely on deprecated jQuery, so test the front end.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'disable_remote_block_patterns', __( 'Remote block patterns', 'amw-toolbox' ), __( 'Disable remote block patterns', 'amw-toolbox' ), __( 'Stops WordPress fetching block patterns from the wp.org directory. Fewer external calls; leave off if you use those patterns.', 'amw-toolbox' ) );
 					?>
 				</table>
 
@@ -550,6 +632,22 @@ function amw_toolbox_render_settings() {
 								(<span id="amw-revision-count"><?php echo (int) $rev_count; ?></span>)
 							</button>
 							<p class="description"><?php esc_html_e( 'Permanently removes revisions already stored in the database. Manual and irreversible; make sure you have a backup.', 'amw-toolbox' ); ?></p>
+						</td>
+					</tr>
+				</table>
+
+				<h2><?php esc_html_e( 'Trash', 'amw-toolbox' ); ?></h2>
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Empty trash', 'amw-toolbox' ); ?></th>
+						<td>
+							<select name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[empty_trash_mode]' ); ?>">
+								<option value="default" <?php selected( $o['empty_trash_mode'], 'default' ); ?>><?php esc_html_e( 'Leave as default (30 days)', 'amw-toolbox' ); ?></option>
+								<option value="days" <?php selected( $o['empty_trash_mode'], 'days' ); ?>><?php esc_html_e( 'Empty after…', 'amw-toolbox' ); ?></option>
+							</select>
+							<input type="number" min="0" step="1" class="small-text" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[empty_trash_days]' ); ?>" value="<?php echo esc_attr( $o['empty_trash_days'] ); ?>">
+							<?php esc_html_e( 'days', 'amw-toolbox' ); ?>
+							<p class="description"><?php esc_html_e( 'How often trashed items are permanently deleted. Uses EMPTY_TRASH_DAYS, and is skipped if already defined in wp-config.php. 0 disables the trash entirely (items are deleted immediately).', 'amw-toolbox' ); ?></p>
 						</td>
 					</tr>
 				</table>
@@ -644,6 +742,20 @@ function amw_toolbox_render_settings() {
 							<?php submit_button( __( 'Reset to defaults', 'amw-toolbox' ), 'secondary', 'submit', false ); ?>
 						</form>
 						<p class="description"><?php esc_html_e( 'Turns every option off and clears all hide lists. This cannot be undone.', 'amw-toolbox' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php esc_html_e( 'Expired transients', 'amw-toolbox' ); ?></th>
+					<td>
+						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin:0;">
+							<input type="hidden" name="action" value="amw_toolbox_purge_transients">
+							<?php wp_nonce_field( 'amw_toolbox_purge_transients' ); ?>
+							<?php
+							/* translators: %d: number of expired transients */
+							submit_button( sprintf( __( 'Delete expired transients (%d)', 'amw-toolbox' ), amw_toolbox_count_expired_transients() ), 'secondary', 'submit', false );
+							?>
+						</form>
+						<p class="description"><?php esc_html_e( 'Removes expired transient rows left in the options table. Safe: transients are a cache and are recreated as needed.', 'amw-toolbox' ); ?></p>
 					</td>
 				</tr>
 			</table>

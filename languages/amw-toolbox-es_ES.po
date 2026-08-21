@@ -8,6 +8,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: amw-toolbox\n"
 
+msgid "Something went wrong. Please check your details and try again."
+msgstr "Algo ha ido mal. Revisa tus datos e inténtalo de nuevo."
+
 msgid "WordPress logo"
 msgstr "Logo de WordPress"
 
@@ -67,6 +70,9 @@ msgstr "Ajustes"
 
 msgid "You are not allowed to do this."
 msgstr "No tienes permiso para hacer esto."
+
+msgid "Deleted %d expired transients."
+msgstr "%d transitorios caducados borrados."
 
 msgid "Settings imported."
 msgstr "Ajustes importados."
@@ -209,6 +215,15 @@ msgstr "Conservar los ajustes al desinstalar el plugin"
 msgid "By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall."
 msgstr "Por defecto, borrar el plugin elimina sus ajustes. Actívalo para conservarlos para una futura reinstalación."
 
+msgid "Admin email check"
+msgstr "Verificación del email de administración"
+
+msgid "Disable the periodic admin email verification"
+msgstr "Desactivar la verificación periódica del email de administración"
+
+msgid "Stops the \"Is this admin email still correct?\" screen that WordPress shows every few months."
+msgstr "Quita la pantalla «¿Sigue siendo correcto este email de administración?» que WordPress muestra cada pocos meses."
+
 msgid "WordPress version"
 msgstr "Versión de WordPress"
 
@@ -299,6 +314,24 @@ msgstr "Enviar strict-origin-when-cross-origin"
 msgid "Sends only the origin as the referrer when navigating to other sites."
 msgstr "Envía solo el origen como referente al navegar a otros sitios."
 
+msgid "HSTS"
+msgstr "HSTS"
+
+msgid "Send Strict-Transport-Security (HSTS)"
+msgstr "Enviar Strict-Transport-Security (HSTS)"
+
+msgid "Forces HTTPS for a year, including subdomains. WARNING: only enable on sites fully served over HTTPS; a wrong setup can make the site unreachable for a while. Only sent on HTTPS requests."
+msgstr "Fuerza HTTPS durante un año, incluidos los subdominios. AVISO: actívalo solo en sitios servidos completamente por HTTPS; una configuración incorrecta puede dejar el sitio inaccesible durante un tiempo. Solo se envía en peticiones HTTPS."
+
+msgid "Login errors"
+msgstr "Errores de acceso"
+
+msgid "Use a generic login error message"
+msgstr "Usar un mensaje de error de acceso genérico"
+
+msgid "Hides whether the username or the password was wrong, giving less information to brute-force attempts."
+msgstr "Oculta si el error fue del usuario o de la contraseña, dando menos información a los intentos de fuerza bruta."
+
 msgid "Heartbeat API"
 msgstr "API Heartbeat"
 
@@ -377,6 +410,15 @@ msgstr "Quitar jQuery Migrate"
 msgid "Drops jquery-migrate from the front-end jQuery. WARNING: can break older themes or plugins that rely on deprecated jQuery, so test the front end."
 msgstr "Quita jquery-migrate del jQuery del front. AVISO: puede romper temas o plugins antiguos que dependan de jQuery obsoleto, así que prueba el front."
 
+msgid "Remote block patterns"
+msgstr "Patrones de bloques remotos"
+
+msgid "Disable remote block patterns"
+msgstr "Desactivar los patrones de bloques remotos"
+
+msgid "Stops WordPress fetching block patterns from the wp.org directory. Fewer external calls; leave off if you use those patterns."
+msgstr "Impide que WordPress descargue patrones de bloques del directorio de wp.org. Menos llamadas externas; déjalo desactivado si usas esos patrones."
+
 msgid "Post revisions"
 msgstr "Revisiones de entradas"
 
@@ -400,6 +442,24 @@ msgstr "Borrar las revisiones existentes"
 
 msgid "Permanently removes revisions already stored in the database. Manual and irreversible; make sure you have a backup."
 msgstr "Elimina de forma permanente las revisiones ya guardadas en la base de datos. Manual e irreversible; asegúrate de tener una copia de seguridad."
+
+msgid "Trash"
+msgstr "Papelera"
+
+msgid "Empty trash"
+msgstr "Vaciar la papelera"
+
+msgid "Leave as default (30 days)"
+msgstr "Dejar por defecto (30 días)"
+
+msgid "Empty after…"
+msgstr "Vaciar tras…"
+
+msgid "days"
+msgstr "días"
+
+msgid "How often trashed items are permanently deleted. Uses EMPTY_TRASH_DAYS, and is skipped if already defined in wp-config.php. 0 disables the trash entirely (items are deleted immediately)."
+msgstr "Cada cuánto se borran definitivamente los elementos de la papelera. Usa EMPTY_TRASH_DAYS y se omite si ya está definida en wp-config.php. 0 desactiva la papelera por completo (los elementos se borran al instante)."
 
 msgid "Image sizes"
 msgstr "Tamaños de imagen"
@@ -532,6 +592,15 @@ msgstr "Restablecer a valores por defecto"
 
 msgid "Turns every option off and clears all hide lists. This cannot be undone."
 msgstr "Apaga todas las opciones y vacía las listas de ocultación. No se puede deshacer."
+
+msgid "Expired transients"
+msgstr "Transitorios caducados"
+
+msgid "Delete expired transients (%d)"
+msgstr "Borrar transitorios caducados (%d)"
+
+msgid "Removes expired transient rows left in the options table. Safe: transients are a cache and are recreated as needed."
+msgstr "Elimina las filas de transitorios caducados que quedan en la tabla de opciones. Seguro: los transitorios son una caché y se recrean cuando hacen falta."
 
 msgid "Delete all post revisions?"
 msgstr "¿Borrar todas las revisiones de entradas?"

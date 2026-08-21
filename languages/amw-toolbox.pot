@@ -6,6 +6,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: amw-toolbox\n"
 
+msgid "Something went wrong. Please check your details and try again."
+msgstr ""
+
 msgid "WordPress logo"
 msgstr ""
 
@@ -64,6 +67,9 @@ msgid "Settings"
 msgstr ""
 
 msgid "You are not allowed to do this."
+msgstr ""
+
+msgid "Deleted %d expired transients."
 msgstr ""
 
 msgid "Settings imported."
@@ -207,6 +213,15 @@ msgstr ""
 msgid "By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall."
 msgstr ""
 
+msgid "Admin email check"
+msgstr ""
+
+msgid "Disable the periodic admin email verification"
+msgstr ""
+
+msgid "Stops the \"Is this admin email still correct?\" screen that WordPress shows every few months."
+msgstr ""
+
 msgid "WordPress version"
 msgstr ""
 
@@ -297,6 +312,24 @@ msgstr ""
 msgid "Sends only the origin as the referrer when navigating to other sites."
 msgstr ""
 
+msgid "HSTS"
+msgstr ""
+
+msgid "Send Strict-Transport-Security (HSTS)"
+msgstr ""
+
+msgid "Forces HTTPS for a year, including subdomains. WARNING: only enable on sites fully served over HTTPS; a wrong setup can make the site unreachable for a while. Only sent on HTTPS requests."
+msgstr ""
+
+msgid "Login errors"
+msgstr ""
+
+msgid "Use a generic login error message"
+msgstr ""
+
+msgid "Hides whether the username or the password was wrong, giving less information to brute-force attempts."
+msgstr ""
+
 msgid "Heartbeat API"
 msgstr ""
 
@@ -375,6 +408,15 @@ msgstr ""
 msgid "Drops jquery-migrate from the front-end jQuery. WARNING: can break older themes or plugins that rely on deprecated jQuery, so test the front end."
 msgstr ""
 
+msgid "Remote block patterns"
+msgstr ""
+
+msgid "Disable remote block patterns"
+msgstr ""
+
+msgid "Stops WordPress fetching block patterns from the wp.org directory. Fewer external calls; leave off if you use those patterns."
+msgstr ""
+
 msgid "Post revisions"
 msgstr ""
 
@@ -397,6 +439,24 @@ msgid "Delete existing revisions"
 msgstr ""
 
 msgid "Permanently removes revisions already stored in the database. Manual and irreversible; make sure you have a backup."
+msgstr ""
+
+msgid "Trash"
+msgstr ""
+
+msgid "Empty trash"
+msgstr ""
+
+msgid "Leave as default (30 days)"
+msgstr ""
+
+msgid "Empty after…"
+msgstr ""
+
+msgid "days"
+msgstr ""
+
+msgid "How often trashed items are permanently deleted. Uses EMPTY_TRASH_DAYS, and is skipped if already defined in wp-config.php. 0 disables the trash entirely (items are deleted immediately)."
 msgstr ""
 
 msgid "Image sizes"
@@ -529,6 +589,15 @@ msgid "Reset to defaults"
 msgstr ""
 
 msgid "Turns every option off and clears all hide lists. This cannot be undone."
+msgstr ""
+
+msgid "Expired transients"
+msgstr ""
+
+msgid "Delete expired transients (%d)"
+msgstr ""
+
+msgid "Removes expired transient rows left in the options table. Safe: transients are a cache and are recreated as needed."
 msgstr ""
 
 msgid "Delete all post revisions?"

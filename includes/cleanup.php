@@ -146,7 +146,7 @@ if ( $amw_toolbox_o['hide_wp_version'] ) {
 
 // A single send_headers callback handles the X-Powered-By removal and the
 // optional security headers, so send_headers is only hooked once.
-if ( $amw_toolbox_o['remove_powered_by'] || $amw_toolbox_o['header_nosniff'] || $amw_toolbox_o['header_frame'] || $amw_toolbox_o['header_referrer'] ) {
+if ( $amw_toolbox_o['remove_powered_by'] || $amw_toolbox_o['header_nosniff'] || $amw_toolbox_o['header_frame'] || $amw_toolbox_o['header_referrer'] || $amw_toolbox_o['header_hsts'] ) {
 	add_action( 'send_headers', 'amw_toolbox_http_headers' );
 }
 
@@ -169,6 +169,23 @@ function amw_toolbox_http_headers() {
 	if ( $o['header_referrer'] ) {
 		header( 'Referrer-Policy: strict-origin-when-cross-origin' );
 	}
+	if ( $o['header_hsts'] && is_ssl() ) {
+		header( 'Strict-Transport-Security: max-age=31536000; includeSubDomains' );
+	}
+}
+
+// Generic login error: hides whether the username or the password was wrong.
+if ( $amw_toolbox_o['login_errors_generic'] ) {
+	add_filter( 'login_errors', 'amw_toolbox_generic_login_error' );
+}
+
+function amw_toolbox_generic_login_error() {
+	return __( 'Something went wrong. Please check your details and try again.', 'amw-toolbox' );
+}
+
+// Stop the periodic "Is this admin email still correct?" verification screen.
+if ( $amw_toolbox_o['disable_admin_email_check'] ) {
+	add_filter( 'admin_email_check_interval', '__return_zero' );
 }
 
 // Remove unnecessary tags WordPress adds to the <head> by default.
@@ -254,6 +271,16 @@ if ( ! defined( 'WP_POST_REVISIONS' ) ) {
 	} elseif ( 'limit' === $amw_toolbox_o['revisions_mode'] ) {
 		define( 'WP_POST_REVISIONS', max( 0, (int) $amw_toolbox_o['revisions_limit'] ) );
 	}
+}
+
+// Trash auto-empty interval (days). wp-config.php wins if already defined.
+if ( ! defined( 'EMPTY_TRASH_DAYS' ) && 'days' === $amw_toolbox_o['empty_trash_mode'] ) {
+	define( 'EMPTY_TRASH_DAYS', max( 0, (int) $amw_toolbox_o['empty_trash_days'] ) );
+}
+
+// Stop WordPress fetching block patterns from the wp.org pattern directory.
+if ( $amw_toolbox_o['disable_remote_block_patterns'] ) {
+	add_filter( 'should_load_remote_block_patterns', '__return_false' );
 }
 
 // Remove the front-end block editor (Gutenberg) CSS.

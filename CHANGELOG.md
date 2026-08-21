@@ -1,13 +1,30 @@
 # Changelog
-
 All notable changes to AMW Toolbox are documented in this file.
-
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
-## [1.0.0] - 2026-08-10
-
+## [1.2.0] - 2026-08-21
 ### Added
+* Generic login errors: optionally replace the login failure message with a neutral one, so it no longer reveals whether the username or the password was wrong.
+* HSTS header: optionally send Strict-Transport-Security (one year, including subdomains). Only sent over HTTPS; enable only on sites fully served over HTTPS.
+* Option to disable the periodic admin email verification screen.
+* Option to disable remote block patterns, so WordPress stops fetching patterns from the wp.org directory.
+* Auto-empty trash: choose how many days trashed items are kept before being permanently deleted (uses EMPTY_TRASH_DAYS; 0 disables the trash).
+* Delete expired transients: a one-click tool to clear expired transient rows from the options table.
+* All new options are disabled by default.
 
+## [1.1.0] - 2026-08-17
+### Added
+* Import and export settings as a JSON file, with imported values validated against the known options.
+* Reset all settings to their defaults in one click.
+* Option to keep settings on uninstall, for a future reinstall.
+* Elementor tab (shown only when Elementor is active) with options to disable its usage tracking and its default colors and fonts.
+* Detected-frameworks badge and an active-optimizations counter in the settings header.
+
+### Changed
+* The Divi tab now appears only when Divi is active, matching the WooCommerce tab. Framework toggles are preserved when their tab is hidden.
+
+## [1.0.0] - 2026-08-10
+### Added
 * WordPress administration cleanup and customization options.
 * Comment, trackback and pingback management.
 * WordPress security and hardening options.
@@ -21,4 +38,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 * Multisite uninstall support.
 * All features disabled by default to prevent unexpected changes to existing installations.
 
+[1.2.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.2.0
+[1.1.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.1.0
 [1.0.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.0.0

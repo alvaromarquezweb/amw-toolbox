@@ -69,12 +69,15 @@ function amw_toolbox_defaults() {
 		'hide_default_theme_notice' => false,
 		'keep_on_uninstall'         => false,
 		'disable_admin_email_check' => false,
+		'custom_admin_footer'       => false,
+		'admin_footer_text'         => '',
 
 		// Head & security
 		'hide_wp_version'           => false,
 		'remove_powered_by'         => false,
 		'clean_head_tags'           => false,
 		'disable_xmlrpc'            => false,
+		'xmlrpc_harden'             => false,
 		'disallow_file_edit'        => false,
 		'block_user_enumeration'    => false,
 		'disable_app_passwords'     => false,
@@ -82,7 +85,7 @@ function amw_toolbox_defaults() {
 		'header_frame'              => false,
 		'header_referrer'           => false,
 		'header_hsts'               => false,
-		'login_errors_generic'      => false,
+		'header_permissions_policy' => false,
 
 		// Performance
 		'heartbeat_mode'            => 'default', // default | slow | off
@@ -130,10 +133,12 @@ function amw_toolbox_bool_keys() {
 		'hide_default_theme_notice',
 		'keep_on_uninstall',
 		'disable_admin_email_check',
+		'custom_admin_footer',
 		'hide_wp_version',
 		'remove_powered_by',
 		'clean_head_tags',
 		'disable_xmlrpc',
+		'xmlrpc_harden',
 		'disallow_file_edit',
 		'block_user_enumeration',
 		'disable_app_passwords',
@@ -141,7 +146,7 @@ function amw_toolbox_bool_keys() {
 		'header_frame',
 		'header_referrer',
 		'header_hsts',
-		'login_errors_generic',
+		'header_permissions_policy',
 		'strip_version_query',
 		'remove_block_css',
 		'disable_dashicons',
@@ -316,6 +321,9 @@ function amw_toolbox_sanitize( $input ) {
 	$trash = isset( $input['empty_trash_mode'] ) ? sanitize_key( $input['empty_trash_mode'] ) : 'default';
 	$clean['empty_trash_mode'] = in_array( $trash, array( 'default', 'days' ), true ) ? $trash : 'default';
 	$clean['empty_trash_days'] = isset( $input['empty_trash_days'] ) ? max( 0, absint( $input['empty_trash_days'] ) ) : 30;
+
+	// Custom admin footer text (allow safe HTML, e.g. a link).
+	$clean['admin_footer_text'] = isset( $input['admin_footer_text'] ) ? wp_kses_post( wp_unslash( $input['admin_footer_text'] ) ) : '';
 
 	// Image sizes to skip generating (dynamic list; keep exact names).
 	$clean['disabled_image_sizes'] = array();

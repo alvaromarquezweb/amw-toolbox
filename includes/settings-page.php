@@ -680,6 +680,7 @@ function amw_toolbox_render_settings() {
 				<table class="form-table" role="presentation">
 					<?php
 					amw_toolbox_bool_row( $o, 'fix_divi_viewport', __( 'Viewport', 'amw-toolbox' ), __( 'Fix the Divi viewport (allow zoom)', 'amw-toolbox' ), __( 'Replaces Divi\'s viewport tag so users can pinch-to-zoom.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'fix_divi_maps', __( 'Google Maps', 'amw-toolbox' ), __( 'Fix Divi\'s deprecated Maps API call', 'amw-toolbox' ), __( 'Shims the deprecated google.maps.event.addDomListener that Divi uses, so Map modules keep working and stop logging deprecation errors.', 'amw-toolbox' ) );
 					?>
 				</table>
 			</div>

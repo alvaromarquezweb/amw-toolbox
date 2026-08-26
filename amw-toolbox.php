@@ -3,7 +3,7 @@
  * Plugin Name: AMW Toolbox
  * Plugin URI:  https://alvaromarquezweb.com
  * Description: Cleanup and hardening toolbox for WordPress: hides the WP fingerprint, disables comments, trims the &lt;head&gt;, tightens a few defaults and fixes the Divi viewport. Everything is toggleable from Settings &rarr; AMW Toolbox.
- * Version:     1.3.0
+ * Version:     1.3.1
  * Author:      Álvaro Márquez Díaz
  * Author URI:  https://alvaromarquezweb.com
  * License:     GPL-2.0-or-later

@@ -456,6 +456,29 @@ function amw_toolbox_fix_divi_viewport() {
 	echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">' . "\n";
 }
 
+// Shim the deprecated google.maps.event.addDomListener that Divi's Map modules
+// use, so they keep working without the deprecation error. The inline script is
+// attached to Divi's frontend handle, so it no-ops when Divi is not active.
+if ( $amw_toolbox_o['fix_divi_maps'] ) {
+	add_action( 'wp_enqueue_scripts', 'amw_toolbox_fix_divi_maps' );
+}
+
+function amw_toolbox_fix_divi_maps() {
+	$js = <<<'JS'
+if (window.google && google.maps && google.maps.event) {
+  var oldAddDomListener = google.maps.event.addDomListener;
+  google.maps.event.addDomListener = function(obj, event, fn) {
+    if (obj === window) {
+      window.addEventListener(event, fn);
+    } else {
+      obj && obj.addEventListener && obj.addEventListener(event, fn);
+    }
+  };
+}
+JS;
+	wp_add_inline_script( 'divi-frontend-script', $js, 'before' );
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════════════
    6. WOOCOMMERCE  (filters no-op when WooCommerce is inactive; callbacks that

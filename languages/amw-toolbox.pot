@@ -504,6 +504,15 @@ msgstr ""
 msgid "Replaces Divi's viewport tag so users can pinch-to-zoom."
 msgstr ""
 
+msgid "Google Maps"
+msgstr ""
+
+msgid "Fix Divi's deprecated Maps API call"
+msgstr ""
+
+msgid "Shims the deprecated google.maps.event.addDomListener that Divi uses, so Map modules keep working and stop logging deprecation errors."
+msgstr ""
+
 msgid "These options only appear and act while WooCommerce is active."
 msgstr ""
 

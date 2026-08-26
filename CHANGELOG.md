@@ -2,6 +2,15 @@
 All notable changes to AMW Toolbox are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-08-26
+### Added
+* XML-RPC hardening: keep XML-RPC on but remove its most-abused methods (pingbacks and system.multicall) and the X-Pingback header. A finer alternative to disabling XML-RPC entirely.
+* Permissions-Policy header: optionally send a restrictive policy that disables camera, microphone and geolocation across the whole site.
+* Custom admin footer: replace the "Thank you for creating with WordPress" text with your own (basic HTML and links allowed), or leave it blank.
+
+### Removed
+* Generic login error message option, now handled by AMW Simple Login.
+
 ## [1.2.0] - 2026-08-21
 ### Added
 * Generic login errors: optionally replace the login failure message with a neutral one, so it no longer reveals whether the username or the password was wrong.
@@ -38,6 +47,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 * Multisite uninstall support.
 * All features disabled by default to prevent unexpected changes to existing installations.
 
+[1.3.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.0
 [1.2.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.2.0
 [1.1.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.1.0
 [1.0.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.0.0

@@ -6,9 +6,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: amw-toolbox\n"
 
-msgid "Something went wrong. Please check your details and try again."
-msgstr ""
-
 msgid "WordPress logo"
 msgstr ""
 
@@ -222,6 +219,24 @@ msgstr ""
 msgid "Stops the \"Is this admin email still correct?\" screen that WordPress shows every few months."
 msgstr ""
 
+msgid "Admin footer"
+msgstr ""
+
+msgid "Replace the admin footer text"
+msgstr ""
+
+msgid "Replaces the \"Thank you for creating with WordPress\" text at the bottom of the admin. Enable and set the text below."
+msgstr ""
+
+msgid "Admin footer text"
+msgstr ""
+
+msgid "e.g. Site by Your Name"
+msgstr ""
+
+msgid "Shown only when \"Replace the admin footer text\" is enabled. Basic HTML, including links, is allowed. Leave empty to show no footer text."
+msgstr ""
+
 msgid "WordPress version"
 msgstr ""
 
@@ -256,6 +271,15 @@ msgid "Disable XML-RPC"
 msgstr ""
 
 msgid "Blocks a common attack vector. Leave off if you use the WP app or Jetpack."
+msgstr ""
+
+msgid "XML-RPC hardening"
+msgstr ""
+
+msgid "Remove the most-abused XML-RPC methods"
+msgstr ""
+
+msgid "Keeps XML-RPC on but drops pingbacks and system.multicall (used for brute-force amplification and pingback attacks), and the X-Pingback header. Not needed if you disable XML-RPC above."
 msgstr ""
 
 msgid "File editor"
@@ -321,13 +345,13 @@ msgstr ""
 msgid "Forces HTTPS for a year, including subdomains. WARNING: only enable on sites fully served over HTTPS; a wrong setup can make the site unreachable for a while. Only sent on HTTPS requests."
 msgstr ""
 
-msgid "Login errors"
+msgid "Permissions-Policy"
 msgstr ""
 
-msgid "Use a generic login error message"
+msgid "Send a restrictive Permissions-Policy"
 msgstr ""
 
-msgid "Hides whether the username or the password was wrong, giving less information to brute-force attempts."
+msgid "Disables camera, microphone and geolocation for the whole site. Leave off if the site legitimately uses any of them."
 msgstr ""
 
 msgid "Heartbeat API"

@@ -8,9 +8,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: amw-toolbox\n"
 
-msgid "Something went wrong. Please check your details and try again."
-msgstr "Algo ha ido mal. Revisa tus datos e inténtalo de nuevo."
-
 msgid "WordPress logo"
 msgstr "Logo de WordPress"
 
@@ -224,6 +221,24 @@ msgstr "Desactivar la verificación periódica del email de administración"
 msgid "Stops the \"Is this admin email still correct?\" screen that WordPress shows every few months."
 msgstr "Quita la pantalla «¿Sigue siendo correcto este email de administración?» que WordPress muestra cada pocos meses."
 
+msgid "Admin footer"
+msgstr "Pie del escritorio"
+
+msgid "Replace the admin footer text"
+msgstr "Reemplazar el texto del pie del escritorio"
+
+msgid "Replaces the \"Thank you for creating with WordPress\" text at the bottom of the admin. Enable and set the text below."
+msgstr "Reemplaza el texto «Gracias por crear con WordPress» del pie del escritorio. Actívalo y define el texto abajo."
+
+msgid "Admin footer text"
+msgstr "Texto del pie del escritorio"
+
+msgid "e.g. Site by Your Name"
+msgstr "p. ej. Web hecha por Tu Nombre"
+
+msgid "Shown only when \"Replace the admin footer text\" is enabled. Basic HTML, including links, is allowed. Leave empty to show no footer text."
+msgstr "Solo se muestra si «Reemplazar el texto del pie del escritorio» está activo. Se permite HTML básico, incluidos enlaces. Déjalo vacío para no mostrar texto en el pie."
+
 msgid "WordPress version"
 msgstr "Versión de WordPress"
 
@@ -259,6 +274,15 @@ msgstr "Desactivar XML-RPC"
 
 msgid "Blocks a common attack vector. Leave off if you use the WP app or Jetpack."
 msgstr "Bloquea un vector de ataque habitual. Déjalo desactivado si usas la app de WordPress o Jetpack."
+
+msgid "XML-RPC hardening"
+msgstr "Endurecer XML-RPC"
+
+msgid "Remove the most-abused XML-RPC methods"
+msgstr "Quitar los métodos de XML-RPC más abusados"
+
+msgid "Keeps XML-RPC on but drops pingbacks and system.multicall (used for brute-force amplification and pingback attacks), and the X-Pingback header. Not needed if you disable XML-RPC above."
+msgstr "Mantiene XML-RPC activo pero quita los pingbacks y system.multicall (usados para amplificar la fuerza bruta y los ataques de pingback) y la cabecera X-Pingback. No hace falta si desactivas XML-RPC arriba."
 
 msgid "File editor"
 msgstr "Editor de archivos"
@@ -323,14 +347,14 @@ msgstr "Enviar Strict-Transport-Security (HSTS)"
 msgid "Forces HTTPS for a year, including subdomains. WARNING: only enable on sites fully served over HTTPS; a wrong setup can make the site unreachable for a while. Only sent on HTTPS requests."
 msgstr "Fuerza HTTPS durante un año, incluidos los subdominios. AVISO: actívalo solo en sitios servidos completamente por HTTPS; una configuración incorrecta puede dejar el sitio inaccesible durante un tiempo. Solo se envía en peticiones HTTPS."
 
-msgid "Login errors"
-msgstr "Errores de acceso"
+msgid "Permissions-Policy"
+msgstr "Permissions-Policy"
 
-msgid "Use a generic login error message"
-msgstr "Usar un mensaje de error de acceso genérico"
+msgid "Send a restrictive Permissions-Policy"
+msgstr "Enviar una Permissions-Policy restrictiva"
 
-msgid "Hides whether the username or the password was wrong, giving less information to brute-force attempts."
-msgstr "Oculta si el error fue del usuario o de la contraseña, dando menos información a los intentos de fuerza bruta."
+msgid "Disables camera, microphone and geolocation for the whole site. Leave off if the site legitimately uses any of them."
+msgstr "Desactiva cámara, micrófono y geolocalización en todo el sitio. Déjalo desactivado si el sitio usa alguno de forma legítima."
 
 msgid "Heartbeat API"
 msgstr "API Heartbeat"

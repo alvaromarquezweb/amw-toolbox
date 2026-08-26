@@ -560,7 +560,15 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'hide_default_theme_notice', __( 'Default theme check', 'amw-toolbox' ), __( 'Hide the "default theme available" Site Health check', 'amw-toolbox' ), __( 'Removes the Site Health recommendation to keep a default (Twenty*) theme installed as a fallback.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'keep_on_uninstall', __( 'On uninstall', 'amw-toolbox' ), __( 'Keep settings when the plugin is uninstalled', 'amw-toolbox' ), __( 'By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_admin_email_check', __( 'Admin email check', 'amw-toolbox' ), __( 'Disable the periodic admin email verification', 'amw-toolbox' ), __( 'Stops the "Is this admin email still correct?" screen that WordPress shows every few months.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'custom_admin_footer', __( 'Admin footer', 'amw-toolbox' ), __( 'Replace the admin footer text', 'amw-toolbox' ), __( 'Replaces the "Thank you for creating with WordPress" text at the bottom of the admin. Enable and set the text below.', 'amw-toolbox' ) );
 					?>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Admin footer text', 'amw-toolbox' ); ?></th>
+						<td>
+							<input type="text" class="regular-text" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[admin_footer_text]' ); ?>" value="<?php echo esc_attr( $o['admin_footer_text'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. Site by Your Name', 'amw-toolbox' ); ?>">
+							<p class="description"><?php esc_html_e( 'Shown only when "Replace the admin footer text" is enabled. Basic HTML, including links, is allowed. Leave empty to show no footer text.', 'amw-toolbox' ); ?></p>
+						</td>
+					</tr>
 				</table>
 			</div>
 
@@ -572,6 +580,7 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'remove_powered_by', __( 'X-Powered-By', 'amw-toolbox' ), __( 'Remove the X-Powered-By header', 'amw-toolbox' ), __( 'Hides the PHP fingerprint sent in the response headers.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'clean_head_tags', __( '<head> cleanup', 'amw-toolbox' ), __( 'Clean up the <head>', 'amw-toolbox' ), __( 'Removes RSD, WLW, shortlinks and feed links.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_xmlrpc', __( 'XML-RPC', 'amw-toolbox' ), __( 'Disable XML-RPC', 'amw-toolbox' ), __( 'Blocks a common attack vector. Leave off if you use the WP app or Jetpack.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'xmlrpc_harden', __( 'XML-RPC hardening', 'amw-toolbox' ), __( 'Remove the most-abused XML-RPC methods', 'amw-toolbox' ), __( 'Keeps XML-RPC on but drops pingbacks and system.multicall (used for brute-force amplification and pingback attacks), and the X-Pingback header. Not needed if you disable XML-RPC above.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disallow_file_edit', __( 'File editor', 'amw-toolbox' ), __( 'Disable the theme/plugin file editor', 'amw-toolbox' ), __( 'Defines DISALLOW_FILE_EDIT so code cannot be edited from the admin.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'block_user_enumeration', __( 'User enumeration', 'amw-toolbox' ), __( 'Block user enumeration', 'amw-toolbox' ), __( 'Blocks ?author=N scans and the public REST users endpoints for logged-out visitors.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_app_passwords', __( 'Application Passwords', 'amw-toolbox' ), __( 'Disable Application Passwords', 'amw-toolbox' ), __( 'Turns off the WordPress Application Passwords feature.', 'amw-toolbox' ) );
@@ -579,7 +588,7 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'header_frame', __( 'X-Frame-Options', 'amw-toolbox' ), __( 'Send SAMEORIGIN', 'amw-toolbox' ), __( 'Blocks other sites from framing yours (clickjacking). Leave off if you embed this site elsewhere.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'header_referrer', __( 'Referrer-Policy', 'amw-toolbox' ), __( 'Send strict-origin-when-cross-origin', 'amw-toolbox' ), __( 'Sends only the origin as the referrer when navigating to other sites.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'header_hsts', __( 'HSTS', 'amw-toolbox' ), __( 'Send Strict-Transport-Security (HSTS)', 'amw-toolbox' ), __( 'Forces HTTPS for a year, including subdomains. WARNING: only enable on sites fully served over HTTPS; a wrong setup can make the site unreachable for a while. Only sent on HTTPS requests.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'login_errors_generic', __( 'Login errors', 'amw-toolbox' ), __( 'Use a generic login error message', 'amw-toolbox' ), __( 'Hides whether the username or the password was wrong, giving less information to brute-force attempts.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'header_permissions_policy', __( 'Permissions-Policy', 'amw-toolbox' ), __( 'Send a restrictive Permissions-Policy', 'amw-toolbox' ), __( 'Disables camera, microphone and geolocation for the whole site. Leave off if the site legitimately uses any of them.', 'amw-toolbox' ) );
 					?>
 				</table>
 			</div>

@@ -105,6 +105,7 @@ function amw_toolbox_defaults() {
 
 		// Divi
 		'fix_divi_viewport'   => false,
+		'fix_divi_maps'       => false,
 
 		// WooCommerce (only applied when WooCommerce is active)
 		'wc_disable_analytics'               => false,
@@ -178,6 +179,7 @@ function amw_toolbox_woo_keys() {
 function amw_toolbox_divi_keys() {
 	return array(
 		'fix_divi_viewport',
+		'fix_divi_maps',
 	);
 }
 

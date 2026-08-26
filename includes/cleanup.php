@@ -146,7 +146,7 @@ if ( $amw_toolbox_o['hide_wp_version'] ) {
 
 // A single send_headers callback handles the X-Powered-By removal and the
 // optional security headers, so send_headers is only hooked once.
-if ( $amw_toolbox_o['remove_powered_by'] || $amw_toolbox_o['header_nosniff'] || $amw_toolbox_o['header_frame'] || $amw_toolbox_o['header_referrer'] || $amw_toolbox_o['header_hsts'] ) {
+if ( $amw_toolbox_o['remove_powered_by'] || $amw_toolbox_o['header_nosniff'] || $amw_toolbox_o['header_frame'] || $amw_toolbox_o['header_referrer'] || $amw_toolbox_o['header_hsts'] || $amw_toolbox_o['header_permissions_policy'] ) {
 	add_action( 'send_headers', 'amw_toolbox_http_headers' );
 }
 
@@ -172,20 +172,24 @@ function amw_toolbox_http_headers() {
 	if ( $o['header_hsts'] && is_ssl() ) {
 		header( 'Strict-Transport-Security: max-age=31536000; includeSubDomains' );
 	}
-}
-
-// Generic login error: hides whether the username or the password was wrong.
-if ( $amw_toolbox_o['login_errors_generic'] ) {
-	add_filter( 'login_errors', 'amw_toolbox_generic_login_error' );
-}
-
-function amw_toolbox_generic_login_error() {
-	return __( 'Something went wrong. Please check your details and try again.', 'amw-toolbox' );
+	if ( $o['header_permissions_policy'] ) {
+		header( 'Permissions-Policy: camera=(), microphone=(), geolocation=()' );
+	}
 }
 
 // Stop the periodic "Is this admin email still correct?" verification screen.
 if ( $amw_toolbox_o['disable_admin_email_check'] ) {
 	add_filter( 'admin_email_check_interval', '__return_zero' );
+}
+
+// Replace the admin footer text ("Thank you for creating with WordPress").
+if ( $amw_toolbox_o['custom_admin_footer'] ) {
+	add_filter( 'admin_footer_text', 'amw_toolbox_custom_admin_footer' );
+}
+
+function amw_toolbox_custom_admin_footer() {
+	$o = amw_toolbox_get_options();
+	return $o['admin_footer_text'];
 }
 
 // Remove unnecessary tags WordPress adds to the <head> by default.
@@ -201,6 +205,25 @@ if ( $amw_toolbox_o['clean_head_tags'] ) {
 // Disable XML-RPC.
 if ( $amw_toolbox_o['disable_xmlrpc'] ) {
 	add_filter( 'xmlrpc_enabled', '__return_false' );
+}
+
+// Harden XML-RPC without turning it off: drop the most-abused methods (pingbacks
+// and system.multicall) and the X-Pingback header, leaving the rest working.
+if ( $amw_toolbox_o['xmlrpc_harden'] ) {
+	add_filter( 'xmlrpc_methods', 'amw_toolbox_harden_xmlrpc_methods' );
+	add_filter( 'wp_headers', 'amw_toolbox_remove_xpingback_header' );
+}
+
+function amw_toolbox_harden_xmlrpc_methods( $methods ) {
+	unset( $methods['pingback.ping'] );
+	unset( $methods['pingback.extensions.getPingbacks'] );
+	unset( $methods['system.multicall'] );
+	return $methods;
+}
+
+function amw_toolbox_remove_xpingback_header( $headers ) {
+	unset( $headers['X-Pingback'] );
+	return $headers;
 }
 
 // Prevent editing themes/plugins from the admin. wp-config.php is the canonical

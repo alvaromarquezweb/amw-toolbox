@@ -123,6 +123,9 @@ msgstr ""
 msgid "Elementor"
 msgstr ""
 
+msgid "Plugin"
+msgstr ""
+
 msgid "Tools"
 msgstr ""
 
@@ -199,15 +202,6 @@ msgid "Hide the \"default theme available\" Site Health check"
 msgstr ""
 
 msgid "Removes the Site Health recommendation to keep a default (Twenty*) theme installed as a fallback."
-msgstr ""
-
-msgid "On uninstall"
-msgstr ""
-
-msgid "Keep settings when the plugin is uninstalled"
-msgstr ""
-
-msgid "By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall."
 msgstr ""
 
 msgid "Admin email check"
@@ -586,6 +580,30 @@ msgid "Disable default colors and fonts"
 msgstr ""
 
 msgid "Lets your theme control colors and typography instead of Elementor's defaults."
+msgstr ""
+
+msgid "Google Fonts"
+msgstr ""
+
+msgid "Disable Elementor's Google Fonts"
+msgstr ""
+
+msgid "Stops Elementor loading fonts from Google on the front end (better privacy and fewer external calls). Use your theme or local fonts instead."
+msgstr ""
+
+msgid "Plugin options"
+msgstr ""
+
+msgid "Settings for AMW Toolbox itself."
+msgstr ""
+
+msgid "On uninstall"
+msgstr ""
+
+msgid "Keep settings when the plugin is uninstalled"
+msgstr ""
+
+msgid "By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall."
 msgstr ""
 
 msgid "Import, export & reset"

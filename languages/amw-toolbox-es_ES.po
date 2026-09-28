@@ -125,6 +125,9 @@ msgstr "WooCommerce"
 msgid "Elementor"
 msgstr "Elementor"
 
+msgid "Plugin"
+msgstr "Plugin"
+
 msgid "Tools"
 msgstr "Herramientas"
 
@@ -202,15 +205,6 @@ msgstr "Ocultar la comprobación «Tener un tema por defecto disponible» de Sal
 
 msgid "Removes the Site Health recommendation to keep a default (Twenty*) theme installed as a fallback."
 msgstr "Quita la recomendación de Salud del sitio que pide mantener un tema por defecto (Twenty*) instalado como respaldo."
-
-msgid "On uninstall"
-msgstr "Al desinstalar"
-
-msgid "Keep settings when the plugin is uninstalled"
-msgstr "Conservar los ajustes al desinstalar el plugin"
-
-msgid "By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall."
-msgstr "Por defecto, borrar el plugin elimina sus ajustes. Actívalo para conservarlos para una futura reinstalación."
 
 msgid "Admin email check"
 msgstr "Verificación del email de administración"
@@ -589,6 +583,30 @@ msgstr "Desactivar colores y fuentes por defecto"
 
 msgid "Lets your theme control colors and typography instead of Elementor's defaults."
 msgstr "Deja que tu tema controle los colores y la tipografía en lugar de los valores por defecto de Elementor."
+
+msgid "Google Fonts"
+msgstr "Google Fonts"
+
+msgid "Disable Elementor's Google Fonts"
+msgstr "Desactivar las Google Fonts de Elementor"
+
+msgid "Stops Elementor loading fonts from Google on the front end (better privacy and fewer external calls). Use your theme or local fonts instead."
+msgstr "Impide que Elementor cargue fuentes desde Google en el front (mejor privacidad y menos llamadas externas). Usa las fuentes del tema o locales."
+
+msgid "Plugin options"
+msgstr "Opciones del plugin"
+
+msgid "Settings for AMW Toolbox itself."
+msgstr "Ajustes del propio AMW Toolbox."
+
+msgid "On uninstall"
+msgstr "Al desinstalar"
+
+msgid "Keep settings when the plugin is uninstalled"
+msgstr "Conservar los ajustes al desinstalar el plugin"
+
+msgid "By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall."
+msgstr "Por defecto, borrar el plugin elimina sus ajustes. Actívalo para conservarlos para una futura reinstalación."
 
 msgid "Import, export & reset"
 msgstr "Importar, exportar y restablecer"

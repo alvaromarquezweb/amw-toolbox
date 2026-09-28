@@ -133,5 +133,16 @@
 					} );
 			} );
 		}
+		/* ── Import: reveal the submit button only once a file is chosen ── */
+		var importFile   = document.getElementById( 'amw-import-file' );
+		var importSubmit = document.getElementById( 'amw-import-submit' );
+
+		if ( importFile && importSubmit ) {
+			var syncImport = function () {
+				importSubmit.style.display = ( importFile.files && importFile.files.length ) ? '' : 'none';
+			};
+			syncImport();
+			importFile.addEventListener( 'change', syncImport );
+		}
 	} );
 } )();

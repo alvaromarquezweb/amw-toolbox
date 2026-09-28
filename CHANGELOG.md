@@ -2,6 +2,23 @@
 All notable changes to AMW Toolbox are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
+## 1.3.2 — 2026-09-28
+
+### Added
+- **Elementor: disable Google Fonts.** Optional toggle that stops Elementor
+  loading fonts from Google on the front end (better privacy and fewer external
+  calls). Uses your theme or local fonts instead.
+- **New "Plugin" tab** grouping AMW Toolbox's own options.
+
+### Changed
+- **"Keep settings on uninstall" moved** from the Admin tab to the new Plugin tab.
+- **Import settings:** the import button now appears only once a file has been
+  selected.
+
+### Fixed
+- The admin menu list no longer includes items the current user cannot access,
+  removing ghost entries (such as Links) that were never actually shown.
+
 ## [1.3.1] - 2026-08-26
 ### Added
 * Divi: optional fix for the deprecated google.maps.event.addDomListener used by Divi's Map modules, so maps keep working without the deprecation error. Off by default, in the Divi tab.

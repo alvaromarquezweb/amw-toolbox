@@ -118,6 +118,7 @@ function amw_toolbox_defaults() {
 		// Elementor (only applied when Elementor is active)
 		'el_disable_tracking'        => false,
 		'el_disable_default_schemes' => false,
+		'el_disable_google_fonts'    => false,
 	);
 }
 
@@ -190,6 +191,7 @@ function amw_toolbox_elementor_keys() {
 	return array(
 		'el_disable_tracking',
 		'el_disable_default_schemes',
+		'el_disable_google_fonts',
 	);
 }
 

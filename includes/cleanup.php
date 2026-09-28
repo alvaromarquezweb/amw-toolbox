@@ -563,6 +563,11 @@ if ( $amw_toolbox_o['el_disable_default_schemes'] ) {
 	add_filter( 'pre_option_elementor_disable_typography_schemes', 'amw_toolbox_el_yes' );
 }
 
+// Stop Elementor loading fonts from Google on the front end.
+if ( $amw_toolbox_o['el_disable_google_fonts'] ) {
+	add_filter( 'elementor/frontend/print_google_fonts', '__return_false' );
+}
+
 function amw_toolbox_el_disable_tracking() {
 	return 'no';
 }

@@ -365,6 +365,13 @@ function amw_toolbox_get_admin_menus() {
 			continue;
 		}
 
+		// Skip items the current user cannot access: WordPress does not render
+		// those, so they should not appear here either (avoids "ghost" entries
+		// like Links or the Site Editor that are registered but not shown).
+		if ( isset( $entry[1] ) && '' !== $entry[1] && ! current_user_can( $entry[1] ) ) {
+			continue;
+		}
+
 		// Drop count bubbles (e.g. pending comments/updates) from the label.
 		$label = isset( $entry[0] ) ? preg_replace( '/<span[^>]*>.*?<\/span>/', '', $entry[0] ) : '';
 		$label = trim( wp_strip_all_tags( $label ) );
@@ -510,6 +517,7 @@ function amw_toolbox_render_settings() {
 			<?php if ( $elementor_active ) : ?>
 			<a href="#" class="nav-tab"                data-amw-tab="elementor"   id="amw-tab-elementor"   role="tab" aria-controls="amw-panel-elementor"   aria-selected="false" tabindex="-1"><?php esc_html_e( 'Elementor', 'amw-toolbox' ); ?></a>
 			<?php endif; ?>
+			<a href="#" class="nav-tab"                data-amw-tab="plugin"      id="amw-tab-plugin"      role="tab" aria-controls="amw-panel-plugin"      aria-selected="false" tabindex="-1"><?php esc_html_e( 'Plugin', 'amw-toolbox' ); ?></a>
 			<a href="#" class="nav-tab"                data-amw-tab="tools"       id="amw-tab-tools"       role="tab" aria-controls="amw-panel-tools"       aria-selected="false" tabindex="-1"><?php esc_html_e( 'Tools', 'amw-toolbox' ); ?></a>
 		</nav>
 
@@ -558,7 +566,6 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'hide_notices_for_clients', __( 'Admin notices', 'amw-toolbox' ), __( 'Hide admin notices for non-administrators', 'amw-toolbox' ), __( 'A cleaner admin for clients: users who cannot manage options stop seeing plugin and theme notices.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_block_widgets', __( 'Block widgets', 'amw-toolbox' ), __( 'Disable the block-based widgets screen', 'amw-toolbox' ), __( 'Restores the classic widgets screen instead of the block editor.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'hide_default_theme_notice', __( 'Default theme check', 'amw-toolbox' ), __( 'Hide the "default theme available" Site Health check', 'amw-toolbox' ), __( 'Removes the Site Health recommendation to keep a default (Twenty*) theme installed as a fallback.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'keep_on_uninstall', __( 'On uninstall', 'amw-toolbox' ), __( 'Keep settings when the plugin is uninstalled', 'amw-toolbox' ), __( 'By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_admin_email_check', __( 'Admin email check', 'amw-toolbox' ), __( 'Disable the periodic admin email verification', 'amw-toolbox' ), __( 'Stops the "Is this admin email still correct?" screen that WordPress shows every few months.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'custom_admin_footer', __( 'Admin footer', 'amw-toolbox' ), __( 'Replace the admin footer text', 'amw-toolbox' ), __( 'Replaces the "Thank you for creating with WordPress" text at the bottom of the admin. Enable and set the text below.', 'amw-toolbox' ) );
 					?>
@@ -711,10 +718,21 @@ function amw_toolbox_render_settings() {
 					<?php
 					amw_toolbox_bool_row( $o, 'el_disable_tracking', __( 'Usage tracking', 'amw-toolbox' ), __( 'Disable Elementor usage tracking', 'amw-toolbox' ), __( 'Forces Elementor usage data collection off.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'el_disable_default_schemes', __( 'Default styles', 'amw-toolbox' ), __( 'Disable default colors and fonts', 'amw-toolbox' ), __( 'Lets your theme control colors and typography instead of Elementor\'s defaults.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'el_disable_google_fonts', __( 'Google Fonts', 'amw-toolbox' ), __( 'Disable Elementor\'s Google Fonts', 'amw-toolbox' ), __( 'Stops Elementor loading fonts from Google on the front end (better privacy and fewer external calls). Use your theme or local fonts instead.', 'amw-toolbox' ) );
 					?>
 				</table>
 			</div>
 			<?php endif; ?>
+
+			<div class="amw-tab-panel" data-amw-panel="plugin" id="amw-panel-plugin" role="tabpanel" aria-labelledby="amw-tab-plugin" tabindex="0">
+				<h2><?php esc_html_e( 'Plugin options', 'amw-toolbox' ); ?></h2>
+				<p class="description" style="max-width:640px;"><?php esc_html_e( 'Settings for AMW Toolbox itself.', 'amw-toolbox' ); ?></p>
+				<table class="form-table" role="presentation">
+					<?php
+					amw_toolbox_bool_row( $o, 'keep_on_uninstall', __( 'On uninstall', 'amw-toolbox' ), __( 'Keep settings when the plugin is uninstalled', 'amw-toolbox' ), __( 'By default, deleting the plugin removes its settings. Enable this to keep them for a future reinstall.', 'amw-toolbox' ) );
+					?>
+				</table>
+			</div>
 
 			<div class="amw-submit"><?php submit_button(); ?></div>
 		</form>
@@ -737,8 +755,8 @@ function amw_toolbox_render_settings() {
 						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" enctype="multipart/form-data" style="margin:0;">
 							<input type="hidden" name="action" value="amw_toolbox_import">
 							<?php wp_nonce_field( 'amw_toolbox_import' ); ?>
-							<input type="file" name="amw_import_file" accept="application/json,.json" required>
-							<?php submit_button( __( 'Import settings', 'amw-toolbox' ), 'secondary', 'submit', false ); ?>
+							<input type="file" name="amw_import_file" id="amw-import-file" accept="application/json,.json" required>
+							<?php submit_button( __( 'Import settings', 'amw-toolbox' ), 'secondary', 'amw_import_submit', false, array( 'id' => 'amw-import-submit' ) ); ?>
 						</form>
 						<p class="description"><?php esc_html_e( 'Upload a JSON file exported from AMW Toolbox. Imported values are validated against the known options before being saved.', 'amw-toolbox' ); ?></p>
 					</td>

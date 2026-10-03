@@ -11,10 +11,10 @@ const AMW_TOOLBOX_OPTION = 'amw_toolbox_options';
 
 /**
  * Admin bar nodes the user can hide (id => label).
- * Curated because the admin bar object is not built on the settings screen,
- * so it cannot be discovered dynamically there.
+ * Fallback labels, used before the live admin bar has been captured and to give
+ * nice names to known core nodes. The live list is detected dynamically.
  */
-function amw_toolbox_adminbar_nodes() {
+function amw_toolbox_adminbar_known() {
 	return array(
 		'wp-logo'        => __( 'WordPress logo', 'amw-toolbox' ),
 		'site-name'      => __( 'Site name', 'amw-toolbox' ),
@@ -31,10 +31,10 @@ function amw_toolbox_adminbar_nodes() {
 }
 
 /**
- * Dashboard widgets the user can hide (id => array( label, context )).
- * Curated for the same reason as the admin bar.
+ * Dashboard widgets fallback labels (id => array( label, context )). Used before
+ * the dashboard has been visited and captured. The live list is learned there.
  */
-function amw_toolbox_dashboard_widgets() {
+function amw_toolbox_dashboard_known() {
 	return array(
 		'dashboard_right_now'       => array( __( 'At a Glance', 'amw-toolbox' ), 'normal' ),
 		'dashboard_activity'        => array( __( 'Activity', 'amw-toolbox' ), 'normal' ),
@@ -69,6 +69,7 @@ function amw_toolbox_defaults() {
 		'hide_default_theme_notice' => false,
 		'keep_on_uninstall'         => false,
 		'disable_admin_email_check' => false,
+		'allow_svg_upload'          => false,
 		'custom_admin_footer'       => false,
 		'admin_footer_text'         => '',
 
@@ -135,6 +136,7 @@ function amw_toolbox_bool_keys() {
 		'hide_default_theme_notice',
 		'keep_on_uninstall',
 		'disable_admin_email_check',
+		'allow_svg_upload',
 		'custom_admin_footer',
 		'hide_wp_version',
 		'remove_powered_by',
@@ -300,17 +302,30 @@ function amw_toolbox_sanitize( $input ) {
 		}
 	}
 
-	// Admin bar nodes (whitelisted).
-	$clean['hidden_adminbar'] = amw_toolbox_clean_list(
-		$input['hidden_adminbar'] ?? array(),
-		array_keys( amw_toolbox_adminbar_nodes() )
-	);
+	// Admin bar nodes: the list is detected dynamically, so we sanitize the ids
+	// rather than whitelisting. They are only used for remove_node (a no-op if the
+	// id is unknown) and printed with esc_attr, so this is safe.
+	$clean['hidden_adminbar'] = array();
+	if ( ! empty( $input['hidden_adminbar'] ) && is_array( $input['hidden_adminbar'] ) ) {
+		foreach ( $input['hidden_adminbar'] as $id ) {
+			$id = sanitize_text_field( wp_unslash( $id ) );
+			if ( '' !== $id ) {
+				$clean['hidden_adminbar'][] = $id;
+			}
+		}
+	}
 
-	// Dashboard widgets (whitelisted).
-	$clean['hidden_dashboard'] = amw_toolbox_clean_list(
-		$input['hidden_dashboard'] ?? array(),
-		array_keys( amw_toolbox_dashboard_widgets() )
-	);
+	// Dashboard widgets: same approach (learned dynamically; remove_meta_box is a
+	// no-op for unknown ids).
+	$clean['hidden_dashboard'] = array();
+	if ( ! empty( $input['hidden_dashboard'] ) && is_array( $input['hidden_dashboard'] ) ) {
+		foreach ( $input['hidden_dashboard'] as $id ) {
+			$id = sanitize_text_field( wp_unslash( $id ) );
+			if ( '' !== $id ) {
+				$clean['hidden_dashboard'][] = $id;
+			}
+		}
+	}
 
 	// Heartbeat mode.
 	$hb = isset( $input['heartbeat_mode'] ) ? sanitize_key( $input['heartbeat_mode'] ) : 'off';

@@ -138,13 +138,13 @@ msgstr ""
 msgid "Admin bar"
 msgstr ""
 
-msgid "Check the top bar items you want to hide."
+msgid "Check the top bar items you want to hide. This list reflects the admin bar on this site."
 msgstr ""
 
 msgid "Dashboard widgets"
 msgstr ""
 
-msgid "Check the dashboard widgets you want to hide."
+msgid "Check the dashboard widgets you want to hide. The list is learned from your Dashboard, so visit it once if something is missing here."
 msgstr ""
 
 msgid "Comments"
@@ -211,6 +211,18 @@ msgid "Disable the periodic admin email verification"
 msgstr ""
 
 msgid "Stops the \"Is this admin email still correct?\" screen that WordPress shows every few months."
+msgstr ""
+
+msgid "SVG uploads"
+msgstr ""
+
+msgid "Allow SVG uploads (administrators only)"
+msgstr ""
+
+msgid "Security warning"
+msgstr ""
+
+msgid "SVG files are code (XML) and can carry scripts. AMW Toolbox permits the upload but does NOT sanitize the file, so a malicious SVG could run in the browser. Enable this only if you upload SVGs from sources you trust. Uploading is limited to administrators."
 msgstr ""
 
 msgid "Admin footer"

@@ -140,14 +140,14 @@ msgstr "Marca los menús principales que quieras ocultar de la barra lateral. Es
 msgid "Admin bar"
 msgstr "Barra de administración"
 
-msgid "Check the top bar items you want to hide."
-msgstr "Marca los elementos de la barra superior que quieras ocultar."
+msgid "Check the top bar items you want to hide. This list reflects the admin bar on this site."
+msgstr "Marca los elementos de la barra superior que quieras ocultar. Esta lista refleja la barra de administración de este sitio."
 
 msgid "Dashboard widgets"
 msgstr "Widgets del escritorio"
 
-msgid "Check the dashboard widgets you want to hide."
-msgstr "Marca los widgets del escritorio que quieras ocultar."
+msgid "Check the dashboard widgets you want to hide. The list is learned from your Dashboard, so visit it once if something is missing here."
+msgstr "Marca los widgets del escritorio que quieras ocultar. La lista se aprende de tu Escritorio, así que visítalo una vez si echas algo en falta aquí."
 
 msgid "Comments"
 msgstr "Comentarios"
@@ -214,6 +214,18 @@ msgstr "Desactivar la verificación periódica del email de administración"
 
 msgid "Stops the \"Is this admin email still correct?\" screen that WordPress shows every few months."
 msgstr "Quita la pantalla «¿Sigue siendo correcto este email de administración?» que WordPress muestra cada pocos meses."
+
+msgid "SVG uploads"
+msgstr "Subida de SVG"
+
+msgid "Allow SVG uploads (administrators only)"
+msgstr "Permitir subir SVG (solo administradores)"
+
+msgid "Security warning"
+msgstr "Aviso de seguridad"
+
+msgid "SVG files are code (XML) and can carry scripts. AMW Toolbox permits the upload but does NOT sanitize the file, so a malicious SVG could run in the browser. Enable this only if you upload SVGs from sources you trust. Uploading is limited to administrators."
+msgstr "Los archivos SVG son código (XML) y pueden llevar scripts. AMW Toolbox permite subirlos pero NO sanea el archivo, así que un SVG malicioso podría ejecutarse en el navegador. Actívalo solo si subes SVG de fuentes en las que confíes. La subida está limitada a administradores."
 
 msgid "Admin footer"
 msgstr "Pie del escritorio"

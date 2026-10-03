@@ -13,6 +13,7 @@ add_action( 'admin_menu', 'amw_toolbox_register_settings_page' );
 add_action( 'admin_init', 'amw_toolbox_register_setting' );
 add_action( 'admin_enqueue_scripts', 'amw_toolbox_enqueue_assets' );
 add_action( 'admin_menu', 'amw_toolbox_snapshot_admin_menu', 9998 );
+add_action( 'wp_before_admin_bar_render', 'amw_toolbox_snapshot_admin_bar', 0 );
 add_action( 'wp_ajax_amw_toolbox_purge_revisions', 'amw_toolbox_ajax_purge_revisions' );
 add_filter( 'plugin_action_links_' . AMW_TOOLBOX_BASENAME, 'amw_toolbox_settings_link' );
 add_action( 'admin_post_amw_toolbox_export', 'amw_toolbox_handle_export' );
@@ -306,6 +307,101 @@ function amw_toolbox_menu_snapshot( $set = null ) {
 }
 
 /**
+ * Snapshot the live admin bar on our own screen (the bar is built on every admin
+ * page, so it is available here), before our removals run. Captures the top-level
+ * bar items so the settings list reflects what this site actually has.
+ */
+function amw_toolbox_snapshot_admin_bar() {
+	if ( ! isset( $_GET['page'] ) || 'amw-toolbox' !== sanitize_key( wp_unslash( $_GET['page'] ) ) ) {
+		return;
+	}
+	global $wp_admin_bar;
+	if ( ! is_object( $wp_admin_bar ) || ! method_exists( $wp_admin_bar, 'get_nodes' ) ) {
+		return;
+	}
+
+	$nodes = $wp_admin_bar->get_nodes();
+	if ( empty( $nodes ) ) {
+		return;
+	}
+
+	$top = array();
+	foreach ( $nodes as $id => $node ) {
+		if ( empty( $id ) || ! empty( $node->group ) ) {
+			continue; // skip group containers
+		}
+		$parent = isset( $node->parent ) ? (string) $node->parent : '';
+		// Keep only top-bar items (direct, or in the left/right top groups).
+		if ( '' !== $parent && 'top' !== $parent && 'top-secondary' !== $parent ) {
+			continue;
+		}
+		$title       = isset( $node->title ) ? trim( wp_strip_all_tags( (string) $node->title ) ) : '';
+		$top[ $id ] = ( '' !== $title ) ? $title : $id;
+	}
+
+	amw_toolbox_adminbar_snapshot( $top );
+}
+
+/**
+ * Store / retrieve the pre-removal admin bar snapshot.
+ */
+function amw_toolbox_adminbar_snapshot( $set = null ) {
+	static $snapshot = array();
+
+	if ( null !== $set ) {
+		$snapshot = $set;
+	}
+
+	return $snapshot;
+}
+
+/**
+ * Admin bar items to offer in the settings list (id => label). Uses the live
+ * snapshot, with curated labels for known core nodes; falls back to the known
+ * list before the bar has been captured.
+ */
+function amw_toolbox_adminbar_nodes() {
+	$snapshot = amw_toolbox_adminbar_snapshot();
+	$known    = amw_toolbox_adminbar_known();
+
+	if ( empty( $snapshot ) ) {
+		return $known;
+	}
+
+	$items = array();
+	foreach ( $snapshot as $id => $title ) {
+		$items[ $id ] = isset( $known[ $id ] ) ? $known[ $id ] : $title;
+	}
+
+	return $items;
+}
+
+/**
+ * Dashboard widgets to offer in the settings list (id => label). Uses the list
+ * learned on the Dashboard, with curated labels for known widgets; falls back to
+ * the known list before the Dashboard has been visited.
+ */
+function amw_toolbox_dashboard_choices() {
+	$seen  = get_option( 'amw_toolbox_dashboard_seen', array() );
+	$known = amw_toolbox_dashboard_known();
+
+	if ( ! is_array( $seen ) || empty( $seen ) ) {
+		$items = array();
+		foreach ( $known as $id => $data ) {
+			$items[ $id ] = $data[0];
+		}
+		return $items;
+	}
+
+	$items = array();
+	foreach ( $seen as $id => $title ) {
+		$items[ $id ] = isset( $known[ $id ][0] ) ? $known[ $id ][0] : $title;
+	}
+
+	return $items;
+}
+
+/**
  * AJAX: purge every stored post revision. Manual, admin-only, nonce-protected.
  */
 function amw_toolbox_ajax_purge_revisions() {
@@ -464,10 +560,7 @@ function amw_toolbox_render_settings() {
 	$o = amw_toolbox_get_options();
 
 	// Dashboard widgets as value => label.
-	$dashboard_items = array();
-	foreach ( amw_toolbox_dashboard_widgets() as $id => $data ) {
-		$dashboard_items[ $id ] = $data[0];
-	}
+	$dashboard_items = amw_toolbox_dashboard_choices();
 
 	$rev_count = amw_toolbox_count_revisions();
 
@@ -536,7 +629,7 @@ function amw_toolbox_render_settings() {
 
 				amw_toolbox_hide_section(
 					__( 'Admin bar', 'amw-toolbox' ),
-					__( 'Check the top bar items you want to hide.', 'amw-toolbox' ),
+					__( 'Check the top bar items you want to hide. This list reflects the admin bar on this site.', 'amw-toolbox' ),
 					'hidden_adminbar',
 					amw_toolbox_adminbar_nodes(),
 					$o['hidden_adminbar']
@@ -544,7 +637,7 @@ function amw_toolbox_render_settings() {
 
 				amw_toolbox_hide_section(
 					__( 'Dashboard widgets', 'amw-toolbox' ),
-					__( 'Check the dashboard widgets you want to hide.', 'amw-toolbox' ),
+					__( 'Check the dashboard widgets you want to hide. The list is learned from your Dashboard, so visit it once if something is missing here.', 'amw-toolbox' ),
 					'hidden_dashboard',
 					$dashboard_items,
 					$o['hidden_dashboard']
@@ -567,6 +660,21 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'disable_block_widgets', __( 'Block widgets', 'amw-toolbox' ), __( 'Disable the block-based widgets screen', 'amw-toolbox' ), __( 'Restores the classic widgets screen instead of the block editor.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'hide_default_theme_notice', __( 'Default theme check', 'amw-toolbox' ), __( 'Hide the "default theme available" Site Health check', 'amw-toolbox' ), __( 'Removes the Site Health recommendation to keep a default (Twenty*) theme installed as a fallback.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_admin_email_check', __( 'Admin email check', 'amw-toolbox' ), __( 'Disable the periodic admin email verification', 'amw-toolbox' ), __( 'Stops the "Is this admin email still correct?" screen that WordPress shows every few months.', 'amw-toolbox' ) );
+					?>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'SVG uploads', 'amw-toolbox' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[allow_svg_upload]' ); ?>" value="1" <?php checked( ! empty( $o['allow_svg_upload'] ) ); ?>>
+								<?php esc_html_e( 'Allow SVG uploads (administrators only)', 'amw-toolbox' ); ?>
+							</label>
+							<div class="amw-warning" style="margin-top:8px;padding:10px 12px;border-left:4px solid #dba617;background:#fcf9e8;max-width:640px;">
+								<strong><?php esc_html_e( 'Security warning', 'amw-toolbox' ); ?></strong><br>
+								<?php esc_html_e( 'SVG files are code (XML) and can carry scripts. AMW Toolbox permits the upload but does NOT sanitize the file, so a malicious SVG could run in the browser. Enable this only if you upload SVGs from sources you trust. Uploading is limited to administrators.', 'amw-toolbox' ); ?>
+							</div>
+						</td>
+					</tr>
+					<?php
 					amw_toolbox_bool_row( $o, 'custom_admin_footer', __( 'Admin footer', 'amw-toolbox' ), __( 'Replace the admin footer text', 'amw-toolbox' ), __( 'Replaces the "Thank you for creating with WordPress" text at the bottom of the admin. Enable and set the text below.', 'amw-toolbox' ) );
 					?>
 					<tr>

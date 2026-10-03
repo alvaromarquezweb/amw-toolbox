@@ -2,6 +2,22 @@
 All notable changes to AMW Toolbox are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
+## 1.3.4 — 2026-10-03
+
+### Added
+- **Dynamic detection for the admin bar and dashboard widgets.** Both lists now
+  show the items that actually exist on each site (including those added by other
+  plugins), the same way the admin menu list already worked. Dashboard widgets
+  are learned the first time you open the Dashboard.
+
+## 1.3.3 — 2026-10-03
+
+### Added
+- **SVG uploads (administrators only).** Optional support for uploading SVG and
+  SVGZ files to the media library, limited to administrators. It enables the file
+  type and fixes WordPress's type check, but does not sanitize the file, so a
+  clear security warning is shown on the setting. Off by default.
+
 ## 1.3.2 — 2026-09-28
 
 ### Added

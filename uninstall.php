@@ -22,6 +22,7 @@ function amw_toolbox_uninstall_site() {
 	}
 
 	delete_option( 'amw_toolbox_options' );
+	delete_option( 'amw_toolbox_dashboard_seen' );
 }
 
 if ( is_multisite() ) {

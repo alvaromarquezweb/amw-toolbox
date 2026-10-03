@@ -26,8 +26,12 @@ if ( ! empty( $amw_toolbox_o['hidden_adminbar'] ) ) {
 	add_action( 'wp_before_admin_bar_render', 'amw_toolbox_hide_admin_bar' );
 }
 
+// Learn which dashboard widgets exist (they are only registered on the Dashboard,
+// never on the settings screen), before any hiding runs, and store them.
+add_action( 'wp_dashboard_setup', 'amw_toolbox_snapshot_dashboard_widgets', 9998 );
+
 if ( ! empty( $amw_toolbox_o['hidden_dashboard'] ) ) {
-	add_action( 'wp_dashboard_setup', 'amw_toolbox_hide_dashboard_widgets' );
+	add_action( 'wp_dashboard_setup', 'amw_toolbox_hide_dashboard_widgets', 9999 );
 }
 
 if ( $amw_toolbox_o['hide_notices_for_clients'] ) {
@@ -65,10 +69,50 @@ function amw_toolbox_hide_admin_bar() {
 }
 
 function amw_toolbox_hide_dashboard_widgets() {
-	$map = amw_toolbox_dashboard_widgets();
+	$contexts = array( 'normal', 'side', 'column3', 'column4', 'advanced' );
 	foreach ( amw_toolbox_get_options()['hidden_dashboard'] as $id ) {
-		$context = isset( $map[ $id ][1] ) ? $map[ $id ][1] : 'normal';
-		remove_meta_box( $id, 'dashboard', $context );
+		foreach ( $contexts as $context ) {
+			remove_meta_box( $id, 'dashboard', $context );
+		}
+	}
+}
+
+/**
+ * Capture every dashboard widget registered on this site (before any hiding) and
+ * store it, so the settings panel can list the real widgets, including those from
+ * other plugins. Runs on each admin Dashboard visit; writes only when it changes.
+ */
+function amw_toolbox_snapshot_dashboard_widgets() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	global $wp_meta_boxes;
+	if ( empty( $wp_meta_boxes['dashboard'] ) || ! is_array( $wp_meta_boxes['dashboard'] ) ) {
+		return;
+	}
+
+	$seen = array();
+	foreach ( $wp_meta_boxes['dashboard'] as $priorities ) {
+		if ( ! is_array( $priorities ) ) {
+			continue;
+		}
+		foreach ( $priorities as $boxes ) {
+			if ( ! is_array( $boxes ) ) {
+				continue;
+			}
+			foreach ( $boxes as $id => $box ) {
+				if ( empty( $id ) || empty( $box ) ) {
+					continue;
+				}
+				$title        = isset( $box['title'] ) ? trim( wp_strip_all_tags( $box['title'] ) ) : '';
+				$seen[ $id ] = ( '' !== $title ) ? $title : $id;
+			}
+		}
+	}
+
+	if ( ! empty( $seen ) && get_option( 'amw_toolbox_dashboard_seen' ) !== $seen ) {
+		update_option( 'amw_toolbox_dashboard_seen', $seen, false );
 	}
 }
 
@@ -185,6 +229,38 @@ if ( $amw_toolbox_o['disable_admin_email_check'] ) {
 // Replace the admin footer text ("Thank you for creating with WordPress").
 if ( $amw_toolbox_o['custom_admin_footer'] ) {
 	add_filter( 'admin_footer_text', 'amw_toolbox_custom_admin_footer' );
+}
+
+// Allow SVG uploads for administrators only (WPCode-style: permits the type and
+// fixes the file-type check, but does NOT sanitize the file contents).
+if ( $amw_toolbox_o['allow_svg_upload'] ) {
+	add_filter( 'upload_mimes', 'amw_toolbox_allow_svg_mimes' );
+	add_filter( 'wp_check_filetype_and_ext', 'amw_toolbox_fix_svg_filetype', 10, 4 );
+	add_action( 'admin_head', 'amw_toolbox_svg_media_css' );
+}
+
+function amw_toolbox_allow_svg_mimes( $mimes ) {
+	if ( current_user_can( 'manage_options' ) ) {
+		$mimes['svg']  = 'image/svg+xml';
+		$mimes['svgz'] = 'image/svg+xml';
+	}
+	return $mimes;
+}
+
+function amw_toolbox_fix_svg_filetype( $data, $file, $filename, $mimes ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return $data;
+	}
+	$check = wp_check_filetype( $filename, $mimes );
+	if ( 'svg' === $check['ext'] || 'svgz' === $check['ext'] ) {
+		$data['ext']  = $check['ext'];
+		$data['type'] = $check['type'];
+	}
+	return $data;
+}
+
+function amw_toolbox_svg_media_css() {
+	echo "<style id=\"amw-svg-media\">img[src\$=\".svg\"].attachment-thumbnail,.media-icon img[src\$=\".svg\"],.attachment-preview .thumbnail img[src\$=\".svg\"]{width:100%;height:auto;}</style>\n";
 }
 
 function amw_toolbox_custom_admin_footer() {

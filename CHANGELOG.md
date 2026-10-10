@@ -2,38 +2,29 @@
 All notable changes to AMW Toolbox are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
-## 1.3.4 — 2026-10-03
+## [1.3.5] - 2026-10-10
+### Fixed
+* "Remove the ?ver query string" no longer breaks front-end page builders. It is now skipped while the Divi Visual Builder (and Elementor or WPBakery) is editing or previewing, so the builder keeps loading normally.
 
+## [1.3.4] - 2026-10-03
 ### Added
-- **Dynamic detection for the admin bar and dashboard widgets.** Both lists now
-  show the items that actually exist on each site (including those added by other
-  plugins), the same way the admin menu list already worked. Dashboard widgets
-  are learned the first time you open the Dashboard.
+* The admin bar and dashboard widget lists are now detected dynamically, like the admin menu list, so they show the items that actually exist on each site (including those added by other plugins). Dashboard widgets are learned the first time you open the Dashboard.
 
-## 1.3.3 — 2026-10-03
-
+## [1.3.3] - 2026-10-03
 ### Added
-- **SVG uploads (administrators only).** Optional support for uploading SVG and
-  SVGZ files to the media library, limited to administrators. It enables the file
-  type and fixes WordPress's type check, but does not sanitize the file, so a
-  clear security warning is shown on the setting. Off by default.
+* SVG uploads: optional, administrators-only SVG support in the media library (enables the file type without sanitizing), with a clear security warning on the setting.
 
-## 1.3.2 — 2026-09-28
-
+## [1.3.2] - 2026-09-28
 ### Added
-- **Elementor: disable Google Fonts.** Optional toggle that stops Elementor
-  loading fonts from Google on the front end (better privacy and fewer external
-  calls). Uses your theme or local fonts instead.
-- **New "Plugin" tab** grouping AMW Toolbox's own options.
+* Elementor: option to disable Google Fonts, so Elementor stops loading fonts from Google on the front end.
+* New "Plugin" tab grouping AMW Toolbox's own options.
 
 ### Changed
-- **"Keep settings on uninstall" moved** from the Admin tab to the new Plugin tab.
-- **Import settings:** the import button now appears only once a file has been
-  selected.
+* "Keep settings on uninstall" moved from the Admin tab to the new Plugin tab.
+* The "Import settings" button now appears only once a file has been selected.
 
 ### Fixed
-- The admin menu list no longer includes items the current user cannot access,
-  removing ghost entries (such as Links) that were never actually shown.
+* The admin menu list no longer includes items the current user cannot access, removing ghost entries (such as Links) that were never actually shown.
 
 ## [1.3.1] - 2026-08-26
 ### Added
@@ -84,6 +75,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 * Multisite uninstall support.
 * All features disabled by default to prevent unexpected changes to existing installations.
 
+[1.3.5]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.5
+[1.3.4]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.4
+[1.3.3]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.3
+[1.3.2]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.2
 [1.3.1]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.1
 [1.3.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.0
 [1.2.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.2.0

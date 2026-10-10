@@ -501,10 +501,37 @@ if ( $amw_toolbox_o['strip_version_query'] ) {
 }
 
 function amw_toolbox_register_version_filters() {
-	if ( ! is_admin() ) {
-		add_filter( 'script_loader_src', 'amw_toolbox_strip_version_query', 15 );
-		add_filter( 'style_loader_src',  'amw_toolbox_strip_version_query', 15 );
+	// Skip in wp-admin, and while a front-end page builder is editing or
+	// previewing: those load versioned assets the builder relies on, and
+	// stripping the version breaks the builder (e.g. Divi's Visual Builder).
+	if ( is_admin() || amw_toolbox_is_builder_context() ) {
+		return;
 	}
+	add_filter( 'script_loader_src', 'amw_toolbox_strip_version_query', 15 );
+	add_filter( 'style_loader_src',  'amw_toolbox_strip_version_query', 15 );
+}
+
+/**
+ * Is a front-end page builder currently editing or previewing? When it is, the
+ * version query must be left alone so the builder keeps working.
+ */
+function amw_toolbox_is_builder_context() {
+	// Divi Visual Builder.
+	if ( isset( $_GET['et_fb'] ) ) {
+		return true;
+	}
+	if ( function_exists( 'et_core_is_fb_enabled' ) && et_core_is_fb_enabled() ) {
+		return true;
+	}
+	// Elementor editor / preview.
+	if ( isset( $_GET['elementor-preview'] ) || ( isset( $_GET['action'] ) && 'elementor' === $_GET['action'] ) ) {
+		return true;
+	}
+	// WPBakery front-end editor.
+	if ( isset( $_GET['vc_editable'] ) || ( isset( $_GET['vc_action'] ) && 'vc_inline' === $_GET['vc_action'] ) ) {
+		return true;
+	}
+	return false;
 }
 
 function amw_toolbox_strip_version_query( $src ) {

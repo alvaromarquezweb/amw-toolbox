@@ -567,6 +567,7 @@ function amw_toolbox_render_settings() {
 	$woo_active       = class_exists( 'WooCommerce' );
 	$divi_active      = amw_toolbox_is_divi_active();
 	$elementor_active = amw_toolbox_is_elementor_active();
+	$wpbakery_active  = amw_toolbox_is_wpbakery_active();
 	?>
 	<div class="wrap amw-settings">
 
@@ -594,6 +595,7 @@ function amw_toolbox_render_settings() {
 			echo amw_toolbox_framework_pill( 'Divi', $divi_active ); // phpcs:ignore -- escaped inside helper.
 			echo amw_toolbox_framework_pill( 'WooCommerce', $woo_active ); // phpcs:ignore
 			echo amw_toolbox_framework_pill( 'Elementor', $elementor_active ); // phpcs:ignore
+			echo amw_toolbox_framework_pill( 'WPBakery', $wpbakery_active ); // phpcs:ignore
 			?>
 		</p>
 
@@ -610,8 +612,10 @@ function amw_toolbox_render_settings() {
 			<?php if ( $elementor_active ) : ?>
 			<a href="#" class="nav-tab"                data-amw-tab="elementor"   id="amw-tab-elementor"   role="tab" aria-controls="amw-panel-elementor"   aria-selected="false" tabindex="-1"><?php esc_html_e( 'Elementor', 'amw-toolbox' ); ?></a>
 			<?php endif; ?>
-			<a href="#" class="nav-tab"                data-amw-tab="plugin"      id="amw-tab-plugin"      role="tab" aria-controls="amw-panel-plugin"      aria-selected="false" tabindex="-1"><?php esc_html_e( 'Plugin', 'amw-toolbox' ); ?></a>
-			<a href="#" class="nav-tab"                data-amw-tab="tools"       id="amw-tab-tools"       role="tab" aria-controls="amw-panel-tools"       aria-selected="false" tabindex="-1"><?php esc_html_e( 'Tools', 'amw-toolbox' ); ?></a>
+			<?php if ( $wpbakery_active ) : ?>
+			<a href="#" class="nav-tab"                data-amw-tab="wpbakery"    id="amw-tab-wpbakery"    role="tab" aria-controls="amw-panel-wpbakery"    aria-selected="false" tabindex="-1"><?php esc_html_e( 'WPBakery', 'amw-toolbox' ); ?></a>
+			<?php endif; ?>
+			<a href="#" class="nav-tab"                data-amw-tab="tools"       id="amw-tab-tools"       role="tab" aria-controls="amw-panel-plugin amw-panel-tools" aria-selected="false" tabindex="-1"><?php esc_html_e( 'Tools', 'amw-toolbox' ); ?></a>
 		</nav>
 
 		<form method="post" action="options.php">
@@ -795,7 +799,6 @@ function amw_toolbox_render_settings() {
 				<table class="form-table" role="presentation">
 					<?php
 					amw_toolbox_bool_row( $o, 'fix_divi_viewport', __( 'Viewport', 'amw-toolbox' ), __( 'Fix the Divi viewport (allow zoom)', 'amw-toolbox' ), __( 'Replaces Divi\'s viewport tag so users can pinch-to-zoom.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'fix_divi_maps', __( 'Google Maps', 'amw-toolbox' ), __( 'Fix Divi\'s deprecated Maps API call', 'amw-toolbox' ), __( 'Shims the deprecated google.maps.event.addDomListener that Divi uses, so Map modules keep working and stop logging deprecation errors.', 'amw-toolbox' ) );
 					?>
 				</table>
 			</div>
@@ -832,7 +835,14 @@ function amw_toolbox_render_settings() {
 			</div>
 			<?php endif; ?>
 
-			<div class="amw-tab-panel" data-amw-panel="plugin" id="amw-panel-plugin" role="tabpanel" aria-labelledby="amw-tab-plugin" tabindex="0">
+			<?php if ( $wpbakery_active ) : ?>
+			<div class="amw-tab-panel" data-amw-panel="wpbakery" id="amw-panel-wpbakery" role="tabpanel" aria-labelledby="amw-tab-wpbakery" tabindex="0">
+				<h2><?php esc_html_e( 'WPBakery', 'amw-toolbox' ); ?></h2>
+				<p class="description" style="max-width:640px;"><?php esc_html_e( 'WPBakery Page Builder is active on this site. There are no WPBakery options yet; this tab is here so they have a home in a future version.', 'amw-toolbox' ); ?></p>
+			</div>
+			<?php endif; ?>
+
+			<div class="amw-tab-panel" data-amw-panel="tools" id="amw-panel-plugin" role="tabpanel" aria-labelledby="amw-tab-tools" tabindex="0">
 				<h2><?php esc_html_e( 'Plugin options', 'amw-toolbox' ); ?></h2>
 				<p class="description" style="max-width:640px;"><?php esc_html_e( 'Settings for AMW Toolbox itself.', 'amw-toolbox' ); ?></p>
 				<table class="form-table" role="presentation">

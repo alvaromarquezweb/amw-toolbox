@@ -125,8 +125,8 @@ msgstr "WooCommerce"
 msgid "Elementor"
 msgstr "Elementor"
 
-msgid "Plugin"
-msgstr "Plugin"
+msgid "WPBakery"
+msgstr "WPBakery"
 
 msgid "Tools"
 msgstr "Herramientas"
@@ -512,15 +512,6 @@ msgstr "Corregir el viewport de Divi (permitir zoom)"
 msgid "Replaces Divi's viewport tag so users can pinch-to-zoom."
 msgstr "Sustituye la etiqueta viewport de Divi para que los usuarios puedan hacer zoom con los dedos."
 
-msgid "Google Maps"
-msgstr "Google Maps"
-
-msgid "Fix Divi's deprecated Maps API call"
-msgstr "Corregir la llamada obsoleta de Divi a la API de Maps"
-
-msgid "Shims the deprecated google.maps.event.addDomListener that Divi uses, so Map modules keep working and stop logging deprecation errors."
-msgstr "Parchea el google.maps.event.addDomListener obsoleto que usa Divi, para que los módulos de mapa sigan funcionando y dejen de registrar errores de obsolescencia."
-
 msgid "These options only appear and act while WooCommerce is active."
 msgstr "Estas opciones solo aparecen y actúan mientras WooCommerce está activo."
 
@@ -604,6 +595,9 @@ msgstr "Desactivar las Google Fonts de Elementor"
 
 msgid "Stops Elementor loading fonts from Google on the front end (better privacy and fewer external calls). Use your theme or local fonts instead."
 msgstr "Impide que Elementor cargue fuentes desde Google en el front (mejor privacidad y menos llamadas externas). Usa las fuentes del tema o locales."
+
+msgid "WPBakery Page Builder is active on this site. There are no WPBakery options yet; this tab is here so they have a home in a future version."
+msgstr "WPBakery Page Builder está activo en este sitio. Todavía no hay opciones de WPBakery; esta pestaña está aquí para que tengan su sitio en una versión futura."
 
 msgid "Plugin options"
 msgstr "Opciones del plugin"

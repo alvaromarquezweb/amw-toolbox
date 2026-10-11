@@ -106,7 +106,6 @@ function amw_toolbox_defaults() {
 
 		// Divi
 		'fix_divi_viewport'   => false,
-		'fix_divi_maps'       => false,
 
 		// WooCommerce (only applied when WooCommerce is active)
 		'wc_disable_analytics'               => false,
@@ -182,7 +181,6 @@ function amw_toolbox_woo_keys() {
 function amw_toolbox_divi_keys() {
 	return array(
 		'fix_divi_viewport',
-		'fix_divi_maps',
 	);
 }
 
@@ -210,6 +208,14 @@ function amw_toolbox_is_divi_active() {
  */
 function amw_toolbox_is_elementor_active() {
 	return defined( 'ELEMENTOR_VERSION' );
+}
+
+/**
+ * Is WPBakery Page Builder active? No options of its own yet; the tab is shown
+ * so it is ready for WPBakery-specific features in a future version.
+ */
+function amw_toolbox_is_wpbakery_active() {
+	return defined( 'WPB_VC_VERSION' ) || class_exists( 'Vc_Manager' );
 }
 
 /**

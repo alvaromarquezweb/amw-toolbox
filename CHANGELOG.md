@@ -2,6 +2,16 @@
 All notable changes to AMW Toolbox are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] - 2026-10-11
+### Added
+* WPBakery detection: the WPBakery tab now appears when WPBakery Page Builder is active (no options of its own yet; it is ready for future WPBakery-specific features). WPBakery is also shown in the detected-frameworks badge.
+
+### Changed
+* The "Plugin" and "Tools" tabs are now a single "Tools" tab, grouping the plugin's own options and the import/export/reset/transients actions in one place.
+
+### Removed
+* Divi: the "Fix Divi's deprecated Maps API call" option has been removed.
+
 ## [1.3.5] - 2026-10-10
 ### Fixed
 * "Remove the ?ver query string" no longer breaks front-end page builders. It is now skipped while the Divi Visual Builder (and Elementor or WPBakery) is editing or previewing, so the builder keeps loading normally.
@@ -75,6 +85,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 * Multisite uninstall support.
 * All features disabled by default to prevent unexpected changes to existing installations.
 
+[1.4.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.0
 [1.3.5]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.5
 [1.3.4]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.4
 [1.3.3]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.3

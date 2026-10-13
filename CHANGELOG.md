@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [1.4.1] - 2026-10-13
 ### Added
 * Divi: option to disable the Divi "Projects" (portfolio) post type and its categories/tags when unused, removing it from the admin and its public URLs. Off by default; enable only on sites that do not use the Divi portfolio.
+* Overlap notes: options that a detected builder also handles (Divi emojis and jQuery Migrate; Elementor usage tracking and default styles) now show a short note recommending where to manage each, so the same thing is not toggled in two places.
 
 ## [1.4.0] - 2026-10-11
 ### Added

@@ -431,6 +431,9 @@ msgstr "Desactivar los emojis"
 msgid "Removes the emoji script, styles, TinyMCE plugin, feed/email filters and the s.w.org dns-prefetch."
 msgstr "Quita el script y los estilos de emojis, el plugin de TinyMCE, los filtros de feed/correo y el dns-prefetch a s.w.org."
 
+msgid "Divi can also disable WordPress emojis (Theme Options -> Performance). On a Divi site, manage it there and leave this off so it is in one place."
+msgstr "Divi también puede desactivar los emojis de WordPress (Opciones del tema -> Rendimiento). En una web con Divi, gestiónalo ahí y deja esto apagado para tenerlo en un solo sitio."
+
 msgid "jQuery Migrate"
 msgstr "jQuery Migrate"
 
@@ -439,6 +442,9 @@ msgstr "Quitar jQuery Migrate"
 
 msgid "Drops jquery-migrate from the front-end jQuery. WARNING: can break older themes or plugins that rely on deprecated jQuery, so test the front end."
 msgstr "Quita jquery-migrate del jQuery del front. AVISO: puede romper temas o plugins antiguos que dependan de jQuery obsoleto, así que prueba el front."
+
+msgid "Divi has a related, safer option in Theme Options -> Performance: defer jQuery and jQuery Migrate. On a Divi site, prefer Divi's and leave this off."
+msgstr "Divi tiene una opción relacionada y más segura en Opciones del tema -> Rendimiento: aplazar jQuery y jQuery Migrate. En una web con Divi, usa la de Divi y deja esto apagado."
 
 msgid "Remote block patterns"
 msgstr "Patrones de bloques remotos"
@@ -512,6 +518,15 @@ msgstr "Corregir el viewport de Divi (permitir zoom)"
 msgid "Replaces Divi's viewport tag so users can pinch-to-zoom."
 msgstr "Sustituye la etiqueta viewport de Divi para que los usuarios puedan hacer zoom con los dedos."
 
+msgid "Projects"
+msgstr "Projects"
+
+msgid "Disable the Divi Projects (portfolio) post type"
+msgstr "Desactivar el tipo de contenido Projects (portfolio) de Divi"
+
+msgid "Removes the Projects post type and its categories/tags, including its admin menu and public URLs. Enable only on sites that do not use the Divi portfolio."
+msgstr "Elimina el tipo de contenido Projects y sus categorías/etiquetas, incluido su menú en el escritorio y sus URLs públicas. Actívalo solo en webs que no usen el portfolio de Divi."
+
 msgid "These options only appear and act while WooCommerce is active."
 msgstr "Estas opciones solo aparecen y actúan mientras WooCommerce está activo."
 
@@ -578,6 +593,9 @@ msgstr "Desactivar el seguimiento de uso de Elementor"
 msgid "Forces Elementor usage data collection off."
 msgstr "Fuerza la desactivación de la recopilación de datos de uso de Elementor."
 
+msgid "Elementor also offers this in Elementor -> Settings. Enabling it in both places is redundant; on an Elementor site, keeping it in Elementor is usually tidier."
+msgstr "Elementor también ofrece esto en Elementor -> Ajustes. Activarlo en los dos sitios es redundante; en una web con Elementor, lo normal es dejarlo en Elementor."
+
 msgid "Default styles"
 msgstr "Estilos por defecto"
 
@@ -586,6 +604,9 @@ msgstr "Desactivar colores y fuentes por defecto"
 
 msgid "Lets your theme control colors and typography instead of Elementor's defaults."
 msgstr "Deja que tu tema controle los colores y la tipografía en lugar de los valores por defecto de Elementor."
+
+msgid "Elementor has this natively in Elementor -> Settings -> Advanced (Disable Default Colors / Fonts). Prefer Elementor's and leave this off to avoid duplicating it."
+msgstr "Elementor lo trae de serie en Elementor -> Ajustes -> Avanzado (Desactivar colores / fuentes por defecto). Usa la de Elementor y deja esto apagado para no duplicarlo."
 
 msgid "Google Fonts"
 msgstr "Google Fonts"

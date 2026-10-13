@@ -429,6 +429,9 @@ msgstr ""
 msgid "Removes the emoji script, styles, TinyMCE plugin, feed/email filters and the s.w.org dns-prefetch."
 msgstr ""
 
+msgid "Divi can also disable WordPress emojis (Theme Options -> Performance). On a Divi site, manage it there and leave this off so it is in one place."
+msgstr ""
+
 msgid "jQuery Migrate"
 msgstr ""
 
@@ -436,6 +439,9 @@ msgid "Remove jQuery Migrate"
 msgstr ""
 
 msgid "Drops jquery-migrate from the front-end jQuery. WARNING: can break older themes or plugins that rely on deprecated jQuery, so test the front end."
+msgstr ""
+
+msgid "Divi has a related, safer option in Theme Options -> Performance: defer jQuery and jQuery Migrate. On a Divi site, prefer Divi's and leave this off."
 msgstr ""
 
 msgid "Remote block patterns"
@@ -510,6 +516,15 @@ msgstr ""
 msgid "Replaces Divi's viewport tag so users can pinch-to-zoom."
 msgstr ""
 
+msgid "Projects"
+msgstr ""
+
+msgid "Disable the Divi Projects (portfolio) post type"
+msgstr ""
+
+msgid "Removes the Projects post type and its categories/tags, including its admin menu and public URLs. Enable only on sites that do not use the Divi portfolio."
+msgstr ""
+
 msgid "These options only appear and act while WooCommerce is active."
 msgstr ""
 
@@ -576,6 +591,9 @@ msgstr ""
 msgid "Forces Elementor usage data collection off."
 msgstr ""
 
+msgid "Elementor also offers this in Elementor -> Settings. Enabling it in both places is redundant; on an Elementor site, keeping it in Elementor is usually tidier."
+msgstr ""
+
 msgid "Default styles"
 msgstr ""
 
@@ -583,6 +601,9 @@ msgid "Disable default colors and fonts"
 msgstr ""
 
 msgid "Lets your theme control colors and typography instead of Elementor's defaults."
+msgstr ""
+
+msgid "Elementor has this natively in Elementor -> Settings -> Advanced (Disable Default Colors / Fonts). Prefer Elementor's and leave this off to avoid duplicating it."
 msgstr ""
 
 msgid "Google Fonts"

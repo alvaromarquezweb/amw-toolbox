@@ -502,7 +502,7 @@ function amw_toolbox_get_image_sizes() {
 /**
  * One native form-table row with a single boolean checkbox.
  */
-function amw_toolbox_bool_row( $options, $key, $th_label, $checkbox_label, $description = '' ) {
+function amw_toolbox_bool_row( $options, $key, $th_label, $checkbox_label, $description = '', $note = '' ) {
 	$name = AMW_TOOLBOX_OPTION . '[' . $key . ']';
 	?>
 	<tr>
@@ -514,6 +514,9 @@ function amw_toolbox_bool_row( $options, $key, $th_label, $checkbox_label, $desc
 			</label>
 			<?php if ( $description ) : ?>
 				<p class="description"><?php echo esc_html( $description ); ?></p>
+			<?php endif; ?>
+			<?php if ( $note ) : ?>
+				<div class="amw-overlap-note" style="margin-top:6px;padding:8px 10px;border-left:3px solid #72aee6;background:#f0f6fc;max-width:640px;font-size:13px;line-height:1.5;"><?php echo esc_html( $note ); ?></div>
 			<?php endif; ?>
 		</td>
 	</tr>
@@ -732,8 +735,8 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'disable_oembed', __( 'oEmbed', 'amw-toolbox' ), __( 'Disable oEmbed', 'amw-toolbox' ), __( 'Removes the discovery links and the front-end wp-embed.js. Leave off if you embed external content in posts.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_big_image_scaling', __( 'Large image scaling', 'amw-toolbox' ), __( 'Disable automatic scaling of big images', 'amw-toolbox' ), __( 'Stops WordPress from creating a downscaled "-scaled" copy of uploads above ~2560px.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'strip_version_query', __( 'Version query string', 'amw-toolbox' ), __( 'Strip the ?ver query string', 'amw-toolbox' ), __( 'Removes ?ver from front-end and login CSS/JS (also hides the version hint there). Note: it also busts browser caches.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'disable_emojis', __( 'Emojis', 'amw-toolbox' ), __( 'Disable emojis', 'amw-toolbox' ), __( 'Removes the emoji script, styles, TinyMCE plugin, feed/email filters and the s.w.org dns-prefetch.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'remove_jquery_migrate', __( 'jQuery Migrate', 'amw-toolbox' ), __( 'Remove jQuery Migrate', 'amw-toolbox' ), __( 'Drops jquery-migrate from the front-end jQuery. WARNING: can break older themes or plugins that rely on deprecated jQuery, so test the front end.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'disable_emojis', __( 'Emojis', 'amw-toolbox' ), __( 'Disable emojis', 'amw-toolbox' ), __( 'Removes the emoji script, styles, TinyMCE plugin, feed/email filters and the s.w.org dns-prefetch.', 'amw-toolbox' ), $divi_active ? __( 'Divi can also disable WordPress emojis (Theme Options -> Performance). On a Divi site, manage it there and leave this off so it is in one place.', 'amw-toolbox' ) : '' );
+					amw_toolbox_bool_row( $o, 'remove_jquery_migrate', __( 'jQuery Migrate', 'amw-toolbox' ), __( 'Remove jQuery Migrate', 'amw-toolbox' ), __( 'Drops jquery-migrate from the front-end jQuery. WARNING: can break older themes or plugins that rely on deprecated jQuery, so test the front end.', 'amw-toolbox' ), $divi_active ? __( 'Divi has a related, safer option in Theme Options -> Performance: defer jQuery and jQuery Migrate. On a Divi site, prefer Divi\'s and leave this off.', 'amw-toolbox' ) : '' );
 					amw_toolbox_bool_row( $o, 'disable_remote_block_patterns', __( 'Remote block patterns', 'amw-toolbox' ), __( 'Disable remote block patterns', 'amw-toolbox' ), __( 'Stops WordPress fetching block patterns from the wp.org directory. Fewer external calls; leave off if you use those patterns.', 'amw-toolbox' ) );
 					?>
 				</table>
@@ -799,6 +802,7 @@ function amw_toolbox_render_settings() {
 				<table class="form-table" role="presentation">
 					<?php
 					amw_toolbox_bool_row( $o, 'fix_divi_viewport', __( 'Viewport', 'amw-toolbox' ), __( 'Fix the Divi viewport (allow zoom)', 'amw-toolbox' ), __( 'Replaces Divi\'s viewport tag so users can pinch-to-zoom.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'disable_divi_projects', __( 'Projects', 'amw-toolbox' ), __( 'Disable the Divi Projects (portfolio) post type', 'amw-toolbox' ), __( 'Removes the Projects post type and its categories/tags, including its admin menu and public URLs. Enable only on sites that do not use the Divi portfolio.', 'amw-toolbox' ) );
 					?>
 				</table>
 			</div>
@@ -827,8 +831,8 @@ function amw_toolbox_render_settings() {
 				<p class="description" style="max-width:640px;"><?php esc_html_e( 'These options only appear and act while Elementor is active.', 'amw-toolbox' ); ?></p>
 				<table class="form-table" role="presentation">
 					<?php
-					amw_toolbox_bool_row( $o, 'el_disable_tracking', __( 'Usage tracking', 'amw-toolbox' ), __( 'Disable Elementor usage tracking', 'amw-toolbox' ), __( 'Forces Elementor usage data collection off.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'el_disable_default_schemes', __( 'Default styles', 'amw-toolbox' ), __( 'Disable default colors and fonts', 'amw-toolbox' ), __( 'Lets your theme control colors and typography instead of Elementor\'s defaults.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'el_disable_tracking', __( 'Usage tracking', 'amw-toolbox' ), __( 'Disable Elementor usage tracking', 'amw-toolbox' ), __( 'Forces Elementor usage data collection off.', 'amw-toolbox' ), __( 'Elementor also offers this in Elementor -> Settings. Enabling it in both places is redundant; on an Elementor site, keeping it in Elementor is usually tidier.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'el_disable_default_schemes', __( 'Default styles', 'amw-toolbox' ), __( 'Disable default colors and fonts', 'amw-toolbox' ), __( 'Lets your theme control colors and typography instead of Elementor\'s defaults.', 'amw-toolbox' ), __( 'Elementor has this natively in Elementor -> Settings -> Advanced (Disable Default Colors / Fonts). Prefer Elementor\'s and leave this off to avoid duplicating it.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'el_disable_google_fonts', __( 'Google Fonts', 'amw-toolbox' ), __( 'Disable Elementor\'s Google Fonts', 'amw-toolbox' ), __( 'Stops Elementor loading fonts from Google on the front end (better privacy and fewer external calls). Use your theme or local fonts instead.', 'amw-toolbox' ) );
 					?>
 				</table>

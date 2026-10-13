@@ -559,6 +559,27 @@ function amw_toolbox_fix_divi_viewport() {
 	echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">' . "\n";
 }
 
+// Disable Divi's "Projects" (portfolio) post type and its taxonomies when they
+// are not used, removing them from the admin and their public URLs. Runs after
+// Divi has registered them (priority 99 on init).
+if ( $amw_toolbox_o['disable_divi_projects'] ) {
+	add_action( 'init', 'amw_toolbox_disable_divi_projects', 99 );
+}
+
+function amw_toolbox_disable_divi_projects() {
+	if ( ! amw_toolbox_is_divi_active() ) {
+		return;
+	}
+	if ( post_type_exists( 'project' ) ) {
+		unregister_post_type( 'project' );
+	}
+	foreach ( array( 'project_category', 'project_tag' ) as $tax ) {
+		if ( taxonomy_exists( $tax ) ) {
+			unregister_taxonomy( $tax );
+		}
+	}
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════════════
    6. WOOCOMMERCE  (filters no-op when WooCommerce is inactive; callbacks that

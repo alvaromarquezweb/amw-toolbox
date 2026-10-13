@@ -105,7 +105,8 @@ function amw_toolbox_defaults() {
 		'empty_trash_days'          => 30,
 
 		// Divi
-		'fix_divi_viewport'   => false,
+		'fix_divi_viewport'     => false,
+		'disable_divi_projects' => false,
 
 		// WooCommerce (only applied when WooCommerce is active)
 		'wc_disable_analytics'               => false,
@@ -181,6 +182,7 @@ function amw_toolbox_woo_keys() {
 function amw_toolbox_divi_keys() {
 	return array(
 		'fix_divi_viewport',
+		'disable_divi_projects',
 	);
 }
 

@@ -2,6 +2,10 @@
 All notable changes to AMW Toolbox are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
+## [1.4.1] - 2026-10-13
+### Added
+* Divi: option to disable the Divi "Projects" (portfolio) post type and its categories/tags when unused, removing it from the admin and its public URLs. Off by default; enable only on sites that do not use the Divi portfolio.
+
 ## [1.4.0] - 2026-10-11
 ### Added
 * WPBakery detection: the WPBakery tab now appears when WPBakery Page Builder is active (no options of its own yet; it is ready for future WPBakery-specific features). WPBakery is also shown in the detected-frameworks badge.
@@ -85,6 +89,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 * Multisite uninstall support.
 * All features disabled by default to prevent unexpected changes to existing installations.
 
+[1.4.1]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.1
 [1.4.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.0
 [1.3.5]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.5
 [1.3.4]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.4

@@ -2,9 +2,9 @@
 
 A lightweight WordPress toolbox for **cleanup, hardening, performance optimization and client-site management**.
 
-AMW Toolbox brings together a collection of optional WordPress tweaks that can normally require several snippets, plugins or manual configuration.
+AMW Toolbox brings together a collection of optional WordPress tweaks that would normally require several snippets, plugins or manual configuration.
 
-Every feature is **disabled by default**. The plugin does nothing until an option is explicitly enabled.
+Every feature is **disabled by default**. The plugin does nothing until an option is explicitly enabled, and the whole settings panel is available to administrators only.
 
 ## Features
 
@@ -12,14 +12,17 @@ Every feature is **disabled by default**. The plugin does nothing until an optio
 
 Customize and simplify the WordPress administration area:
 
-* Hide selected admin menu items
-* Hide selected admin bar elements
-* Hide dashboard widgets
+* Hide selected admin menu items (the list is detected from the real menu, and items the current user cannot access are left out)
+* Hide selected admin bar elements (detected from the live admin bar)
+* Hide dashboard widgets (the list is learned from your own Dashboard, so widgets added by other plugins appear too)
 * Hide admin notices from users who cannot manage options
 * Hide the admin bar on the front end for non-administrators
 * Hide the WordPress welcome panel
 * Disable the block-based widgets editor
 * Hide the default theme recommendation from Site Health
+* Disable the periodic "Is this admin email still correct?" verification screen
+* Replace the admin footer text ("Thank you for creating with WordPress") with your own
+* Allow SVG uploads for administrators only (see the security note below)
 
 ### Comments
 
@@ -37,8 +40,11 @@ Optional security and privacy-related tweaks:
 * Add `X-Content-Type-Options: nosniff`
 * Add `X-Frame-Options: SAMEORIGIN`
 * Add a restrictive `Referrer-Policy`
+* Add `Strict-Transport-Security` (HSTS), sent only over HTTPS
+* Add a restrictive `Permissions-Policy` (disables camera, microphone and geolocation site-wide)
 * Clean unnecessary tags from the `<head>`
 * Disable XML-RPC
+* Harden XML-RPC without disabling it, by removing the most-abused methods (pingbacks and `system.multicall`) and the `X-Pingback` header
 * Disable the built-in theme/plugin file editor
 * Block public user enumeration
 * Disable WordPress Application Passwords
@@ -50,7 +56,8 @@ Optional security and privacy-related tweaks:
 Reduce unnecessary WordPress resources and behavior:
 
 * Disable or slow down the Heartbeat API
-* Limit or disable post revisions
+* Limit or disable post revisions, with a manual tool to delete revisions already stored
+* Choose how many days trashed items are kept before being permanently deleted
 * Remove Gutenberg/block editor CSS from the front end
 * Disable Dashicons for logged-out visitors
 * Disable oEmbed
@@ -58,15 +65,15 @@ Reduce unnecessary WordPress resources and behavior:
 * Prevent selected intermediate image sizes from being generated
 * Disable WordPress emojis
 * Remove jQuery Migrate from the front end
-* Remove `?ver=` query strings from CSS and JavaScript URLs
+* Disable remote block patterns (stops WordPress fetching patterns from the wp.org directory)
+* Remove `?ver=` query strings from CSS and JavaScript URLs (left alone while a front-end page builder is editing, so the builder keeps working)
 
 ### Divi
 
-Specific optimization for websites using **Elegant Themes Divi**:
+Specific options for websites using **Elegant Themes Divi** (shown only when Divi is active):
 
-* Replace Divi's viewport configuration with a standard responsive viewport that allows user zooming.
-
-The Divi functionality is optional and has no effect when disabled.
+* Replace Divi's viewport configuration with a standard responsive viewport that allows user zooming
+* Disable the Divi "Projects" (portfolio) post type and its categories/tags when unused, removing it from the admin and its public URLs
 
 ### WooCommerce
 
@@ -79,7 +86,31 @@ When WooCommerce is active, AMW Toolbox provides additional options:
 * Hide the WooCommerce Extensions/Marketplace menu
 * Load WooCommerce front-end styles only on store-related pages
 
-WooCommerce options are only displayed when WooCommerce is installed and active.
+### Elementor
+
+When Elementor is active, AMW Toolbox provides additional options:
+
+* Disable Elementor usage tracking
+* Disable Elementor's default colors and fonts, so the theme controls styling
+* Disable Elementor's Google Fonts on the front end (better privacy and fewer external calls)
+
+### WPBakery
+
+The WPBakery tab appears when WPBakery Page Builder is active. It currently has no options of its own and is in place so WPBakery-specific features have a home in a future version.
+
+> Framework options (Divi, WooCommerce, Elementor, WPBakery) are only displayed when the matching framework is installed and active. The settings header shows which frameworks were detected and how many optimizations are currently enabled.
+
+### Tools
+
+* Export the current configuration as a JSON file
+* Import a configuration from a JSON file (validated against the known options before saving)
+* Reset all settings to their defaults
+* Delete expired transients left in the options table
+* Keep settings on uninstall (so a future reinstall starts from your configuration)
+
+### Overlap notes
+
+When an option is also handled natively by a detected page builder (for example disabling emojis or managing jQuery Migrate in Divi, or usage tracking and default styles in Elementor), AMW Toolbox shows a short note recommending where to manage it, so the same thing is not toggled in two places.
 
 ## Philosophy
 
@@ -87,7 +118,7 @@ AMW Toolbox follows a simple principle:
 
 > **Do not change anything unless the administrator explicitly enables it.**
 
-The plugin is shipped with all options disabled.
+The plugin ships with all options disabled, and it avoids duplicating what a page builder or theme already does well, pointing you to the better place instead.
 
 This makes it suitable for development environments, client websites and custom WordPress installations where unnecessary functionality needs to be removed without adding a large collection of plugins.
 
@@ -129,7 +160,7 @@ After activation, the plugin adds its configuration panel under:
 
 **Settings → AMW Toolbox**
 
-Options are organized into logical sections so individual features can be enabled or disabled independently.
+Options are organized into tabs so individual features can be enabled or disabled independently. The panel and all of its actions are restricted to administrators.
 
 The plugin stores its configuration in the WordPress option:
 
@@ -165,15 +196,27 @@ Conditional WooCommerce styles should be tested carefully on custom pages, espec
 
 Disabling Application Passwords can affect integrations and external applications that use the WordPress REST API with this authentication method.
 
-### Post revisions
+### Post revisions and trash
 
-Revision settings affect how WordPress stores revisions from that point forward. Existing revisions are not automatically deleted by this option.
+Revision and trash settings affect how WordPress behaves from that point forward. Existing revisions are not deleted automatically by the revision setting; use the manual tool for that.
+
+### HSTS
+
+Enable `Strict-Transport-Security` only on sites served fully over HTTPS. A wrong setup can make the site unreachable in browsers for a while. The header is only sent on HTTPS requests.
+
+### SVG uploads
+
+This option permits SVG and SVGZ uploads for administrators only. It fixes WordPress's file-type check but does **not** sanitize the file contents, so only enable it if you upload SVGs from sources you trust.
+
+### Divi Projects
+
+Disabling the Divi Projects post type removes it and its public URLs. Enable it only on sites that do not use the Divi portfolio.
 
 ## Uninstallation
 
 AMW Toolbox includes an uninstall routine.
 
-When the plugin is permanently deleted from WordPress, its stored configuration is removed from the database.
+When the plugin is permanently deleted from WordPress, its stored configuration is removed from the database, unless "Keep settings on uninstall" is enabled.
 
 On multisite installations, the uninstall routine removes the plugin options from all sites in the network.
 
@@ -187,8 +230,7 @@ The plugin tracks the `main` branch for updates.
 
 * WordPress
 * PHP version compatible with the installed WordPress version
-* WooCommerce is optional
-* Divi is optional
+* WooCommerce, Divi, Elementor and WPBakery are all optional
 
 ## Compatibility
 

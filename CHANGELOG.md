@@ -2,6 +2,10 @@
 All notable changes to AMW Toolbox are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
+## [1.4.2] - 2026-10-25
+### Added
+* Admin experience: option to block the dashboard for logged-in users without editing permission. When enabled, users who cannot `edit_posts` (subscribers and custom roles such as a bookings manager) are redirected out of `/wp-admin` to the front page, including the profile screen. Administrators and editors are unaffected. AJAX (`admin-ajax.php`), `admin-post.php` form handlers and WP-Cron are never blocked, and logged-out visitors still reach the login screen. Off by default. The redirect target can be changed per role with the `amw_toolbox_dashboard_redirect` filter.
+
 ## [1.4.1] - 2026-10-13
 ### Added
 * Divi: option to disable the Divi "Projects" (portfolio) post type and its categories/tags when unused, removing it from the admin and its public URLs. Off by default; enable only on sites that do not use the Divi portfolio.
@@ -90,6 +94,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 * Multisite uninstall support.
 * All features disabled by default to prevent unexpected changes to existing installations.
 
+[1.4.2]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.2
 [1.4.1]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.1
 [1.4.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.0
 [1.3.5]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.3.5

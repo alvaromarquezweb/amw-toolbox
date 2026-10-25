@@ -72,6 +72,7 @@ function amw_toolbox_defaults() {
 		'allow_svg_upload'          => false,
 		'custom_admin_footer'       => false,
 		'admin_footer_text'         => '',
+		'block_dashboard_non_editors' => false,
 
 		// Head & security
 		'hide_wp_version'           => false,
@@ -138,6 +139,7 @@ function amw_toolbox_bool_keys() {
 		'disable_admin_email_check',
 		'allow_svg_upload',
 		'custom_admin_footer',
+		'block_dashboard_non_editors',
 		'hide_wp_version',
 		'remove_powered_by',
 		'clean_head_tags',

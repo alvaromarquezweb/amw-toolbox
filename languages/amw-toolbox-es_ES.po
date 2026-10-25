@@ -691,3 +691,12 @@ msgstr "Cancelar"
 
 msgid "Cleanup and hardening toolbox for WordPress: hides the WP fingerprint, disables comments, trims the &lt;head&gt;, tightens a few defaults and fixes the Divi viewport. Everything is toggleable from Settings &rarr; AMW Toolbox."
 msgstr "Caja de herramientas de limpieza y hardening para WordPress: oculta la huella de WP, desactiva los comentarios, recorta el &lt;head&gt;, ajusta algunos valores por defecto y corrige el viewport de Divi. Todo se activa desde Ajustes &rarr; AMW Toolbox."
+
+msgid "Dashboard access"
+msgstr "Acceso al escritorio"
+
+msgid "Block the dashboard for users without editing permission"
+msgstr "Bloquear el escritorio a los usuarios sin permisos de edición"
+
+msgid "Logged-in users who cannot edit content (subscribers and custom roles without edit permission, such as a bookings manager) are redirected out of /wp-admin to the front page. Administrators and editors are unaffected. This also blocks the profile screen, so an administrator must reset those users' passwords for them. AJAX (admin-ajax.php), admin-post.php form handlers and WP-Cron are never blocked, and logged-out visitors still reach the login screen. The redirect target can be changed per role with the amw_toolbox_dashboard_redirect filter."
+msgstr "Los usuarios con sesión iniciada que no pueden editar contenido (suscriptores y roles personalizados sin permiso de edición, como un gestor de reservas) son redirigidos fuera de /wp-admin a la portada, incluida la pantalla de perfil. Los administradores y editores no se ven afectados. Como esto también bloquea la pantalla de perfil, un administrador debe restablecer la contraseña de esos usuarios. Las peticiones AJAX (admin-ajax.php), los gestores de formularios admin-post.php y WP-Cron nunca se bloquean, y los visitantes sin sesión siguen llegando a la pantalla de acceso. El destino de la redirección se puede cambiar por rol con el filtro amw_toolbox_dashboard_redirect."

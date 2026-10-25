@@ -691,6 +691,9 @@ function amw_toolbox_render_settings() {
 							<p class="description"><?php esc_html_e( 'Shown only when "Replace the admin footer text" is enabled. Basic HTML, including links, is allowed. Leave empty to show no footer text.', 'amw-toolbox' ); ?></p>
 						</td>
 					</tr>
+						<?php
+						amw_toolbox_bool_row( $o, 'block_dashboard_non_editors', __( 'Dashboard access', 'amw-toolbox' ), __( 'Block the dashboard for users without editing permission', 'amw-toolbox' ), __( 'Logged-in users who cannot edit content (subscribers and custom roles without edit permission, such as a bookings manager) are redirected out of /wp-admin to the front page. Administrators and editors are unaffected. This also blocks the profile screen, so an administrator must reset those users\' passwords for them. AJAX (admin-ajax.php), admin-post.php form handlers and WP-Cron are never blocked, and logged-out visitors still reach the login screen. The redirect target can be changed per role with the amw_toolbox_dashboard_redirect filter.', 'amw-toolbox' ) );
+						?>
 				</table>
 			</div>
 

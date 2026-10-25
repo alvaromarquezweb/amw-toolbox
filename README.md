@@ -23,6 +23,7 @@ Customize and simplify the WordPress administration area:
 * Disable the periodic "Is this admin email still correct?" verification screen
 * Replace the admin footer text ("Thank you for creating with WordPress") with your own
 * Allow SVG uploads for administrators only (see the security note below)
+* Block the dashboard for logged-in users without editing permission (subscribers and custom roles such as a bookings manager), redirecting them out of `/wp-admin`; administrators and editors are unaffected, and the redirect target can be changed per role with the `amw_toolbox_dashboard_redirect` filter (see the note below)
 
 ### Comments
 
@@ -211,6 +212,10 @@ This option permits SVG and SVGZ uploads for administrators only. It fixes WordP
 ### Divi Projects
 
 Disabling the Divi Projects post type removes it and its public URLs. Enable it only on sites that do not use the Divi portfolio.
+
+### Dashboard access
+
+Blocking the dashboard redirects every logged-in user who cannot edit content away from `/wp-admin`, the profile screen (`profile.php`) included, so affected users cannot change their own password — an administrator has to reset it for them. AJAX (`admin-ajax.php`), `admin-post.php` form handlers and WP-Cron are deliberately never blocked, so front-end plugins that talk to the admin (for example AMW Reservas renewing its booking-panel nonce) keep working. Other plugins can send a specific role to a custom location with the `amw_toolbox_dashboard_redirect` filter, which receives the default URL and the current `WP_User`.
 
 ## Uninstallation
 

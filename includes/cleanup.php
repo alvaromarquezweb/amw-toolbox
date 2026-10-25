@@ -231,6 +231,11 @@ if ( $amw_toolbox_o['custom_admin_footer'] ) {
 	add_filter( 'admin_footer_text', 'amw_toolbox_custom_admin_footer' );
 }
 
+// Block the dashboard for logged-in users without editing permission.
+if ( $amw_toolbox_o['block_dashboard_non_editors'] ) {
+	add_action( 'admin_init', 'amw_toolbox_block_dashboard_non_editors' );
+}
+
 // Allow SVG uploads for administrators only (WPCode-style: permits the type and
 // fixes the file-type check, but does NOT sanitize the file contents).
 if ( $amw_toolbox_o['allow_svg_upload'] ) {
@@ -266,6 +271,55 @@ function amw_toolbox_svg_media_css() {
 function amw_toolbox_custom_admin_footer() {
 	$o = amw_toolbox_get_options();
 	return $o['admin_footer_text'];
+}
+
+/**
+ * Redirect logged-in users who cannot edit content away from /wp-admin.
+ *
+ * Runs on admin_init. Anyone without the `edit_posts` capability (subscribers
+ * and custom roles such as a bookings manager) is sent out of the dashboard,
+ * including the profile screen (profile.php), so an administrator must reset
+ * those users' passwords for them. Administrators and editors are untouched,
+ * and logged-out visitors are left alone (WordPress already sends them to the
+ * login screen).
+ *
+ * Deliberate exceptions, never redirected:
+ * - admin-ajax.php (wp_doing_ajax): front-end plugins talk to the admin over
+ *   admin-ajax. AMW Reservas, for example, renews its booking-panel nonce there;
+ *   blocking it would surface a false "session expired".
+ * - admin-post.php: front-end form handlers post here.
+ * - WP-Cron (wp_doing_cron): scheduled tasks run in an admin context.
+ *
+ * The redirect target passes through the `amw_toolbox_dashboard_redirect`
+ * filter, so another plugin can send a particular role somewhere specific
+ * (e.g. AMW Reservas routing its bookings manager to its own panel):
+ *
+ *     add_filter( 'amw_toolbox_dashboard_redirect', function ( $url, $user ) {
+ *         return in_array( 'amw_reservas_manager', (array) $user->roles, true )
+ *             ? admin_url( 'admin.php?page=amw-reservas' ) // or a front-end URL
+ *             : $url;
+ *     }, 10, 2 );
+ *
+ * @param string  $url  Default redirect URL.
+ * @param WP_User $user The current user.
+ */
+function amw_toolbox_block_dashboard_non_editors() {
+	if ( wp_doing_ajax() || wp_doing_cron() ) {
+		return;
+	}
+
+	global $pagenow;
+	if ( 'admin-post.php' === $pagenow ) {
+		return;
+	}
+
+	if ( ! is_user_logged_in() || current_user_can( 'edit_posts' ) ) {
+		return;
+	}
+
+	$redirect = apply_filters( 'amw_toolbox_dashboard_redirect', home_url( '/' ), wp_get_current_user() );
+	wp_safe_redirect( $redirect );
+	exit;
 }
 
 // Remove unnecessary tags WordPress adds to the <head> by default.

@@ -73,11 +73,14 @@ function amw_toolbox_defaults() {
 		'custom_admin_footer'       => false,
 		'admin_footer_text'         => '',
 		'block_dashboard_non_editors' => false,
+		'enable_duplication'        => false,
+		'enable_year_shortcode'     => false,
 
 		// Head & security
 		'hide_wp_version'           => false,
 		'remove_powered_by'         => false,
 		'clean_head_tags'           => false,
+		'disable_feeds'             => false,
 		'disable_xmlrpc'            => false,
 		'xmlrpc_harden'             => false,
 		'disallow_file_edit'        => false,
@@ -116,11 +119,6 @@ function amw_toolbox_defaults() {
 		'wc_disable_tracker'                 => false,
 		'wc_hide_marketplace_menu'           => false,
 		'wc_conditional_styles'              => false,
-
-		// Elementor (only applied when Elementor is active)
-		'el_disable_tracking'        => false,
-		'el_disable_default_schemes' => false,
-		'el_disable_google_fonts'    => false,
 	);
 }
 
@@ -140,9 +138,12 @@ function amw_toolbox_bool_keys() {
 		'allow_svg_upload',
 		'custom_admin_footer',
 		'block_dashboard_non_editors',
+		'enable_duplication',
+		'enable_year_shortcode',
 		'hide_wp_version',
 		'remove_powered_by',
 		'clean_head_tags',
+		'disable_feeds',
 		'disable_xmlrpc',
 		'xmlrpc_harden',
 		'disallow_file_edit',
@@ -189,37 +190,11 @@ function amw_toolbox_divi_keys() {
 }
 
 /**
- * Elementor feature keys (only surfaced when Elementor is active).
- */
-function amw_toolbox_elementor_keys() {
-	return array(
-		'el_disable_tracking',
-		'el_disable_default_schemes',
-		'el_disable_google_fonts',
-	);
-}
-
-/**
  * Is Divi active? True for the Divi or Extra theme and for the Divi Builder plugin.
  * Reliable on admin/front once the theme is loaded (not at plugin-load time).
  */
 function amw_toolbox_is_divi_active() {
 	return defined( 'ET_CORE_VERSION' ) || function_exists( 'et_setup_theme' );
-}
-
-/**
- * Is Elementor active?
- */
-function amw_toolbox_is_elementor_active() {
-	return defined( 'ELEMENTOR_VERSION' );
-}
-
-/**
- * Is WPBakery Page Builder active? No options of its own yet; the tab is shown
- * so it is ready for WPBakery-specific features in a future version.
- */
-function amw_toolbox_is_wpbakery_active() {
-	return defined( 'WPB_VC_VERSION' ) || class_exists( 'Vc_Manager' );
 }
 
 /**
@@ -234,8 +209,7 @@ function amw_toolbox_active_count() {
 	$bools = array_merge(
 		amw_toolbox_bool_keys(),
 		amw_toolbox_woo_keys(),
-		amw_toolbox_divi_keys(),
-		amw_toolbox_elementor_keys()
+		amw_toolbox_divi_keys()
 	);
 	foreach ( $bools as $key ) {
 		if ( 'keep_on_uninstall' === $key ) {
@@ -382,12 +356,6 @@ function amw_toolbox_sanitize( $input ) {
 	$divi_active = amw_toolbox_is_divi_active();
 	foreach ( amw_toolbox_divi_keys() as $key ) {
 		$clean[ $key ] = $divi_active ? ! empty( $input[ $key ] ) : ! empty( $existing[ $key ] );
-	}
-
-	// Elementor toggles: same rule.
-	$elementor_active = amw_toolbox_is_elementor_active();
-	foreach ( amw_toolbox_elementor_keys() as $key ) {
-		$clean[ $key ] = $elementor_active ? ! empty( $input[ $key ] ) : ! empty( $existing[ $key ] );
 	}
 
 	return $clean;

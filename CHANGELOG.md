@@ -2,6 +2,19 @@
 All notable changes to AMW Toolbox are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
+## [1.4.3] - 2026-10-26
+### Added
+* Utilities: optional "Duplicate" row action for posts, pages and custom post types. The copy is created as a draft with the original title, content, taxonomies and custom fields, and only users who can create that post type see the link. Content and meta are slashed before saving, so Divi (and other builders that store shortcodes or JSON in the content and post meta) duplicate intact instead of breaking, which plain duplicate snippets get wrong. Off by default.
+* Utilities: optional `[amw_year]` shortcode that prints the current year (site timezone) and updates on its own, ideal for a footer copyright. A `start` attribute prints a range, e.g. `[amw_year start="2020"]` → `2020–2026`. It also registers the shorter `[year]` shortcode when no other plugin already uses that name. Off by default.
+* Head & Security: optional "Disable all RSS feeds" option. It redirects every feed endpoint (posts, comments, categories, authors, Atom) to the home page and removes the feed discovery links from the head. For client sites without a blog. Off by default.
+
+### Changed
+* New "Utilities" tab grouping the optional extras that add a capability (rather than hide, clean or harden): SVG uploads, the custom admin footer text, and blocking the dashboard for users without editing permission. These moved out of the Admin Area tab. No option keys, defaults or behavior changed, so saved settings are preserved.
+* Renamed the "Tools" tab to "Maintenance" to make it clearer, and distinct from the new Utilities tab. Its contents (plugin options, import/export/reset, transients cleanup) are unchanged.
+
+### Removed
+* Elementor integration (the Elementor tab and its usage-tracking, default-styles and Google-Fonts options) and the WPBakery tab. They did not earn their place. The `?ver` stripping option still detects the Elementor and WPBakery editors so it does not interfere with them.
+
 ## [1.4.2] - 2026-10-25
 ### Added
 * Admin experience: option to block the dashboard for logged-in users without editing permission. When enabled, users who cannot `edit_posts` (subscribers and custom roles such as a bookings manager) are redirected out of `/wp-admin` to the front page, including the profile screen. Administrators and editors are unaffected. AJAX (`admin-ajax.php`), `admin-post.php` form handlers and WP-Cron are never blocked, and logged-out visitors still reach the login screen. Off by default. The redirect target can be changed per role with the `amw_toolbox_dashboard_redirect` filter.
@@ -94,6 +107,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 * Multisite uninstall support.
 * All features disabled by default to prevent unexpected changes to existing installations.
 
+[1.4.3]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.3
 [1.4.2]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.2
 [1.4.1]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.1
 [1.4.0]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.0

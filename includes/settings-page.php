@@ -569,8 +569,6 @@ function amw_toolbox_render_settings() {
 
 	$woo_active       = class_exists( 'WooCommerce' );
 	$divi_active      = amw_toolbox_is_divi_active();
-	$elementor_active = amw_toolbox_is_elementor_active();
-	$wpbakery_active  = amw_toolbox_is_wpbakery_active();
 	?>
 	<div class="wrap amw-settings">
 
@@ -597,8 +595,6 @@ function amw_toolbox_render_settings() {
 			<?php
 			echo amw_toolbox_framework_pill( 'Divi', $divi_active ); // phpcs:ignore -- escaped inside helper.
 			echo amw_toolbox_framework_pill( 'WooCommerce', $woo_active ); // phpcs:ignore
-			echo amw_toolbox_framework_pill( 'Elementor', $elementor_active ); // phpcs:ignore
-			echo amw_toolbox_framework_pill( 'WPBakery', $wpbakery_active ); // phpcs:ignore
 			?>
 		</p>
 
@@ -606,19 +602,14 @@ function amw_toolbox_render_settings() {
 			<a href="#" class="nav-tab nav-tab-active" data-amw-tab="admin"       id="amw-tab-admin"       role="tab" aria-controls="amw-panel-admin"       aria-selected="true"  tabindex="0"><?php esc_html_e( 'Admin Area', 'amw-toolbox' ); ?></a>
 			<a href="#" class="nav-tab"                data-amw-tab="head"        id="amw-tab-head"        role="tab" aria-controls="amw-panel-head"        aria-selected="false" tabindex="-1"><?php esc_html_e( 'Head & Security', 'amw-toolbox' ); ?></a>
 			<a href="#" class="nav-tab"                data-amw-tab="performance" id="amw-tab-performance" role="tab" aria-controls="amw-panel-performance" aria-selected="false" tabindex="-1"><?php esc_html_e( 'Performance', 'amw-toolbox' ); ?></a>
+			<a href="#" class="nav-tab"                data-amw-tab="utilities"   id="amw-tab-utilities"   role="tab" aria-controls="amw-panel-utilities"   aria-selected="false" tabindex="-1"><?php esc_html_e( 'Utilities', 'amw-toolbox' ); ?></a>
 			<?php if ( $divi_active ) : ?>
 			<a href="#" class="nav-tab"                data-amw-tab="divi"        id="amw-tab-divi"        role="tab" aria-controls="amw-panel-divi"        aria-selected="false" tabindex="-1"><?php esc_html_e( 'Divi', 'amw-toolbox' ); ?></a>
 			<?php endif; ?>
 			<?php if ( $woo_active ) : ?>
 			<a href="#" class="nav-tab"                data-amw-tab="woocommerce" id="amw-tab-woocommerce" role="tab" aria-controls="amw-panel-woocommerce" aria-selected="false" tabindex="-1"><?php esc_html_e( 'WooCommerce', 'amw-toolbox' ); ?></a>
 			<?php endif; ?>
-			<?php if ( $elementor_active ) : ?>
-			<a href="#" class="nav-tab"                data-amw-tab="elementor"   id="amw-tab-elementor"   role="tab" aria-controls="amw-panel-elementor"   aria-selected="false" tabindex="-1"><?php esc_html_e( 'Elementor', 'amw-toolbox' ); ?></a>
-			<?php endif; ?>
-			<?php if ( $wpbakery_active ) : ?>
-			<a href="#" class="nav-tab"                data-amw-tab="wpbakery"    id="amw-tab-wpbakery"    role="tab" aria-controls="amw-panel-wpbakery"    aria-selected="false" tabindex="-1"><?php esc_html_e( 'WPBakery', 'amw-toolbox' ); ?></a>
-			<?php endif; ?>
-			<a href="#" class="nav-tab"                data-amw-tab="tools"       id="amw-tab-tools"       role="tab" aria-controls="amw-panel-plugin amw-panel-tools" aria-selected="false" tabindex="-1"><?php esc_html_e( 'Tools', 'amw-toolbox' ); ?></a>
+			<a href="#" class="nav-tab"                data-amw-tab="tools"       id="amw-tab-tools"       role="tab" aria-controls="amw-panel-plugin amw-panel-tools" aria-selected="false" tabindex="-1"><?php esc_html_e( 'Maintenance', 'amw-toolbox' ); ?></a>
 		</nav>
 
 		<form method="post" action="options.php">
@@ -668,32 +659,6 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'hide_default_theme_notice', __( 'Default theme check', 'amw-toolbox' ), __( 'Hide the "default theme available" Site Health check', 'amw-toolbox' ), __( 'Removes the Site Health recommendation to keep a default (Twenty*) theme installed as a fallback.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_admin_email_check', __( 'Admin email check', 'amw-toolbox' ), __( 'Disable the periodic admin email verification', 'amw-toolbox' ), __( 'Stops the "Is this admin email still correct?" screen that WordPress shows every few months.', 'amw-toolbox' ) );
 					?>
-					<tr>
-						<th scope="row"><?php esc_html_e( 'SVG uploads', 'amw-toolbox' ); ?></th>
-						<td>
-							<label>
-								<input type="checkbox" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[allow_svg_upload]' ); ?>" value="1" <?php checked( ! empty( $o['allow_svg_upload'] ) ); ?>>
-								<?php esc_html_e( 'Allow SVG uploads (administrators only)', 'amw-toolbox' ); ?>
-							</label>
-							<div class="amw-warning" style="margin-top:8px;padding:10px 12px;border-left:4px solid #dba617;background:#fcf9e8;max-width:640px;">
-								<strong><?php esc_html_e( 'Security warning', 'amw-toolbox' ); ?></strong><br>
-								<?php esc_html_e( 'SVG files are code (XML) and can carry scripts. AMW Toolbox permits the upload but does NOT sanitize the file, so a malicious SVG could run in the browser. Enable this only if you upload SVGs from sources you trust. Uploading is limited to administrators.', 'amw-toolbox' ); ?>
-							</div>
-						</td>
-					</tr>
-					<?php
-					amw_toolbox_bool_row( $o, 'custom_admin_footer', __( 'Admin footer', 'amw-toolbox' ), __( 'Replace the admin footer text', 'amw-toolbox' ), __( 'Replaces the "Thank you for creating with WordPress" text at the bottom of the admin. Enable and set the text below.', 'amw-toolbox' ) );
-					?>
-					<tr>
-						<th scope="row"><?php esc_html_e( 'Admin footer text', 'amw-toolbox' ); ?></th>
-						<td>
-							<input type="text" class="regular-text" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[admin_footer_text]' ); ?>" value="<?php echo esc_attr( $o['admin_footer_text'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. Site by Your Name', 'amw-toolbox' ); ?>">
-							<p class="description"><?php esc_html_e( 'Shown only when "Replace the admin footer text" is enabled. Basic HTML, including links, is allowed. Leave empty to show no footer text.', 'amw-toolbox' ); ?></p>
-						</td>
-					</tr>
-						<?php
-						amw_toolbox_bool_row( $o, 'block_dashboard_non_editors', __( 'Dashboard access', 'amw-toolbox' ), __( 'Block the dashboard for users without editing permission', 'amw-toolbox' ), __( 'Logged-in users who cannot edit content (subscribers and custom roles without edit permission, such as a bookings manager) are redirected out of /wp-admin to the front page. Administrators and editors are unaffected. This also blocks the profile screen, so an administrator must reset those users\' passwords for them. AJAX (admin-ajax.php), admin-post.php form handlers and WP-Cron are never blocked, and logged-out visitors still reach the login screen. The redirect target can be changed per role with the amw_toolbox_dashboard_redirect filter.', 'amw-toolbox' ) );
-						?>
 				</table>
 			</div>
 
@@ -704,6 +669,7 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'hide_wp_version', __( 'WordPress version', 'amw-toolbox' ), __( 'Hide the WordPress version', 'amw-toolbox' ), __( 'Removes the version from the head, RSS feeds and HTTP headers.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'remove_powered_by', __( 'X-Powered-By', 'amw-toolbox' ), __( 'Remove the X-Powered-By header', 'amw-toolbox' ), __( 'Hides the PHP fingerprint sent in the response headers.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'clean_head_tags', __( '<head> cleanup', 'amw-toolbox' ), __( 'Clean up the <head>', 'amw-toolbox' ), __( 'Removes RSD, WLW, shortlinks and feed links.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'disable_feeds', __( 'RSS feeds', 'amw-toolbox' ), __( 'Disable all RSS feeds', 'amw-toolbox' ), __( 'Turns off every RSS and Atom feed (posts, comments, categories, authors) by redirecting the feed URLs to the home page, and removes the feed links from the <head>. Useful on client sites without a blog. Leave off if something consumes your feed, such as an email service (Mailchimp RSS) or a podcast.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_xmlrpc', __( 'XML-RPC', 'amw-toolbox' ), __( 'Disable XML-RPC', 'amw-toolbox' ), __( 'Blocks a common attack vector. Leave off if you use the WP app or Jetpack.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'xmlrpc_harden', __( 'XML-RPC hardening', 'amw-toolbox' ), __( 'Remove the most-abused XML-RPC methods', 'amw-toolbox' ), __( 'Keeps XML-RPC on but drops pingbacks and system.multicall (used for brute-force amplification and pingback attacks), and the X-Pingback header. Not needed if you disable XML-RPC above.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disallow_file_edit', __( 'File editor', 'amw-toolbox' ), __( 'Disable the theme/plugin file editor', 'amw-toolbox' ), __( 'Defines DISALLOW_FILE_EDIT so code cannot be edited from the admin.', 'amw-toolbox' ) );
@@ -798,6 +764,41 @@ function amw_toolbox_render_settings() {
 				?>
 			</div>
 
+				<div class="amw-tab-panel" data-amw-panel="utilities" id="amw-panel-utilities" role="tabpanel" aria-labelledby="amw-tab-utilities" tabindex="0">
+					<h2><?php esc_html_e( 'Utilities', 'amw-toolbox' ); ?></h2>
+					<p class="description" style="max-width:640px;"><?php esc_html_e( 'Optional extras that add a capability to WordPress or the admin, instead of hiding, cleaning or hardening something.', 'amw-toolbox' ); ?></p>
+					<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row"><?php esc_html_e( 'SVG uploads', 'amw-toolbox' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[allow_svg_upload]' ); ?>" value="1" <?php checked( ! empty( $o['allow_svg_upload'] ) ); ?>>
+								<?php esc_html_e( 'Allow SVG uploads (administrators only)', 'amw-toolbox' ); ?>
+							</label>
+							<div class="amw-warning" style="margin-top:8px;padding:10px 12px;border-left:4px solid #dba617;background:#fcf9e8;max-width:640px;">
+								<strong><?php esc_html_e( 'Security warning', 'amw-toolbox' ); ?></strong><br>
+								<?php esc_html_e( 'SVG files are code (XML) and can carry scripts. AMW Toolbox permits the upload but does NOT sanitize the file, so a malicious SVG could run in the browser. Enable this only if you upload SVGs from sources you trust. Uploading is limited to administrators.', 'amw-toolbox' ); ?>
+							</div>
+						</td>
+					</tr>
+					<?php
+					amw_toolbox_bool_row( $o, 'custom_admin_footer', __( 'Admin footer', 'amw-toolbox' ), __( 'Replace the admin footer text', 'amw-toolbox' ), __( 'Replaces the "Thank you for creating with WordPress" text at the bottom of the admin. Enable and set the text below.', 'amw-toolbox' ) );
+					?>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Admin footer text', 'amw-toolbox' ); ?></th>
+						<td>
+							<input type="text" class="regular-text" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[admin_footer_text]' ); ?>" value="<?php echo esc_attr( $o['admin_footer_text'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. Site by Your Name', 'amw-toolbox' ); ?>">
+							<p class="description"><?php esc_html_e( 'Shown only when "Replace the admin footer text" is enabled. Basic HTML, including links, is allowed. Leave empty to show no footer text.', 'amw-toolbox' ); ?></p>
+						</td>
+					</tr>
+						<?php
+						amw_toolbox_bool_row( $o, 'block_dashboard_non_editors', __( 'Dashboard access', 'amw-toolbox' ), __( 'Block the dashboard for users without editing permission', 'amw-toolbox' ), __( 'Logged-in users who cannot edit content (subscribers and custom roles without edit permission, such as a bookings manager) are redirected out of /wp-admin to the front page. Administrators and editors are unaffected. This also blocks the profile screen, so an administrator must reset those users\' passwords for them. AJAX (admin-ajax.php), admin-post.php form handlers and WP-Cron are never blocked, and logged-out visitors still reach the login screen. The redirect target can be changed per role with the amw_toolbox_dashboard_redirect filter.', 'amw-toolbox' ) );
+						amw_toolbox_bool_row( $o, 'enable_duplication', __( 'Duplicate content', 'amw-toolbox' ), __( 'Add a "Duplicate" link to posts, pages and custom post types', 'amw-toolbox' ), __( 'Adds a Duplicate action to the posts, pages and custom post type lists. The copy is created as a draft, with the title, content, taxonomies and custom fields of the original. Content is slashed correctly before saving, so Divi and other page builder layouts are duplicated intact instead of being broken. Only users who can create items of that type see the link.', 'amw-toolbox' ) );
+						amw_toolbox_bool_row( $o, 'enable_year_shortcode', __( 'Current year', 'amw-toolbox' ), __( 'Enable a shortcode that prints the current year', 'amw-toolbox' ), __( 'Registers the [amw_year] shortcode, which prints the current year and updates on its own, ideal for a footer copyright. Add a start year for a range: [amw_year start="2020"] shows 2020–2026. It also registers the shorter [year] shortcode when no other plugin already uses that name.', 'amw-toolbox' ) );
+						?>
+					</table>
+				</div>
+
 			<?php if ( $divi_active ) : ?>
 			<div class="amw-tab-panel" data-amw-panel="divi" id="amw-panel-divi" role="tabpanel" aria-labelledby="amw-tab-divi" tabindex="0">
 				<h2><?php esc_html_e( 'Divi', 'amw-toolbox' ); ?></h2>
@@ -825,27 +826,6 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'wc_conditional_styles', __( 'Store styles', 'amw-toolbox' ), __( 'Load WooCommerce styles only on store pages', 'amw-toolbox' ), __( 'Dequeues WooCommerce CSS everywhere except shop, cart, checkout and account. Leave off if you use Woo shortcodes or blocks on other pages.', 'amw-toolbox' ) );
 					?>
 				</table>
-			</div>
-			<?php endif; ?>
-
-			<?php if ( $elementor_active ) : ?>
-			<div class="amw-tab-panel" data-amw-panel="elementor" id="amw-panel-elementor" role="tabpanel" aria-labelledby="amw-tab-elementor" tabindex="0">
-				<h2><?php esc_html_e( 'Elementor', 'amw-toolbox' ); ?></h2>
-				<p class="description" style="max-width:640px;"><?php esc_html_e( 'These options only appear and act while Elementor is active.', 'amw-toolbox' ); ?></p>
-				<table class="form-table" role="presentation">
-					<?php
-					amw_toolbox_bool_row( $o, 'el_disable_tracking', __( 'Usage tracking', 'amw-toolbox' ), __( 'Disable Elementor usage tracking', 'amw-toolbox' ), __( 'Forces Elementor usage data collection off.', 'amw-toolbox' ), __( 'Elementor also offers this in Elementor -> Settings. Enabling it in both places is redundant; on an Elementor site, keeping it in Elementor is usually tidier.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'el_disable_default_schemes', __( 'Default styles', 'amw-toolbox' ), __( 'Disable default colors and fonts', 'amw-toolbox' ), __( 'Lets your theme control colors and typography instead of Elementor\'s defaults.', 'amw-toolbox' ), __( 'Elementor has this natively in Elementor -> Settings -> Advanced (Disable Default Colors / Fonts). Prefer Elementor\'s and leave this off to avoid duplicating it.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'el_disable_google_fonts', __( 'Google Fonts', 'amw-toolbox' ), __( 'Disable Elementor\'s Google Fonts', 'amw-toolbox' ), __( 'Stops Elementor loading fonts from Google on the front end (better privacy and fewer external calls). Use your theme or local fonts instead.', 'amw-toolbox' ) );
-					?>
-				</table>
-			</div>
-			<?php endif; ?>
-
-			<?php if ( $wpbakery_active ) : ?>
-			<div class="amw-tab-panel" data-amw-panel="wpbakery" id="amw-panel-wpbakery" role="tabpanel" aria-labelledby="amw-tab-wpbakery" tabindex="0">
-				<h2><?php esc_html_e( 'WPBakery', 'amw-toolbox' ); ?></h2>
-				<p class="description" style="max-width:640px;"><?php esc_html_e( 'WPBakery Page Builder is active on this site. There are no WPBakery options yet; this tab is here so they have a home in a future version.', 'amw-toolbox' ); ?></p>
 			</div>
 			<?php endif; ?>
 

@@ -332,6 +332,26 @@ if ( $amw_toolbox_o['clean_head_tags'] ) {
 	remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10 ); // Prev/Next
 }
 
+// Disable all RSS/Atom feeds: redirect every feed endpoint to the home page
+// and drop the feed discovery links from the head (independent of head cleanup).
+if ( $amw_toolbox_o['disable_feeds'] ) {
+	add_action( 'init', 'amw_toolbox_disable_feeds_init' );
+}
+
+function amw_toolbox_disable_feeds_init() {
+	remove_action( 'wp_head', 'feed_links', 2 );
+	remove_action( 'wp_head', 'feed_links_extra', 3 );
+
+	foreach ( array( 'do_feed', 'do_feed_rdf', 'do_feed_rss', 'do_feed_rss2', 'do_feed_atom', 'do_feed_rss2_comments', 'do_feed_atom_comments' ) as $feed_hook ) {
+		add_action( $feed_hook, 'amw_toolbox_redirect_feed', 1 );
+	}
+}
+
+function amw_toolbox_redirect_feed() {
+	wp_safe_redirect( home_url( '/' ), 301 );
+	exit;
+}
+
 // Disable XML-RPC.
 if ( $amw_toolbox_o['disable_xmlrpc'] ) {
 	add_filter( 'xmlrpc_enabled', '__return_false' );
@@ -703,30 +723,168 @@ function amw_toolbox_wc_conditional_styles() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   7. ELEMENTOR  (pre_option filters no-op when Elementor is inactive, since only
-      Elementor reads these options)
+   7. DUPLICATE CONTENT  (a "Duplicate" row action for posts, pages and CPTs)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-// Force Elementor usage data collection off.
-if ( $amw_toolbox_o['el_disable_tracking'] ) {
-	add_filter( 'pre_option_elementor_allow_tracking', 'amw_toolbox_el_disable_tracking' );
+// Add a "Duplicate" link to the row actions of posts, pages and custom post types.
+if ( $amw_toolbox_o['enable_duplication'] ) {
+	add_filter( 'post_row_actions', 'amw_toolbox_duplicate_row_link', 10, 2 );
+	add_filter( 'page_row_actions', 'amw_toolbox_duplicate_row_link', 10, 2 );
+	add_action( 'admin_action_amw_toolbox_duplicate_post', 'amw_toolbox_duplicate_post' );
 }
 
-// Let the theme control colours and typography instead of Elementor's defaults.
-if ( $amw_toolbox_o['el_disable_default_schemes'] ) {
-	add_filter( 'pre_option_elementor_disable_color_schemes', 'amw_toolbox_el_yes' );
-	add_filter( 'pre_option_elementor_disable_typography_schemes', 'amw_toolbox_el_yes' );
+/**
+ * Add the "Duplicate" action to a row, for users who can create that post type.
+ *
+ * @param array   $actions Row action links.
+ * @param WP_Post $post    The post the row represents.
+ * @return array
+ */
+function amw_toolbox_duplicate_row_link( $actions, $post ) {
+	$type = get_post_type_object( $post->post_type );
+	if ( null === $type || ! current_user_can( $type->cap->create_posts ) ) {
+		return $actions;
+	}
+
+	$url = wp_nonce_url(
+		add_query_arg(
+			array(
+				'action'  => 'amw_toolbox_duplicate_post',
+				'post_id' => $post->ID,
+			),
+			admin_url( 'admin.php' )
+		),
+		'amw_toolbox_duplicate_post_' . $post->ID,
+		'amw_toolbox_duplicate_nonce'
+	);
+
+	$actions['amw_toolbox_duplicate'] = sprintf(
+		'<a href="%s" rel="permalink">%s</a>',
+		esc_url( $url ),
+		esc_html__( 'Duplicate', 'amw-toolbox' )
+	);
+
+	return $actions;
 }
 
-// Stop Elementor loading fonts from Google on the front end.
-if ( $amw_toolbox_o['el_disable_google_fonts'] ) {
-	add_filter( 'elementor/frontend/print_google_fonts', '__return_false' );
+/**
+ * Create a draft copy of a post and send the user to edit it.
+ *
+ * wp_insert_post() and add_post_meta() unslash the data they receive, so the
+ * content, excerpt, title and every meta value are passed through wp_slash()
+ * first. This is what keeps Divi (and other builders that store shortcodes or
+ * JSON in post_content and post meta) from being corrupted on duplication,
+ * which plain duplicate snippets get wrong.
+ */
+function amw_toolbox_duplicate_post() {
+	$post_id = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : 0;
+	if ( ! $post_id ) {
+		wp_die( esc_html__( 'No item ID was provided for duplication.', 'amw-toolbox' ) );
+	}
+
+	if ( ! isset( $_GET['amw_toolbox_duplicate_nonce'] )
+		|| ! wp_verify_nonce( sanitize_key( $_GET['amw_toolbox_duplicate_nonce'] ), 'amw_toolbox_duplicate_post_' . $post_id ) ) {
+		wp_die( esc_html__( 'The link you followed has expired. Please try again.', 'amw-toolbox' ) );
+	}
+
+	$post = get_post( $post_id );
+	if ( ! $post ) {
+		wp_die( esc_html__( 'The item to duplicate could not be loaded.', 'amw-toolbox' ) );
+	}
+
+	$type = get_post_type_object( $post->post_type );
+	if ( null === $type || ! current_user_can( $type->cap->create_posts ) || ! current_user_can( 'edit_post', $post_id ) ) {
+		wp_die( esc_html__( 'You are not allowed to duplicate this item.', 'amw-toolbox' ) );
+	}
+
+	$author   = wp_get_current_user();
+	$new_post = array(
+		'comment_status' => $post->comment_status,
+		'ping_status'    => $post->ping_status,
+		'menu_order'     => $post->menu_order,
+		'post_author'    => $author->ID,
+		'post_content'   => wp_slash( $post->post_content ),
+		'post_excerpt'   => wp_slash( $post->post_excerpt ),
+		'post_parent'    => $post->post_parent,
+		'post_password'  => $post->post_password,
+		'post_status'    => 'draft',
+		/* translators: %s: original item title. */
+		'post_title'     => wp_slash( sprintf( __( '%s (copy)', 'amw-toolbox' ), $post->post_title ) ),
+		'post_type'      => $post->post_type,
+		'to_ping'        => $post->to_ping,
+	);
+
+	$new_id = wp_insert_post( $new_post );
+	if ( is_wp_error( $new_id ) || ! $new_id ) {
+		wp_die( esc_html__( 'The item could not be duplicated.', 'amw-toolbox' ) );
+	}
+
+	// Copy taxonomy terms.
+	foreach ( get_object_taxonomies( $post->post_type ) as $taxonomy ) {
+		$terms = wp_get_object_terms( $post_id, $taxonomy, array( 'fields' => 'slugs' ) );
+		if ( ! is_wp_error( $terms ) ) {
+			wp_set_object_terms( $new_id, $terms, $taxonomy );
+		}
+	}
+
+	// Copy custom fields, skipping internals. Slash values so add_post_meta()
+	// stores them intact (e.g. Divi's _et_pb_* meta).
+	$skip = array( '_wp_old_slug', '_edit_lock', '_edit_last' );
+	foreach ( get_post_meta( $post_id ) as $key => $values ) {
+		if ( in_array( $key, $skip, true ) ) {
+			continue;
+		}
+		foreach ( $values as $value ) {
+			add_post_meta( $new_id, $key, wp_slash( maybe_unserialize( $value ) ) );
+		}
+	}
+
+	wp_safe_redirect(
+		add_query_arg(
+			array(
+				'action' => 'edit',
+				'post'   => $new_id,
+			),
+			admin_url( 'post.php' )
+		)
+	);
+	exit;
 }
 
-function amw_toolbox_el_disable_tracking() {
-	return 'no';
+/* ═══════════════════════════════════════════════════════════════════════════
+   8. CURRENT-YEAR SHORTCODE  ([amw_year], ideal for a self-updating footer)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+// Register the current-year shortcode late, so the [year] alias can check
+// whether another plugin already claimed that name.
+if ( $amw_toolbox_o['enable_year_shortcode'] ) {
+	add_action( 'init', 'amw_toolbox_register_year_shortcode', 99 );
 }
 
-function amw_toolbox_el_yes() {
-	return 'yes';
+function amw_toolbox_register_year_shortcode() {
+	add_shortcode( 'amw_year', 'amw_toolbox_year_shortcode' );
+	// Convenience alias, only when nothing else uses [year].
+	if ( ! shortcode_exists( 'year' ) ) {
+		add_shortcode( 'year', 'amw_toolbox_year_shortcode' );
+	}
 }
+
+/**
+ * Print the current year (site timezone). With a start year in the past it
+ * prints a range, e.g. [amw_year start="2020"] -> "2020–2026".
+ *
+ * @param array $atts Shortcode attributes.
+ * @return string
+ */
+function amw_toolbox_year_shortcode( $atts ) {
+	$atts    = shortcode_atts( array( 'start' => '' ), $atts, 'amw_year' );
+	$current = wp_date( 'Y' );
+	$start   = preg_replace( '/[^0-9]/', '', (string) $atts['start'] );
+
+	if ( '' !== $start && (int) $start > 0 && (int) $start < (int) $current ) {
+		return esc_html( $start . '–' . $current );
+	}
+
+	return esc_html( $current );
+}
+

@@ -21,8 +21,15 @@ Customize and simplify the WordPress administration area:
 * Disable the block-based widgets editor
 * Hide the default theme recommendation from Site Health
 * Disable the periodic "Is this admin email still correct?" verification screen
-* Replace the admin footer text ("Thank you for creating with WordPress") with your own
+
+### Utilities
+
+Optional extras that add a capability to WordPress or the admin, instead of hiding, cleaning or hardening something:
+
 * Allow SVG uploads for administrators only (see the security note below)
+* Add a "Duplicate" link to posts, pages and custom post types, creating a draft copy with the original title, content, taxonomies and custom fields (handles slashing correctly so Divi and other page builder layouts are duplicated intact)
+* Provide a `[amw_year]` shortcode that prints the current year (and updates on its own) for a self-maintaining footer copyright; `[amw_year start="2020"]` prints a range like `2020–2026`, and a `[year]` alias is registered when no other plugin uses it
+* Replace the admin footer text ("Thank you for creating with WordPress") with your own
 * Block the dashboard for logged-in users without editing permission (subscribers and custom roles such as a bookings manager), redirecting them out of `/wp-admin`; administrators and editors are unaffected, and the redirect target can be changed per role with the `amw_toolbox_dashboard_redirect` filter (see the note below)
 
 ### Comments
@@ -44,6 +51,7 @@ Optional security and privacy-related tweaks:
 * Add `Strict-Transport-Security` (HSTS), sent only over HTTPS
 * Add a restrictive `Permissions-Policy` (disables camera, microphone and geolocation site-wide)
 * Clean unnecessary tags from the `<head>`
+* Disable all RSS/Atom feeds (posts, comments, categories, authors), redirecting the feed URLs to the home page
 * Disable XML-RPC
 * Harden XML-RPC without disabling it, by removing the most-abused methods (pingbacks and `system.multicall`) and the `X-Pingback` header
 * Disable the built-in theme/plugin file editor
@@ -87,21 +95,9 @@ When WooCommerce is active, AMW Toolbox provides additional options:
 * Hide the WooCommerce Extensions/Marketplace menu
 * Load WooCommerce front-end styles only on store-related pages
 
-### Elementor
+> Framework options (Divi, WooCommerce) are only displayed when the matching framework is installed and active. The settings header shows which frameworks were detected and how many optimizations are currently enabled.
 
-When Elementor is active, AMW Toolbox provides additional options:
-
-* Disable Elementor usage tracking
-* Disable Elementor's default colors and fonts, so the theme controls styling
-* Disable Elementor's Google Fonts on the front end (better privacy and fewer external calls)
-
-### WPBakery
-
-The WPBakery tab appears when WPBakery Page Builder is active. It currently has no options of its own and is in place so WPBakery-specific features have a home in a future version.
-
-> Framework options (Divi, WooCommerce, Elementor, WPBakery) are only displayed when the matching framework is installed and active. The settings header shows which frameworks were detected and how many optimizations are currently enabled.
-
-### Tools
+### Maintenance
 
 * Export the current configuration as a JSON file
 * Import a configuration from a JSON file (validated against the known options before saving)
@@ -111,7 +107,7 @@ The WPBakery tab appears when WPBakery Page Builder is active. It currently has 
 
 ### Overlap notes
 
-When an option is also handled natively by a detected page builder (for example disabling emojis or managing jQuery Migrate in Divi, or usage tracking and default styles in Elementor), AMW Toolbox shows a short note recommending where to manage it, so the same thing is not toggled in two places.
+When an option is also handled natively by a detected page builder (for example disabling emojis or managing jQuery Migrate in Divi), AMW Toolbox shows a short note recommending where to manage it, so the same thing is not toggled in two places.
 
 ## Philosophy
 
@@ -235,7 +231,7 @@ The plugin tracks the `main` branch for updates.
 
 * WordPress
 * PHP version compatible with the installed WordPress version
-* WooCommerce, Divi, Elementor and WPBakery are all optional
+* WooCommerce and Divi are both optional
 
 ## Compatibility
 

@@ -122,15 +122,6 @@ msgstr "Rendimiento"
 msgid "WooCommerce"
 msgstr "WooCommerce"
 
-msgid "Elementor"
-msgstr "Elementor"
-
-msgid "WPBakery"
-msgstr "WPBakery"
-
-msgid "Tools"
-msgstr "Herramientas"
-
 msgid "Admin menu items"
 msgstr "Elementos del menú de administración"
 
@@ -584,42 +575,6 @@ msgstr "Cargar los estilos de WooCommerce solo en las páginas de la tienda"
 msgid "Dequeues WooCommerce CSS everywhere except shop, cart, checkout and account. Leave off if you use Woo shortcodes or blocks on other pages."
 msgstr "Quita el CSS de WooCommerce en todas partes salvo tienda, carrito, pago y cuenta. Déjalo desactivado si usas shortcodes o bloques de Woo en otras páginas."
 
-msgid "These options only appear and act while Elementor is active."
-msgstr "Estas opciones solo aparecen y actúan mientras Elementor está activo."
-
-msgid "Disable Elementor usage tracking"
-msgstr "Desactivar el seguimiento de uso de Elementor"
-
-msgid "Forces Elementor usage data collection off."
-msgstr "Fuerza la desactivación de la recopilación de datos de uso de Elementor."
-
-msgid "Elementor also offers this in Elementor -> Settings. Enabling it in both places is redundant; on an Elementor site, keeping it in Elementor is usually tidier."
-msgstr "Elementor también ofrece esto en Elementor -> Ajustes. Activarlo en los dos sitios es redundante; en una web con Elementor, lo normal es dejarlo en Elementor."
-
-msgid "Default styles"
-msgstr "Estilos por defecto"
-
-msgid "Disable default colors and fonts"
-msgstr "Desactivar colores y fuentes por defecto"
-
-msgid "Lets your theme control colors and typography instead of Elementor's defaults."
-msgstr "Deja que tu tema controle los colores y la tipografía en lugar de los valores por defecto de Elementor."
-
-msgid "Elementor has this natively in Elementor -> Settings -> Advanced (Disable Default Colors / Fonts). Prefer Elementor's and leave this off to avoid duplicating it."
-msgstr "Elementor lo trae de serie en Elementor -> Ajustes -> Avanzado (Desactivar colores / fuentes por defecto). Usa la de Elementor y deja esto apagado para no duplicarlo."
-
-msgid "Google Fonts"
-msgstr "Google Fonts"
-
-msgid "Disable Elementor's Google Fonts"
-msgstr "Desactivar las Google Fonts de Elementor"
-
-msgid "Stops Elementor loading fonts from Google on the front end (better privacy and fewer external calls). Use your theme or local fonts instead."
-msgstr "Impide que Elementor cargue fuentes desde Google en el front (mejor privacidad y menos llamadas externas). Usa las fuentes del tema o locales."
-
-msgid "WPBakery Page Builder is active on this site. There are no WPBakery options yet; this tab is here so they have a home in a future version."
-msgstr "WPBakery Page Builder está activo en este sitio. Todavía no hay opciones de WPBakery; esta pestaña está aquí para que tengan su sitio en una versión futura."
-
 msgid "Plugin options"
 msgstr "Opciones del plugin"
 
@@ -700,3 +655,60 @@ msgstr "Bloquear el escritorio a los usuarios sin permisos de edición"
 
 msgid "Logged-in users who cannot edit content (subscribers and custom roles without edit permission, such as a bookings manager) are redirected out of /wp-admin to the front page. Administrators and editors are unaffected. This also blocks the profile screen, so an administrator must reset those users' passwords for them. AJAX (admin-ajax.php), admin-post.php form handlers and WP-Cron are never blocked, and logged-out visitors still reach the login screen. The redirect target can be changed per role with the amw_toolbox_dashboard_redirect filter."
 msgstr "Los usuarios con sesión iniciada que no pueden editar contenido (suscriptores y roles personalizados sin permiso de edición, como un gestor de reservas) son redirigidos fuera de /wp-admin a la portada, incluida la pantalla de perfil. Los administradores y editores no se ven afectados. Como esto también bloquea la pantalla de perfil, un administrador debe restablecer la contraseña de esos usuarios. Las peticiones AJAX (admin-ajax.php), los gestores de formularios admin-post.php y WP-Cron nunca se bloquean, y los visitantes sin sesión siguen llegando a la pantalla de acceso. El destino de la redirección se puede cambiar por rol con el filtro amw_toolbox_dashboard_redirect."
+
+msgid "Utilities"
+msgstr "Utilidades"
+
+msgid "Optional extras that add a capability to WordPress or the admin, instead of hiding, cleaning or hardening something."
+msgstr "Extras opcionales que añaden una capacidad a WordPress o al escritorio, en lugar de ocultar, limpiar o reforzar algo."
+
+msgid "Maintenance"
+msgstr "Mantenimiento"
+
+msgid "Duplicate"
+msgstr "Duplicar"
+
+msgid "Duplicate content"
+msgstr "Duplicar contenido"
+
+msgid "Add a \"Duplicate\" link to posts, pages and custom post types"
+msgstr "Añadir un enlace «Duplicar» a entradas, páginas y tipos de contenido personalizados"
+
+msgid "Adds a Duplicate action to the posts, pages and custom post type lists. The copy is created as a draft, with the title, content, taxonomies and custom fields of the original. Content is slashed correctly before saving, so Divi and other page builder layouts are duplicated intact instead of being broken. Only users who can create items of that type see the link."
+msgstr "Añade una acción Duplicar en los listados de entradas, páginas y tipos de contenido personalizados. La copia se crea como borrador, con el título, el contenido, las taxonomías y los campos personalizados del original. El contenido se escapa correctamente antes de guardarlo, así que los diseños de Divi y otros maquetadores se duplican intactos en lugar de romperse. Solo ven el enlace los usuarios que pueden crear elementos de ese tipo."
+
+msgid "%s (copy)"
+msgstr "%s (copia)"
+
+msgid "No item ID was provided for duplication."
+msgstr "No se indicó el ID del elemento que duplicar."
+
+msgid "The link you followed has expired. Please try again."
+msgstr "El enlace que has seguido ha caducado. Inténtalo de nuevo."
+
+msgid "The item to duplicate could not be loaded."
+msgstr "No se pudo cargar el elemento que duplicar."
+
+msgid "You are not allowed to duplicate this item."
+msgstr "No tienes permiso para duplicar este elemento."
+
+msgid "The item could not be duplicated."
+msgstr "No se pudo duplicar el elemento."
+
+msgid "Current year"
+msgstr "Año actual"
+
+msgid "Enable a shortcode that prints the current year"
+msgstr "Activar un shortcode que muestra el año actual"
+
+msgid "Registers the [amw_year] shortcode, which prints the current year and updates on its own, ideal for a footer copyright. Add a start year for a range: [amw_year start=\"2020\"] shows 2020–2026. It also registers the shorter [year] shortcode when no other plugin already uses that name."
+msgstr "Registra el shortcode [amw_year], que muestra el año actual y se actualiza solo, ideal para el copyright del pie. Añade un año de inicio para un rango: [amw_year start=\"2020\"] muestra 2020–2026. También registra el shortcode más corto [year] cuando ningún otro plugin usa ya ese nombre."
+
+msgid "RSS feeds"
+msgstr "Feeds RSS"
+
+msgid "Disable all RSS feeds"
+msgstr "Desactivar todos los feeds RSS"
+
+msgid "Turns off every RSS and Atom feed (posts, comments, categories, authors) by redirecting the feed URLs to the home page, and removes the feed links from the <head>. Useful on client sites without a blog. Leave off if something consumes your feed, such as an email service (Mailchimp RSS) or a podcast."
+msgstr "Desactiva todos los feeds RSS y Atom (entradas, comentarios, categorías, autores) redirigiendo las URL de feed a la portada, y quita los enlaces de feed del <head>. Útil en webs de cliente sin blog. Déjalo desactivado si algo consume tu feed, como un servicio de email (Mailchimp RSS) o un pódcast."

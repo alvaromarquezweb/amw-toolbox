@@ -120,15 +120,6 @@ msgstr ""
 msgid "WooCommerce"
 msgstr ""
 
-msgid "Elementor"
-msgstr ""
-
-msgid "WPBakery"
-msgstr ""
-
-msgid "Tools"
-msgstr ""
-
 msgid "Admin menu items"
 msgstr ""
 
@@ -582,42 +573,6 @@ msgstr ""
 msgid "Dequeues WooCommerce CSS everywhere except shop, cart, checkout and account. Leave off if you use Woo shortcodes or blocks on other pages."
 msgstr ""
 
-msgid "These options only appear and act while Elementor is active."
-msgstr ""
-
-msgid "Disable Elementor usage tracking"
-msgstr ""
-
-msgid "Forces Elementor usage data collection off."
-msgstr ""
-
-msgid "Elementor also offers this in Elementor -> Settings. Enabling it in both places is redundant; on an Elementor site, keeping it in Elementor is usually tidier."
-msgstr ""
-
-msgid "Default styles"
-msgstr ""
-
-msgid "Disable default colors and fonts"
-msgstr ""
-
-msgid "Lets your theme control colors and typography instead of Elementor's defaults."
-msgstr ""
-
-msgid "Elementor has this natively in Elementor -> Settings -> Advanced (Disable Default Colors / Fonts). Prefer Elementor's and leave this off to avoid duplicating it."
-msgstr ""
-
-msgid "Google Fonts"
-msgstr ""
-
-msgid "Disable Elementor's Google Fonts"
-msgstr ""
-
-msgid "Stops Elementor loading fonts from Google on the front end (better privacy and fewer external calls). Use your theme or local fonts instead."
-msgstr ""
-
-msgid "WPBakery Page Builder is active on this site. There are no WPBakery options yet; this tab is here so they have a home in a future version."
-msgstr ""
-
 msgid "Plugin options"
 msgstr ""
 
@@ -697,4 +652,61 @@ msgid "Block the dashboard for users without editing permission"
 msgstr ""
 
 msgid "Logged-in users who cannot edit content (subscribers and custom roles without edit permission, such as a bookings manager) are redirected out of /wp-admin to the front page. Administrators and editors are unaffected. This also blocks the profile screen, so an administrator must reset those users' passwords for them. AJAX (admin-ajax.php), admin-post.php form handlers and WP-Cron are never blocked, and logged-out visitors still reach the login screen. The redirect target can be changed per role with the amw_toolbox_dashboard_redirect filter."
+msgstr ""
+
+msgid "Utilities"
+msgstr ""
+
+msgid "Optional extras that add a capability to WordPress or the admin, instead of hiding, cleaning or hardening something."
+msgstr ""
+
+msgid "Maintenance"
+msgstr ""
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Duplicate content"
+msgstr ""
+
+msgid "Add a \"Duplicate\" link to posts, pages and custom post types"
+msgstr ""
+
+msgid "Adds a Duplicate action to the posts, pages and custom post type lists. The copy is created as a draft, with the title, content, taxonomies and custom fields of the original. Content is slashed correctly before saving, so Divi and other page builder layouts are duplicated intact instead of being broken. Only users who can create items of that type see the link."
+msgstr ""
+
+msgid "%s (copy)"
+msgstr ""
+
+msgid "No item ID was provided for duplication."
+msgstr ""
+
+msgid "The link you followed has expired. Please try again."
+msgstr ""
+
+msgid "The item to duplicate could not be loaded."
+msgstr ""
+
+msgid "You are not allowed to duplicate this item."
+msgstr ""
+
+msgid "The item could not be duplicated."
+msgstr ""
+
+msgid "Current year"
+msgstr ""
+
+msgid "Enable a shortcode that prints the current year"
+msgstr ""
+
+msgid "Registers the [amw_year] shortcode, which prints the current year and updates on its own, ideal for a footer copyright. Add a start year for a range: [amw_year start=\"2020\"] shows 2020–2026. It also registers the shorter [year] shortcode when no other plugin already uses that name."
+msgstr ""
+
+msgid "RSS feeds"
+msgstr ""
+
+msgid "Disable all RSS feeds"
+msgstr ""
+
+msgid "Turns off every RSS and Atom feed (posts, comments, categories, authors) by redirecting the feed URLs to the home page, and removes the feed links from the <head>. Useful on client sites without a blog. Leave off if something consumes your feed, such as an email service (Mailchimp RSS) or a podcast."
 msgstr ""

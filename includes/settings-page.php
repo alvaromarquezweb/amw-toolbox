@@ -73,6 +73,12 @@ function amw_toolbox_handle_import() {
 		exit;
 	}
 
+	// La configuracion es un JSON minusculo; rechazamos cualquier archivo grande.
+	if ( (int) $_FILES['amw_import_file']['size'] > 512 * 1024 ) {
+		wp_safe_redirect( add_query_arg( 'amw_notice', 'import_error', $redirect ) );
+		exit;
+	}
+
 	$raw  = file_get_contents( $_FILES['amw_import_file']['tmp_name'] ); // phpcs:ignore
 	$data = json_decode( (string) $raw, true );
 
@@ -208,21 +214,6 @@ function amw_toolbox_tools_notices() {
 	);
 }
 
-/**
- * A small coloured pill showing whether a framework was detected.
- */
-function amw_toolbox_framework_pill( $label, $active ) {
-	$bg   = $active ? '#e6f4ea' : '#f0f0f1';
-	$fg   = $active ? '#1e7e34' : '#8c8f94';
-	$mark = $active ? '&#10003;' : '&#10007;';
-	return sprintf(
-		'<span style="display:inline-block; padding:1px 8px; margin:0 2px; border-radius:10px; font-size:12px; line-height:1.8; background:%1$s; color:%2$s;">%3$s %4$s</span>',
-		esc_attr( $bg ),
-		esc_attr( $fg ),
-		esc_html( $label ),
-		$mark // phpcs:ignore -- static HTML entity, not user input.
-	);
-}
 
 /**
  * Register the settings page under the Settings menu.
@@ -263,13 +254,19 @@ function amw_toolbox_enqueue_assets( $hook ) {
 		filemtime( AMW_TOOLBOX_DIR . 'assets/css/admin.css' )
 	);
 
+	// Selector de color nativo de WordPress para el campo del color del corazon.
+	wp_enqueue_style( 'wp-color-picker' );
+
 	wp_enqueue_script(
 		'amw-toolbox-admin',
 		AMW_TOOLBOX_URL . 'assets/js/admin.js',
-		array(),
+		array( 'wp-color-picker' ),
 		filemtime( AMW_TOOLBOX_DIR . 'assets/js/admin.js' ),
 		true
 	);
+
+	// Inicializamos el color picker en los campos marcados con .amw-color-field.
+	wp_add_inline_script( 'amw-toolbox-admin', 'jQuery(function($){$(".amw-color-field").wpColorPicker();});' );
 
 	wp_localize_script( 'amw-toolbox-admin', 'amwToolbox', array(
 		'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
@@ -560,6 +557,10 @@ function amw_toolbox_hide_section( $heading, $intro, $group, $items, $hidden, $t
  * Render the settings page.
  */
 function amw_toolbox_render_settings() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
 	$o = amw_toolbox_get_options();
 
 	// Dashboard widgets as value => label.
@@ -569,6 +570,10 @@ function amw_toolbox_render_settings() {
 
 	$woo_active       = class_exists( 'WooCommerce' );
 	$divi_active      = amw_toolbox_is_divi_active();
+	$yoast_active     = amw_toolbox_is_yoast_active();
+	$yoast_note       = $yoast_active ? __( 'Yoast SEO can also do this in SEO -> Advanced -> Crawl optimization. If you use Yoast, manage it there and leave this off so it stays in one place.', 'amw-toolbox' ) : '';
+	$shield_active    = amw_toolbox_is_shield_active();
+	$shield_note      = $shield_active ? __( 'Shield Security can also do this. If you use Shield, manage it there and leave this off so it stays in one place.', 'amw-toolbox' ) : '';
 	?>
 	<div class="wrap amw-settings">
 
@@ -591,11 +596,17 @@ function amw_toolbox_render_settings() {
 
 		<p class="amw-status" style="margin:.2em 0 1.2em; color:#50575e; font-size:13px;">
 			<strong><?php printf( esc_html__( 'Active optimizations: %d', 'amw-toolbox' ), (int) amw_toolbox_active_count() ); ?></strong>
-			<span style="margin-left:1.2em;"><?php esc_html_e( 'Detected:', 'amw-toolbox' ); ?></span>
 			<?php
-			echo amw_toolbox_framework_pill( 'Divi', $divi_active ); // phpcs:ignore -- escaped inside helper.
-			echo amw_toolbox_framework_pill( 'WooCommerce', $woo_active ); // phpcs:ignore
-			?>
+			// Lista solo de lo que se detecta; si no hay nada, no mostramos la linea.
+			$amw_detected = array();
+			if ( $divi_active )   { $amw_detected[] = 'Divi'; }
+			if ( $woo_active )    { $amw_detected[] = 'WooCommerce'; }
+			if ( $yoast_active )  { $amw_detected[] = 'Yoast SEO'; }
+			if ( $shield_active ) { $amw_detected[] = 'Shield Security'; }
+			if ( $amw_detected ) :
+				?>
+				<span style="margin-left:1.2em;"><?php esc_html_e( 'Detected:', 'amw-toolbox' ); ?> <?php echo esc_html( implode( ', ', $amw_detected ) ); ?></span>
+			<?php endif; ?>
 		</p>
 
 		<nav class="nav-tab-wrapper amw-tabs" role="tablist" aria-label="<?php esc_attr_e( 'Settings sections', 'amw-toolbox' ); ?>">
@@ -666,18 +677,19 @@ function amw_toolbox_render_settings() {
 				<h2><?php esc_html_e( 'Head & Security', 'amw-toolbox' ); ?></h2>
 				<table class="form-table" role="presentation">
 					<?php
-					amw_toolbox_bool_row( $o, 'hide_wp_version', __( 'WordPress version', 'amw-toolbox' ), __( 'Hide the WordPress version', 'amw-toolbox' ), __( 'Removes the version from the head, RSS feeds and HTTP headers.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'remove_powered_by', __( 'X-Powered-By', 'amw-toolbox' ), __( 'Remove the X-Powered-By header', 'amw-toolbox' ), __( 'Hides the PHP fingerprint sent in the response headers.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'clean_head_tags', __( '<head> cleanup', 'amw-toolbox' ), __( 'Clean up the <head>', 'amw-toolbox' ), __( 'Removes RSD, WLW, shortlinks and feed links.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'disable_feeds', __( 'RSS feeds', 'amw-toolbox' ), __( 'Disable all RSS feeds', 'amw-toolbox' ), __( 'Turns off every RSS and Atom feed (posts, comments, categories, authors) by redirecting the feed URLs to the home page, and removes the feed links from the <head>. Useful on client sites without a blog. Leave off if something consumes your feed, such as an email service (Mailchimp RSS) or a podcast.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'disable_xmlrpc', __( 'XML-RPC', 'amw-toolbox' ), __( 'Disable XML-RPC', 'amw-toolbox' ), __( 'Blocks a common attack vector. Leave off if you use the WP app or Jetpack.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'xmlrpc_harden', __( 'XML-RPC hardening', 'amw-toolbox' ), __( 'Remove the most-abused XML-RPC methods', 'amw-toolbox' ), __( 'Keeps XML-RPC on but drops pingbacks and system.multicall (used for brute-force amplification and pingback attacks), and the X-Pingback header. Not needed if you disable XML-RPC above.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'disallow_file_edit', __( 'File editor', 'amw-toolbox' ), __( 'Disable the theme/plugin file editor', 'amw-toolbox' ), __( 'Defines DISALLOW_FILE_EDIT so code cannot be edited from the admin.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'block_user_enumeration', __( 'User enumeration', 'amw-toolbox' ), __( 'Block user enumeration', 'amw-toolbox' ), __( 'Blocks ?author=N scans and the public REST users endpoints for logged-out visitors.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'disable_app_passwords', __( 'Application Passwords', 'amw-toolbox' ), __( 'Disable Application Passwords', 'amw-toolbox' ), __( 'Turns off the WordPress Application Passwords feature.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'header_nosniff', __( 'X-Content-Type-Options', 'amw-toolbox' ), __( 'Send the nosniff header', 'amw-toolbox' ), __( 'Stops browsers from MIME-sniffing responses away from the declared content type.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'header_frame', __( 'X-Frame-Options', 'amw-toolbox' ), __( 'Send SAMEORIGIN', 'amw-toolbox' ), __( 'Blocks other sites from framing yours (clickjacking). Leave off if you embed this site elsewhere.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'header_referrer', __( 'Referrer-Policy', 'amw-toolbox' ), __( 'Send strict-origin-when-cross-origin', 'amw-toolbox' ), __( 'Sends only the origin as the referrer when navigating to other sites.', 'amw-toolbox' ) );
+					amw_toolbox_bool_row( $o, 'hide_wp_version', __( 'WordPress version', 'amw-toolbox' ), __( 'Hide the WordPress version', 'amw-toolbox' ), __( 'Removes the version from the head, RSS feeds and HTTP headers.', 'amw-toolbox' ), $yoast_note );
+					amw_toolbox_bool_row( $o, 'remove_powered_by', __( 'X-Powered-By', 'amw-toolbox' ), __( 'Remove the X-Powered-By header', 'amw-toolbox' ), __( 'Hides the PHP fingerprint sent in the response headers.', 'amw-toolbox' ), $yoast_note );
+					amw_toolbox_bool_row( $o, 'clean_head_tags', __( '<head> cleanup', 'amw-toolbox' ), __( 'Clean up the <head>', 'amw-toolbox' ), __( 'Removes RSD, WLW, shortlinks and feed links.', 'amw-toolbox' ), $yoast_note );
+					amw_toolbox_bool_row( $o, 'disable_feeds', __( 'RSS feeds', 'amw-toolbox' ), __( 'Disable all RSS feeds', 'amw-toolbox' ), __( 'Turns off every RSS and Atom feed (posts, comments, categories, authors) by redirecting the feed URLs to the home page, and removes the feed links from the <head>. Useful on client sites without a blog. Leave off if something consumes your feed, such as an email service (Mailchimp RSS) or a podcast.', 'amw-toolbox' ), $yoast_note );
+					amw_toolbox_bool_row( $o, 'disable_xmlrpc', __( 'XML-RPC', 'amw-toolbox' ), __( 'Disable XML-RPC', 'amw-toolbox' ), __( 'Blocks a common attack vector. Leave off if you use the WP app or Jetpack.', 'amw-toolbox' ), $shield_note );
+					amw_toolbox_bool_row( $o, 'xmlrpc_harden', __( 'XML-RPC hardening', 'amw-toolbox' ), __( 'Remove the most-abused XML-RPC methods', 'amw-toolbox' ), __( 'Keeps XML-RPC on but drops pingbacks and system.multicall (used for brute-force amplification and pingback attacks), and the X-Pingback header. Not needed if you disable XML-RPC above.', 'amw-toolbox' ), $shield_note );
+					amw_toolbox_bool_row( $o, 'disallow_file_edit', __( 'File editor', 'amw-toolbox' ), __( 'Disable the theme/plugin file editor', 'amw-toolbox' ), __( 'Defines DISALLOW_FILE_EDIT so code cannot be edited from the admin.', 'amw-toolbox' ), $shield_note );
+					amw_toolbox_bool_row( $o, 'block_user_enumeration', __( 'User enumeration', 'amw-toolbox' ), __( 'Block user enumeration', 'amw-toolbox' ), __( 'Blocks ?author=N scans and the public REST users endpoints for logged-out visitors.', 'amw-toolbox' ), $shield_note );
+					amw_toolbox_bool_row( $o, 'disable_app_passwords', __( 'Application Passwords', 'amw-toolbox' ), __( 'Disable Application Passwords', 'amw-toolbox' ), __( 'Turns off the WordPress Application Passwords feature.', 'amw-toolbox' ), $shield_note );
+					amw_toolbox_bool_row( $o, 'disable_anon_rest', __( 'Anonymous REST API', 'amw-toolbox' ), __( 'Block the REST API for logged-out visitors', 'amw-toolbox' ), __( 'Returns a 401 for REST requests from visitors who are not logged in. This can break front-end blocks, forms or plugins that use the REST API, so only enable it if your front end does not need it. oEmbed stays allowed, and you can allow more routes with the amw_toolbox_rest_anon_allowed_routes filter.', 'amw-toolbox' ), $shield_note );
+					amw_toolbox_bool_row( $o, 'header_nosniff', __( 'X-Content-Type-Options', 'amw-toolbox' ), __( 'Send the nosniff header', 'amw-toolbox' ), __( 'Stops browsers from MIME-sniffing responses away from the declared content type.', 'amw-toolbox' ), $shield_note );
+					amw_toolbox_bool_row( $o, 'header_frame', __( 'X-Frame-Options', 'amw-toolbox' ), __( 'Send SAMEORIGIN', 'amw-toolbox' ), __( 'Blocks other sites from framing yours (clickjacking). Leave off if you embed this site elsewhere.', 'amw-toolbox' ), $shield_note );
+					amw_toolbox_bool_row( $o, 'header_referrer', __( 'Referrer-Policy', 'amw-toolbox' ), __( 'Send strict-origin-when-cross-origin', 'amw-toolbox' ), __( 'Sends only the origin as the referrer when navigating to other sites.', 'amw-toolbox' ), $shield_note );
 					amw_toolbox_bool_row( $o, 'header_hsts', __( 'HSTS', 'amw-toolbox' ), __( 'Send Strict-Transport-Security (HSTS)', 'amw-toolbox' ), __( 'Forces HTTPS for a year, including subdomains. WARNING: only enable on sites fully served over HTTPS; a wrong setup can make the site unreachable for a while. Only sent on HTTPS requests.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'header_permissions_policy', __( 'Permissions-Policy', 'amw-toolbox' ), __( 'Send a restrictive Permissions-Policy', 'amw-toolbox' ), __( 'Disables camera, microphone and geolocation for the whole site. Leave off if the site legitimately uses any of them.', 'amw-toolbox' ) );
 					?>
@@ -704,7 +716,7 @@ function amw_toolbox_render_settings() {
 					amw_toolbox_bool_row( $o, 'disable_oembed', __( 'oEmbed', 'amw-toolbox' ), __( 'Disable oEmbed', 'amw-toolbox' ), __( 'Removes the discovery links and the front-end wp-embed.js. Leave off if you embed external content in posts.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'disable_big_image_scaling', __( 'Large image scaling', 'amw-toolbox' ), __( 'Disable automatic scaling of big images', 'amw-toolbox' ), __( 'Stops WordPress from creating a downscaled "-scaled" copy of uploads above ~2560px.', 'amw-toolbox' ) );
 					amw_toolbox_bool_row( $o, 'strip_version_query', __( 'Version query string', 'amw-toolbox' ), __( 'Strip the ?ver query string', 'amw-toolbox' ), __( 'Removes ?ver from front-end and login CSS/JS (also hides the version hint there). Note: it also busts browser caches.', 'amw-toolbox' ) );
-					amw_toolbox_bool_row( $o, 'disable_emojis', __( 'Emojis', 'amw-toolbox' ), __( 'Disable emojis', 'amw-toolbox' ), __( 'Removes the emoji script, styles, TinyMCE plugin, feed/email filters and the s.w.org dns-prefetch.', 'amw-toolbox' ), $divi_active ? __( 'Divi can also disable WordPress emojis (Theme Options -> Performance). On a Divi site, manage it there and leave this off so it is in one place.', 'amw-toolbox' ) : '' );
+					amw_toolbox_bool_row( $o, 'disable_emojis', __( 'Emojis', 'amw-toolbox' ), __( 'Disable emojis', 'amw-toolbox' ), __( 'Removes the emoji script, styles, TinyMCE plugin, feed/email filters and the s.w.org dns-prefetch.', 'amw-toolbox' ), $divi_active ? __( 'Divi can also disable WordPress emojis (Theme Options -> Performance). On a Divi site, manage it there and leave this off so it is in one place.', 'amw-toolbox' ) : $yoast_note );
 					amw_toolbox_bool_row( $o, 'remove_jquery_migrate', __( 'jQuery Migrate', 'amw-toolbox' ), __( 'Remove jQuery Migrate', 'amw-toolbox' ), __( 'Drops jquery-migrate from the front-end jQuery. WARNING: can break older themes or plugins that rely on deprecated jQuery, so test the front end.', 'amw-toolbox' ), $divi_active ? __( 'Divi has a related, safer option in Theme Options -> Performance: defer jQuery and jQuery Migrate. On a Divi site, prefer Divi\'s and leave this off.', 'amw-toolbox' ) : '' );
 					amw_toolbox_bool_row( $o, 'disable_remote_block_patterns', __( 'Remote block patterns', 'amw-toolbox' ), __( 'Disable remote block patterns', 'amw-toolbox' ), __( 'Stops WordPress fetching block patterns from the wp.org directory. Fewer external calls; leave off if you use those patterns.', 'amw-toolbox' ) );
 					?>
@@ -768,19 +780,6 @@ function amw_toolbox_render_settings() {
 					<h2><?php esc_html_e( 'Utilities', 'amw-toolbox' ); ?></h2>
 					<p class="description" style="max-width:640px;"><?php esc_html_e( 'Optional extras that add a capability to WordPress or the admin, instead of hiding, cleaning or hardening something.', 'amw-toolbox' ); ?></p>
 					<table class="form-table" role="presentation">
-					<tr>
-						<th scope="row"><?php esc_html_e( 'SVG uploads', 'amw-toolbox' ); ?></th>
-						<td>
-							<label>
-								<input type="checkbox" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[allow_svg_upload]' ); ?>" value="1" <?php checked( ! empty( $o['allow_svg_upload'] ) ); ?>>
-								<?php esc_html_e( 'Allow SVG uploads (administrators only)', 'amw-toolbox' ); ?>
-							</label>
-							<div class="amw-warning" style="margin-top:8px;padding:10px 12px;border-left:4px solid #dba617;background:#fcf9e8;max-width:640px;">
-								<strong><?php esc_html_e( 'Security warning', 'amw-toolbox' ); ?></strong><br>
-								<?php esc_html_e( 'SVG files are code (XML) and can carry scripts. AMW Toolbox permits the upload but does NOT sanitize the file, so a malicious SVG could run in the browser. Enable this only if you upload SVGs from sources you trust. Uploading is limited to administrators.', 'amw-toolbox' ); ?>
-							</div>
-						</td>
-					</tr>
 					<?php
 					amw_toolbox_bool_row( $o, 'custom_admin_footer', __( 'Admin footer', 'amw-toolbox' ), __( 'Replace the admin footer text', 'amw-toolbox' ), __( 'Replaces the "Thank you for creating with WordPress" text at the bottom of the admin. Enable and set the text below.', 'amw-toolbox' ) );
 					?>
@@ -795,7 +794,29 @@ function amw_toolbox_render_settings() {
 						amw_toolbox_bool_row( $o, 'block_dashboard_non_editors', __( 'Dashboard access', 'amw-toolbox' ), __( 'Block the dashboard for users without editing permission', 'amw-toolbox' ), __( 'Logged-in users who cannot edit content (subscribers and custom roles without edit permission, such as a bookings manager) are redirected out of /wp-admin to the front page. Administrators and editors are unaffected. This also blocks the profile screen, so an administrator must reset those users\' passwords for them. AJAX (admin-ajax.php), admin-post.php form handlers and WP-Cron are never blocked, and logged-out visitors still reach the login screen. The redirect target can be changed per role with the amw_toolbox_dashboard_redirect filter.', 'amw-toolbox' ) );
 						amw_toolbox_bool_row( $o, 'enable_duplication', __( 'Duplicate content', 'amw-toolbox' ), __( 'Add a "Duplicate" link to posts, pages and custom post types', 'amw-toolbox' ), __( 'Adds a Duplicate action to the posts, pages and custom post type lists. The copy is created as a draft, with the title, content, taxonomies and custom fields of the original. Content is slashed correctly before saving, so Divi and other page builder layouts are duplicated intact instead of being broken. Only users who can create items of that type see the link.', 'amw-toolbox' ) );
 						amw_toolbox_bool_row( $o, 'enable_year_shortcode', __( 'Current year', 'amw-toolbox' ), __( 'Enable a shortcode that prints the current year', 'amw-toolbox' ), __( 'Registers the [amw_year] shortcode, which prints the current year and updates on its own, ideal for a footer copyright. Add a start year for a range: [amw_year start="2020"] shows 2020–2026. It also registers the shorter [year] shortcode when no other plugin already uses that name.', 'amw-toolbox' ) );
+						amw_toolbox_bool_row( $o, 'enable_firma_shortcode', __( 'Footer signature', 'amw-toolbox' ), __( 'Enable the [amw_firma] footer credit shortcode', 'amw-toolbox' ), __( 'Registers [amw_firma], a footer credit with the dynamic year, the site or client name and a "Hecho con ♥ por" author line. Put [amw_firma] in a Text module in your footer. Set the creator name, link and heart color below.', 'amw-toolbox' ) );
 						?>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Signature creator', 'amw-toolbox' ); ?></th>
+						<td>
+							<input type="text" class="regular-text" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[firma_autor]' ); ?>" value="<?php echo esc_attr( $o['firma_autor'] ); ?>" placeholder="Álvaro Márquez">
+							<p class="description"><?php esc_html_e( 'Name shown after "Hecho con ♥ por" in the signature. Leave empty to use Álvaro Márquez.', 'amw-toolbox' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Signature link', 'amw-toolbox' ); ?></th>
+						<td>
+							<input type="url" class="regular-text" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[firma_url]' ); ?>" value="<?php echo esc_attr( $o['firma_url'] ); ?>" placeholder="https://alvaromarquezweb.com">
+							<p class="description"><?php esc_html_e( 'URL the creator name links to. Leave empty to use https://alvaromarquezweb.com.', 'amw-toolbox' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Heart color', 'amw-toolbox' ); ?></th>
+						<td>
+							<input type="text" class="amw-color-field" data-default-color="#b33a2b" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[firma_corazon]' ); ?>" value="<?php echo esc_attr( $o['firma_corazon'] ); ?>">
+							<p class="description"><?php esc_html_e( 'Hex color of the heart, for example #b33a2b. Leave empty for the default red.', 'amw-toolbox' ); ?></p>
+						</td>
+					</tr>
 					</table>
 				</div>
 

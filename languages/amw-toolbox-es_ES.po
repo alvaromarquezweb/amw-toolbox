@@ -206,18 +206,6 @@ msgstr "Desactivar la verificación periódica del email de administración"
 msgid "Stops the \"Is this admin email still correct?\" screen that WordPress shows every few months."
 msgstr "Quita la pantalla «¿Sigue siendo correcto este email de administración?» que WordPress muestra cada pocos meses."
 
-msgid "SVG uploads"
-msgstr "Subida de SVG"
-
-msgid "Allow SVG uploads (administrators only)"
-msgstr "Permitir subir SVG (solo administradores)"
-
-msgid "Security warning"
-msgstr "Aviso de seguridad"
-
-msgid "SVG files are code (XML) and can carry scripts. AMW Toolbox permits the upload but does NOT sanitize the file, so a malicious SVG could run in the browser. Enable this only if you upload SVGs from sources you trust. Uploading is limited to administrators."
-msgstr "Los archivos SVG son código (XML) y pueden llevar scripts. AMW Toolbox permite subirlos pero NO sanea el archivo, así que un SVG malicioso podría ejecutarse en el navegador. Actívalo solo si subes SVG de fuentes en las que confíes. La subida está limitada a administradores."
-
 msgid "Admin footer"
 msgstr "Pie del escritorio"
 
@@ -712,3 +700,48 @@ msgstr "Desactivar todos los feeds RSS"
 
 msgid "Turns off every RSS and Atom feed (posts, comments, categories, authors) by redirecting the feed URLs to the home page, and removes the feed links from the <head>. Useful on client sites without a blog. Leave off if something consumes your feed, such as an email service (Mailchimp RSS) or a podcast."
 msgstr "Desactiva todos los feeds RSS y Atom (entradas, comentarios, categorías, autores) redirigiendo las URL de feed a la portada, y quita los enlaces de feed del <head>. Útil en webs de cliente sin blog. Déjalo desactivado si algo consume tu feed, como un servicio de email (Mailchimp RSS) o un pódcast."
+
+msgid "Yoast SEO can also do this in SEO -> Advanced -> Crawl optimization. If you use Yoast, manage it there and leave this off so it stays in one place."
+msgstr "Yoast SEO también puede hacer esto en SEO -> Avanzado -> Optimización del rastreo. Si usas Yoast, gestiónalo ahí y deja esta desactivada para tenerlo en un solo sitio."
+
+msgid "Footer signature"
+msgstr "Firma del pie"
+
+msgid "Enable the [amw_firma] footer credit shortcode"
+msgstr "Activar el shortcode [amw_firma] de firma del pie"
+
+msgid "Registers [amw_firma], a footer credit with the dynamic year, the site or client name and a \"Hecho con ♥ por\" author line. Put [amw_firma] in a Text module in your footer. Set the creator name, link and heart color below."
+msgstr "Registra [amw_firma], una firma de pie con el año dinámico, el nombre del sitio o del cliente y una línea \"Hecho con ♥ por\". Pon [amw_firma] en un módulo de Texto del pie. Define debajo el nombre del creador, el enlace y el color del corazón."
+
+msgid "Signature creator"
+msgstr "Creador de la firma"
+
+msgid "Name shown after \"Hecho con ♥ por\" in the signature. Leave empty to use Álvaro Márquez."
+msgstr "Nombre que aparece tras \"Hecho con ♥ por\" en la firma. Déjalo vacío para usar Álvaro Márquez."
+
+msgid "Signature link"
+msgstr "Enlace de la firma"
+
+msgid "URL the creator name links to. Leave empty to use https://alvaromarquezweb.com."
+msgstr "URL a la que enlaza el nombre del creador. Déjalo vacío para usar https://alvaromarquezweb.com."
+
+msgid "Heart color"
+msgstr "Color del corazón"
+
+msgid "Hex color of the heart, for example #b33a2b. Leave empty for the default red."
+msgstr "Color hexadecimal del corazón, por ejemplo #b33a2b. Déjalo vacío para el rojo por defecto."
+
+msgid "Shield Security can also do this. If you use Shield, manage it there and leave this off so it stays in one place."
+msgstr "Shield Security también puede encargarse de esto. Si usas Shield, gestiónalo ahí y deja esta desactivada para tenerlo en un solo sitio."
+
+msgid "Anonymous REST API"
+msgstr "REST API anónima"
+
+msgid "Block the REST API for logged-out visitors"
+msgstr "Bloquear la REST API para visitantes sin sesión"
+
+msgid "Returns a 401 for REST requests from visitors who are not logged in. This can break front-end blocks, forms or plugins that use the REST API, so only enable it if your front end does not need it. oEmbed stays allowed, and you can allow more routes with the amw_toolbox_rest_anon_allowed_routes filter."
+msgstr "Devuelve un 401 en las peticiones REST de visitantes sin sesión. Puede romper bloques, formularios o plugins del front que usen la REST API, así que actívalo solo si tu front no la necesita. oEmbed sigue permitido, y puedes permitir más rutas con el filtro amw_toolbox_rest_anon_allowed_routes."
+
+msgid "The REST API is restricted to logged-in users on this site."
+msgstr "La REST API está restringida a usuarios con sesión en este sitio."

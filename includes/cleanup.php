@@ -236,38 +236,6 @@ if ( $amw_toolbox_o['block_dashboard_non_editors'] ) {
 	add_action( 'admin_init', 'amw_toolbox_block_dashboard_non_editors' );
 }
 
-// Allow SVG uploads for administrators only (WPCode-style: permits the type and
-// fixes the file-type check, but does NOT sanitize the file contents).
-if ( $amw_toolbox_o['allow_svg_upload'] ) {
-	add_filter( 'upload_mimes', 'amw_toolbox_allow_svg_mimes' );
-	add_filter( 'wp_check_filetype_and_ext', 'amw_toolbox_fix_svg_filetype', 10, 4 );
-	add_action( 'admin_head', 'amw_toolbox_svg_media_css' );
-}
-
-function amw_toolbox_allow_svg_mimes( $mimes ) {
-	if ( current_user_can( 'manage_options' ) ) {
-		$mimes['svg']  = 'image/svg+xml';
-		$mimes['svgz'] = 'image/svg+xml';
-	}
-	return $mimes;
-}
-
-function amw_toolbox_fix_svg_filetype( $data, $file, $filename, $mimes ) {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return $data;
-	}
-	$check = wp_check_filetype( $filename, $mimes );
-	if ( 'svg' === $check['ext'] || 'svgz' === $check['ext'] ) {
-		$data['ext']  = $check['ext'];
-		$data['type'] = $check['type'];
-	}
-	return $data;
-}
-
-function amw_toolbox_svg_media_css() {
-	echo "<style id=\"amw-svg-media\">img[src\$=\".svg\"].attachment-thumbnail,.media-icon img[src\$=\".svg\"],.attachment-preview .thumbnail img[src\$=\".svg\"]{width:100%;height:auto;}</style>\n";
-}
-
 function amw_toolbox_custom_admin_footer() {
 	$o = amw_toolbox_get_options();
 	return $o['admin_footer_text'];
@@ -412,6 +380,59 @@ function amw_toolbox_block_rest_user_enum( $endpoints ) {
 // Disable Application Passwords.
 if ( $amw_toolbox_o['disable_app_passwords'] ) {
 	add_filter( 'wp_is_application_passwords_available', '__return_false' );
+}
+
+// Bloquear la REST API para visitantes no autenticados.
+if ( $amw_toolbox_o['disable_anon_rest'] ) {
+	add_filter( 'rest_authentication_errors', 'amw_toolbox_block_anon_rest' );
+}
+
+/**
+ * Devuelve un error 401 en las peticiones REST de visitantes no logueados.
+ *
+ * Respeta cualquier error de autenticacion previo y deja pasar a los usuarios
+ * con sesion. Algunas rutas quedan siempre permitidas para no romper funciones
+ * del front: por defecto las de oEmbed (incrustaciones). Esa lista se puede
+ * ampliar con el filtro amw_toolbox_rest_anon_allowed_routes, por ejemplo:
+ *
+ *     add_filter( 'amw_toolbox_rest_anon_allowed_routes', function ( $rutas ) {
+ *         $rutas[] = '/contact-form-7/'; // dejar pasar tu plugin de formularios
+ *         return $rutas;
+ *     } );
+ *
+ * @param mixed $result Resultado de autenticacion acumulado (null si aun nada).
+ * @return mixed
+ */
+function amw_toolbox_block_anon_rest( $result ) {
+	// Si ya hay un error (u otra respuesta) de autenticacion, no lo pisamos.
+	if ( ! empty( $result ) ) {
+		return $result;
+	}
+	if ( is_user_logged_in() ) {
+		return $result;
+	}
+
+	// Ruta REST actual (por query var, con REQUEST_URI como respaldo).
+	$route = '';
+	if ( isset( $GLOBALS['wp'] ) && isset( $GLOBALS['wp']->query_vars['rest_route'] ) ) {
+		$route = (string) $GLOBALS['wp']->query_vars['rest_route'];
+	} elseif ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
+		$route = (string) wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH );
+	}
+
+	// Rutas siempre permitidas (ampliables por filtro).
+	$permitidas = apply_filters( 'amw_toolbox_rest_anon_allowed_routes', array( '/oembed/' ) );
+	foreach ( (array) $permitidas as $prefijo ) {
+		if ( '' !== $prefijo && false !== strpos( $route, $prefijo ) ) {
+			return $result;
+		}
+	}
+
+	return new WP_Error(
+		'amw_rest_forbidden',
+		__( 'The REST API is restricted to logged-in users on this site.', 'amw-toolbox' ),
+		array( 'status' => 401 )
+	);
 }
 
 
@@ -888,3 +909,182 @@ function amw_toolbox_year_shortcode( $atts ) {
 	return esc_html( $current );
 }
 
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   9. SHORTCODE DE FIRMA  ([amw_firma], credito centralizado del pie de pagina)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+// Registramos el shortcode y dejamos el estilo preparado. El CSS no se encola
+// aqui: solo se encolara cuando una pagina pinte de verdad [amw_firma], para no
+// cargarlo en todo el sitio.
+if ( $amw_toolbox_o['enable_firma_shortcode'] ) {
+	add_action( 'init', 'amw_toolbox_register_firma_shortcode', 99 );
+	add_action( 'wp_enqueue_scripts', 'amw_toolbox_register_firma_style' );
+}
+
+function amw_toolbox_register_firma_shortcode() {
+	add_shortcode( 'amw_firma', 'amw_toolbox_firma_shortcode' );
+}
+
+// Dejamos la hoja de estilos registrada (que no encolada), lista para encolarla
+// bajo demanda desde el propio shortcode.
+function amw_toolbox_register_firma_style() {
+	wp_register_style(
+		'amw-firma',
+		AMW_TOOLBOX_URL . 'assets/css/firma.css',
+		array(),
+		AMW_TOOLBOX_VERSION
+	);
+}
+
+/**
+ * Valores por defecto del credito, centralizados en un unico punto.
+ *
+ * Se pasan por el filtro amw_firma_args para poder cambiar el autor, la URL, el
+ * color del corazon o los textos desde un solo sitio (por ejemplo en el
+ * functions.php del tema hijo) sin tocar el plugin.
+ *
+ * @return array
+ */
+function amw_toolbox_firma_args() {
+	$o = amw_toolbox_get_options();
+
+	// El autor, la URL y el color salen del panel; si estan vacios o no son
+	// validos, caemos a los valores por defecto. El filtro amw_firma_args queda
+	// por encima para poder sobrescribirlo todo desde codigo.
+	$autor   = ( '' !== trim( (string) $o['firma_autor'] ) ) ? $o['firma_autor'] : 'Álvaro Márquez';
+	$url     = ( '' !== trim( (string) $o['firma_url'] ) ) ? $o['firma_url'] : 'https://alvaromarquezweb.com';
+	$corazon = ( '' !== trim( (string) $o['firma_corazon'] ) ) ? $o['firma_corazon'] : '#b33a2b';
+
+	$defaults = array(
+		'autor'    => $autor,                         // Nombre del enlace (panel).
+		'url'      => $url,                           // Destino del enlace (panel).
+		'corazon'  => $corazon,                       // Color del corazon (panel).
+		'hecho'    => 'Hecho con',                    // Texto antes del corazon.
+		'por'      => 'por',                          // Texto entre el corazon y el enlace.
+		'derechos' => 'Todos los derechos reservados.', // Cierre de la primera linea.
+	);
+
+	return apply_filters( 'amw_firma_args', $defaults );
+}
+
+/**
+ * Pinta la firma del pie de pagina.
+ *
+ * Ejemplos de uso:
+ *   [amw_firma]
+ *   [amw_firma cliente="El Pizzaloriano" align="center"]
+ *   [amw_firma color_corazon="#0a7"]
+ *
+ * @param array $atts Atributos del shortcode.
+ * @return string HTML de la firma.
+ */
+function amw_toolbox_firma_shortcode( $atts ) {
+	$args = amw_toolbox_firma_args();
+
+	$atts = shortcode_atts(
+		array(
+			'cliente'       => get_bloginfo( 'name' ), // Por defecto, el nombre del sitio.
+			'align'         => 'right',                 // right, left o center.
+			'color_corazon' => $args['corazon'],
+		),
+		$atts,
+		'amw_firma'
+	);
+
+	// Ahora sabemos que la pagina usa la firma: encolamos el CSS (si se registro
+	// en wp_enqueue_scripts, WordPress lo imprime en el pie).
+	if ( ! wp_style_is( 'amw-firma', 'registered' ) ) {
+		amw_toolbox_register_firma_style();
+	}
+	wp_enqueue_style( 'amw-firma' );
+
+	// Alineacion: solo admitimos left, center o right; cualquier otra cae a right.
+	$align = in_array( $atts['align'], array( 'left', 'center', 'right' ), true ) ? $atts['align'] : 'right';
+
+	// El anio es dinamico y reutiliza la logica de [amw_year] (sin duplicar codigo).
+	// Esa funcion ya devuelve el valor escapado con esc_html.
+	$anio = amw_toolbox_year_shortcode( array() );
+
+	// Cliente saneado como texto plano.
+	$cliente = sanitize_text_field( $atts['cliente'] );
+
+	// Color del corazon: admitimos con o sin '#', y si no es un hex valido
+	// volvemos al color por defecto.
+	$corazon = (string) $atts['color_corazon'];
+	if ( '' !== $corazon && '#' !== substr( $corazon, 0, 1 ) ) {
+		$corazon = '#' . $corazon;
+	}
+	$corazon = sanitize_hex_color( $corazon );
+	if ( empty( $corazon ) ) {
+		$corazon = $args['corazon'];
+	}
+
+	// Primera linea: (c) anio cliente. Todos los derechos reservados.
+	$linea_copyright = sprintf(
+		'© %1$s %2$s. %3$s',
+		$anio, // Ya escapado por [amw_year].
+		esc_html( $cliente ),
+		esc_html( $args['derechos'] )
+	);
+
+	// Credito: Hecho con (corazon) por + pastilla con el logo y el nombre, enlazada
+	// a la web del autor. El SVG del logo es markup de confianza del propio plugin.
+	$credito = sprintf(
+		'%1$s <span class="amw-firma__heart" aria-hidden="true">♥</span> %2$s <a class="amw-firma__badge" href="%3$s" target="_blank" rel="noopener">%4$s<span class="amw-firma__name">%5$s</span></a>',
+		esc_html( $args['hecho'] ),
+		esc_html( $args['por'] ),
+		esc_url( $args['url'] ),
+		amw_toolbox_firma_logo(),
+		esc_html( $args['autor'] )
+	);
+
+	// Clases: base + modificador de alineacion solo cuando NO es la de por defecto
+	// (right), para que la firma por defecto salga como <p class="amw-firma">.
+	$clases = 'amw-firma';
+	if ( 'right' !== $align ) {
+		$clases .= ' amw-firma--' . $align;
+	}
+
+	// Color: solo escribimos la variable CSS si difiere del color por defecto
+	// (#b33a2b), que el CSS ya aplica con su valor de reserva.
+	$style = '';
+	if ( 0 !== strcasecmp( $corazon, '#b33a2b' ) ) {
+		$style = ' style="--amw-firma-heart:' . esc_attr( $corazon ) . '"';
+	}
+
+	// La firma es un contenedor flexible: con sitio va en una linea y, si no cabe,
+	// se parte sola en dos. Por eso no hay <br>.
+	return sprintf(
+		'<p class="%1$s"%2$s><span class="amw-firma__copy">%3$s</span><span class="amw-firma__credito">%4$s</span></p>',
+		esc_attr( $clases ),
+		$style,
+		$linea_copyright,
+		$credito
+	);
+}
+
+/**
+ * Logo de la firma. Por defecto, el logo de Alvaro Marquez (AMW): un SVG inline
+ * monocromo que hereda el color del texto (fill=currentColor), asi encaja en
+ * footers claros y oscuros.
+ *
+ * Se pasa por el filtro amw_firma_logo para que cualquiera que use el plugin
+ * pueda poner su propio logo, o una cadena vacia para no mostrar ninguno. Por
+ * ejemplo, desde el functions.php del tema hijo:
+ *
+ *     add_filter( 'amw_firma_logo', function () {
+ *         return '<svg class="amw-firma__logo" fill="currentColor" viewBox="...">...</svg>';
+ *     } );
+ *
+ * Idealmente el SVG lleva class="amw-firma__logo" y fill="currentColor" para que
+ * herede el color y el tamano. El valor es markup de confianza (lo define quien
+ * tiene acceso al codigo), por eso se imprime tal cual.
+ *
+ * @return string
+ */
+function amw_toolbox_firma_logo() {
+	$logo = '<svg class="amw-firma__logo" viewBox="0 0 156 198" fill="currentColor" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M90,0h-24L0,129.119995v68.880005l18-18v-24l24,24,27.120003-27.119995v45.119995l44.879997-44.880005,42,44.880005v-68.880005L90,0ZM78,24l27.120003,72s-8.872002,3.120003-26.879997,3.120003-27.120003-3.120003-27.120003-3.120003l26.879997-72ZM138,156l-24-26.880005-27.120003,26.880005v-44.880005l-44.880001,44.880005-24-24,30-30s11.916,3.120003,30.000004,3.120003,30-3.120003,30-3.120003l30,30v24Z"/></svg>';
+
+	return apply_filters( 'amw_firma_logo', $logo );
+}

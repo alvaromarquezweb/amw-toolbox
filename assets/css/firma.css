@@ -1,0 +1,73 @@
+/* Estilos de la firma del pie de pagina de AMW Toolbox ([amw_firma]).
+   Se encola solo en las paginas que usan el shortcode. El color del texto y del
+   logo se hereda del footer; solo el corazon usa su propia variable de color.
+
+   La firma es un contenedor flexible: con sitio va en una linea y, si no cabe,
+   se parte sola en dos. La alineacion por defecto es a la derecha. */
+
+.amw-firma {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end; /* right por defecto */
+	gap: .35em .55em;
+	margin: 0;
+	font-size: .875rem;
+	line-height: 1.7;
+	letter-spacing: .01em;
+	text-align: right;
+}
+
+.amw-firma--left {
+	justify-content: flex-start;
+	text-align: left;
+}
+
+.amw-firma--center {
+	justify-content: center;
+	text-align: center;
+}
+
+/* El corazon usa la variable CSS del elemento, con un color de reserva. */
+.amw-firma__heart {
+	color: var(--amw-firma-heart, #b33a2b);
+}
+
+/* La frase del credito y la pastilla, centradas entre si. */
+.amw-firma__credito {
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: inherit;
+	gap: .45em;
+}
+
+/* Pastilla con el logo y el nombre del autor. Hereda el color del footer y el
+   fondo se adapta solo (claro u oscuro) con color-mix. Si el navegador no
+   entiende color-mix, la pastilla se ve sin fondo, sin romperse. */
+.amw-firma__badge {
+	display: inline-flex;
+	align-items: center;
+	gap: .5em;
+	padding: .32em .72em;
+	border-radius: 999px;
+	background: color-mix(in srgb, currentColor 9%, transparent);
+	color: inherit;
+	font-weight: 600;
+	text-decoration: none;
+	line-height: 1;
+	transition: background-color .2s ease;
+}
+
+.amw-firma__badge:hover,
+.amw-firma__badge:focus {
+	background: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+/* Logo: hereda el color (fill: currentColor en el SVG) y escala con el texto. */
+.amw-firma__logo {
+	height: 1.2em;
+	width: auto;
+	display: block;
+	flex: none;
+}

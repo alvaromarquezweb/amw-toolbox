@@ -204,18 +204,6 @@ msgstr ""
 msgid "Stops the \"Is this admin email still correct?\" screen that WordPress shows every few months."
 msgstr ""
 
-msgid "SVG uploads"
-msgstr ""
-
-msgid "Allow SVG uploads (administrators only)"
-msgstr ""
-
-msgid "Security warning"
-msgstr ""
-
-msgid "SVG files are code (XML) and can carry scripts. AMW Toolbox permits the upload but does NOT sanitize the file, so a malicious SVG could run in the browser. Enable this only if you upload SVGs from sources you trust. Uploading is limited to administrators."
-msgstr ""
-
 msgid "Admin footer"
 msgstr ""
 
@@ -709,4 +697,49 @@ msgid "Disable all RSS feeds"
 msgstr ""
 
 msgid "Turns off every RSS and Atom feed (posts, comments, categories, authors) by redirecting the feed URLs to the home page, and removes the feed links from the <head>. Useful on client sites without a blog. Leave off if something consumes your feed, such as an email service (Mailchimp RSS) or a podcast."
+msgstr ""
+
+msgid "Yoast SEO can also do this in SEO -> Advanced -> Crawl optimization. If you use Yoast, manage it there and leave this off so it stays in one place."
+msgstr ""
+
+msgid "Footer signature"
+msgstr ""
+
+msgid "Enable the [amw_firma] footer credit shortcode"
+msgstr ""
+
+msgid "Registers [amw_firma], a footer credit with the dynamic year, the site or client name and a \"Hecho con ♥ por\" author line. Put [amw_firma] in a Text module in your footer. Set the creator name, link and heart color below."
+msgstr ""
+
+msgid "Signature creator"
+msgstr ""
+
+msgid "Name shown after \"Hecho con ♥ por\" in the signature. Leave empty to use Álvaro Márquez."
+msgstr ""
+
+msgid "Signature link"
+msgstr ""
+
+msgid "URL the creator name links to. Leave empty to use https://alvaromarquezweb.com."
+msgstr ""
+
+msgid "Heart color"
+msgstr ""
+
+msgid "Hex color of the heart, for example #b33a2b. Leave empty for the default red."
+msgstr ""
+
+msgid "Shield Security can also do this. If you use Shield, manage it there and leave this off so it stays in one place."
+msgstr ""
+
+msgid "Anonymous REST API"
+msgstr ""
+
+msgid "Block the REST API for logged-out visitors"
+msgstr ""
+
+msgid "Returns a 401 for REST requests from visitors who are not logged in. This can break front-end blocks, forms or plugins that use the REST API, so only enable it if your front end does not need it. oEmbed stays allowed, and you can allow more routes with the amw_toolbox_rest_anon_allowed_routes filter."
+msgstr ""
+
+msgid "The REST API is restricted to logged-in users on this site."
 msgstr ""

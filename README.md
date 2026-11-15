@@ -26,9 +26,9 @@ Customize and simplify the WordPress administration area:
 
 Optional extras that add a capability to WordPress or the admin, instead of hiding, cleaning or hardening something:
 
-* Allow SVG uploads for administrators only (see the security note below)
 * Add a "Duplicate" link to posts, pages and custom post types, creating a draft copy with the original title, content, taxonomies and custom fields (handles slashing correctly so Divi and other page builder layouts are duplicated intact)
 * Provide a `[amw_year]` shortcode that prints the current year (and updates on its own) for a self-maintaining footer copyright; `[amw_year start="2020"]` prints a range like `2020–2026`, and a `[year]` alias is registered when no other plugin uses it
+* Provide a `[amw_firma]` shortcode that prints a centralized footer credit (copyright with the dynamic year plus a "Hecho con ♥ por" author line). Attributes: `cliente` (defaults to the site name), `align` (`right`/`left`/`center`, applied with an `amw-firma--*` modifier class) and `color_corazon` (applied through the `--amw-firma-heart` CSS variable). The creator name, link and heart color can be set from the Utilities tab (enable "Footer signature" first), and the `amw_firma_args` filter still overrides everything from code. The logo can be replaced with the `amw_firma_logo` filter (its default is the author's logo; return an empty string to hide it), so anyone using the plugin can put their own. Its small stylesheet loads only on pages that use the shortcode.
 * Replace the admin footer text ("Thank you for creating with WordPress") with your own
 * Block the dashboard for logged-in users without editing permission (subscribers and custom roles such as a bookings manager), redirecting them out of `/wp-admin`; administrators and editors are unaffected, and the redirect target can be changed per role with the `amw_toolbox_dashboard_redirect` filter (see the note below)
 
@@ -57,6 +57,7 @@ Optional security and privacy-related tweaks:
 * Disable the built-in theme/plugin file editor
 * Block public user enumeration
 * Disable WordPress Application Passwords
+* Block the REST API for logged-out visitors (returns 401 for anonymous requests; oEmbed stays allowed and extra routes can be whitelisted with the `amw_toolbox_rest_anon_allowed_routes` filter). Use with care, as it can break front-end features that use the REST API
 
 > These options are intentionally independent. Enable only the protections that are appropriate for your website.
 
@@ -108,6 +109,10 @@ When WooCommerce is active, AMW Toolbox provides additional options:
 ### Overlap notes
 
 When an option is also handled natively by a detected page builder (for example disabling emojis or managing jQuery Migrate in Divi), AMW Toolbox shows a short note recommending where to manage it, so the same thing is not toggled in two places.
+
+The same applies to Yoast SEO: when Yoast is active, the options it also covers under SEO -> Advanced -> Crawl optimization (hiding the WordPress version, removing X-Powered-By, head cleanup, disabling RSS feeds and disabling emojis) show a note suggesting you keep them in Yoast and leave them off here. The options are not removed, so sites without Yoast keep them as usual.
+
+Similarly, when Shield Security (wp-simple-firewall) is active, the options it also covers (both XML-RPC options, user enumeration, the file editor, Application Passwords, and the X-Content-Type-Options, X-Frame-Options and Referrer-Policy headers) show a note suggesting you manage them in Shield, and Shield appears in the detected-frameworks row.
 
 ## Philosophy
 
@@ -200,10 +205,6 @@ Revision and trash settings affect how WordPress behaves from that point forward
 ### HSTS
 
 Enable `Strict-Transport-Security` only on sites served fully over HTTPS. A wrong setup can make the site unreachable in browsers for a while. The header is only sent on HTTPS requests.
-
-### SVG uploads
-
-This option permits SVG and SVGZ uploads for administrators only. It fixes WordPress's file-type check but does **not** sanitize the file contents, so only enable it if you upload SVGs from sources you trust.
 
 ### Divi Projects
 

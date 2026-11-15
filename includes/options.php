@@ -69,12 +69,15 @@ function amw_toolbox_defaults() {
 		'hide_default_theme_notice' => false,
 		'keep_on_uninstall'         => false,
 		'disable_admin_email_check' => false,
-		'allow_svg_upload'          => false,
 		'custom_admin_footer'       => false,
 		'admin_footer_text'         => '',
 		'block_dashboard_non_editors' => false,
 		'enable_duplication'        => false,
 		'enable_year_shortcode'     => false,
+		'enable_firma_shortcode'    => false,
+		'firma_autor'               => 'Álvaro Márquez',
+		'firma_url'                 => 'https://alvaromarquezweb.com',
+		'firma_corazon'             => '#b33a2b',
 
 		// Head & security
 		'hide_wp_version'           => false,
@@ -86,6 +89,7 @@ function amw_toolbox_defaults() {
 		'disallow_file_edit'        => false,
 		'block_user_enumeration'    => false,
 		'disable_app_passwords'     => false,
+		'disable_anon_rest'         => false,
 		'header_nosniff'            => false,
 		'header_frame'              => false,
 		'header_referrer'           => false,
@@ -135,11 +139,11 @@ function amw_toolbox_bool_keys() {
 		'hide_default_theme_notice',
 		'keep_on_uninstall',
 		'disable_admin_email_check',
-		'allow_svg_upload',
 		'custom_admin_footer',
 		'block_dashboard_non_editors',
 		'enable_duplication',
 		'enable_year_shortcode',
+		'enable_firma_shortcode',
 		'hide_wp_version',
 		'remove_powered_by',
 		'clean_head_tags',
@@ -149,6 +153,7 @@ function amw_toolbox_bool_keys() {
 		'disallow_file_edit',
 		'block_user_enumeration',
 		'disable_app_passwords',
+		'disable_anon_rest',
 		'header_nosniff',
 		'header_frame',
 		'header_referrer',
@@ -195,6 +200,22 @@ function amw_toolbox_divi_keys() {
  */
 function amw_toolbox_is_divi_active() {
 	return defined( 'ET_CORE_VERSION' ) || function_exists( 'et_setup_theme' );
+}
+
+/**
+ * Is Yoast SEO active? Used only to show overlap notes next to the options Yoast
+ * also handles under SEO -> Advanced -> Crawl optimization.
+ */
+function amw_toolbox_is_yoast_active() {
+	return defined( 'WPSEO_VERSION' );
+}
+
+/**
+ * Is Shield Security (wp-simple-firewall) active? Used only to show an overlap
+ * note next to the XML-RPC options, which Shield can also handle.
+ */
+function amw_toolbox_is_shield_active() {
+	return class_exists( 'ICWP_WPSF_Shield_Security' );
 }
 
 /**
@@ -275,45 +296,19 @@ function amw_toolbox_sanitize( $input ) {
 		$clean[ $key ] = ! empty( $input[ $key ] );
 	}
 
-	// Menu slugs (dynamic).
-	$clean['hidden_menus'] = array();
-	if ( ! empty( $input['hidden_menus'] ) && is_array( $input['hidden_menus'] ) ) {
-		foreach ( $input['hidden_menus'] as $slug ) {
-			$slug = sanitize_text_field( wp_unslash( $slug ) );
-			if ( '' !== $slug && 'options-general.php' !== $slug ) {
-				$clean['hidden_menus'][] = $slug;
-			}
-		}
-	}
+	// Menu slugs (dynamic). The Settings menu is never hideable (it holds this panel).
+	$clean['hidden_menus'] = amw_toolbox_sanitize_slug_list( isset( $input['hidden_menus'] ) ? $input['hidden_menus'] : array(), array( 'options-general.php' ) );
 
-	// Admin bar nodes: the list is detected dynamically, so we sanitize the ids
-	// rather than whitelisting. They are only used for remove_node (a no-op if the
-	// id is unknown) and printed with esc_attr, so this is safe.
-	$clean['hidden_adminbar'] = array();
-	if ( ! empty( $input['hidden_adminbar'] ) && is_array( $input['hidden_adminbar'] ) ) {
-		foreach ( $input['hidden_adminbar'] as $id ) {
-			$id = sanitize_text_field( wp_unslash( $id ) );
-			if ( '' !== $id ) {
-				$clean['hidden_adminbar'][] = $id;
-			}
-		}
-	}
+	// Admin bar nodes: detected dynamically, so we only sanitize the ids (used for
+	// remove_node, a no-op for unknown ids, and printed with esc_attr).
+	$clean['hidden_adminbar'] = amw_toolbox_sanitize_slug_list( isset( $input['hidden_adminbar'] ) ? $input['hidden_adminbar'] : array() );
 
-	// Dashboard widgets: same approach (learned dynamically; remove_meta_box is a
-	// no-op for unknown ids).
-	$clean['hidden_dashboard'] = array();
-	if ( ! empty( $input['hidden_dashboard'] ) && is_array( $input['hidden_dashboard'] ) ) {
-		foreach ( $input['hidden_dashboard'] as $id ) {
-			$id = sanitize_text_field( wp_unslash( $id ) );
-			if ( '' !== $id ) {
-				$clean['hidden_dashboard'][] = $id;
-			}
-		}
-	}
+	// Dashboard widgets: same approach (remove_meta_box is a no-op for unknown ids).
+	$clean['hidden_dashboard'] = amw_toolbox_sanitize_slug_list( isset( $input['hidden_dashboard'] ) ? $input['hidden_dashboard'] : array() );
 
 	// Heartbeat mode.
-	$hb = isset( $input['heartbeat_mode'] ) ? sanitize_key( $input['heartbeat_mode'] ) : 'off';
-	$clean['heartbeat_mode'] = in_array( $hb, array( 'default', 'slow', 'off' ), true ) ? $hb : 'off';
+	$hb = isset( $input['heartbeat_mode'] ) ? sanitize_key( $input['heartbeat_mode'] ) : 'default';
+	$clean['heartbeat_mode'] = in_array( $hb, array( 'default', 'slow', 'off' ), true ) ? $hb : 'default';
 
 	// Post revisions: mode + limit.
 	$rev = isset( $input['revisions_mode'] ) ? sanitize_key( $input['revisions_mode'] ) : 'default';
@@ -328,16 +323,18 @@ function amw_toolbox_sanitize( $input ) {
 	// Custom admin footer text (allow safe HTML, e.g. a link).
 	$clean['admin_footer_text'] = isset( $input['admin_footer_text'] ) ? wp_kses_post( wp_unslash( $input['admin_footer_text'] ) ) : '';
 
-	// Image sizes to skip generating (dynamic list; keep exact names).
-	$clean['disabled_image_sizes'] = array();
-	if ( ! empty( $input['disabled_image_sizes'] ) && is_array( $input['disabled_image_sizes'] ) ) {
-		foreach ( $input['disabled_image_sizes'] as $size ) {
-			$size = sanitize_text_field( wp_unslash( $size ) );
-			if ( '' !== $size ) {
-				$clean['disabled_image_sizes'][] = $size;
-			}
-		}
+	// Firma del pie: creador, enlace y color del corazon.
+	$clean['firma_autor'] = isset( $input['firma_autor'] ) ? sanitize_text_field( wp_unslash( $input['firma_autor'] ) ) : '';
+	$clean['firma_url']   = isset( $input['firma_url'] ) ? esc_url_raw( wp_unslash( $input['firma_url'] ) ) : '';
+	$firma_hex = isset( $input['firma_corazon'] ) ? sanitize_text_field( wp_unslash( $input['firma_corazon'] ) ) : '';
+	if ( '' !== $firma_hex && '#' !== substr( $firma_hex, 0, 1 ) ) {
+		$firma_hex = '#' . $firma_hex;
 	}
+	// sanitize_hex_color devuelve '' si el hex no es valido; al pintar se usa el color por defecto.
+	$clean['firma_corazon'] = sanitize_hex_color( $firma_hex );
+
+	// Image sizes to skip generating (dynamic list; keep exact names).
+	$clean['disabled_image_sizes'] = amw_toolbox_sanitize_slug_list( isset( $input['disabled_image_sizes'] ) ? $input['disabled_image_sizes'] : array() );
 
 	// WooCommerce toggles: only editable when WooCommerce is active. Otherwise
 	// preserve whatever was saved, so they are not wiped while Woo is off (the
@@ -362,15 +359,17 @@ function amw_toolbox_sanitize( $input ) {
 }
 
 /**
- * Keep only submitted values that exist in the given whitelist.
+ * Sanea una lista de slugs/ids enviada: unslash + sanitize_text_field, descarta
+ * vacios y cualquier valor en $exclude. Reemplaza el saneado repetido de las
+ * listas dinamicas (menus, barra de admin, widgets del escritorio, tamanos).
  */
-function amw_toolbox_clean_list( $submitted, $allowed ) {
+function amw_toolbox_sanitize_slug_list( $input, $exclude = array() ) {
 	$out = array();
 
-	if ( ! empty( $submitted ) && is_array( $submitted ) ) {
-		foreach ( $submitted as $value ) {
+	if ( ! empty( $input ) && is_array( $input ) ) {
+		foreach ( $input as $value ) {
 			$value = sanitize_text_field( wp_unslash( $value ) );
-			if ( in_array( $value, $allowed, true ) ) {
+			if ( '' !== $value && ! in_array( $value, $exclude, true ) ) {
 				$out[] = $value;
 			}
 		}

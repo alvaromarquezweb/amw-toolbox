@@ -2,6 +2,21 @@
 All notable changes to AMW Toolbox are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
+## [1.4.4] - 2026-11-15
+### Added
+* `[amw_firma]` shortcode: a centralized footer credit for client sites, so the signature lives in one place and updates on its own. By default it outputs a clean `<p class="amw-firma">` with the dynamic year (reusing `[amw_year]`), the site or client name, a rights line and a "Hecho con ♥ por" credit that links to the author, with the AMW logo (inline SVG that inherits the footer color) and the name shown together in a subtle pill.
+* Enable and personalize the signature from Settings -> AMW Toolbox -> Utilities: a "Footer signature" toggle (off by default, like `[amw_year]`) plus fields for the creator name, the link URL and the heart color (native WordPress color picker). The `amw_firma_args` filter still overrides everything from code, and the `amw_firma_logo` filter swaps the logo (its default is the author's AMW logo; return an empty string to hide it), so anyone using the plugin from GitHub can use their own.
+* Signature attributes: `cliente` (defaults to the site name), `align` (`right` default, `left` or `center`; a modifier class is only added when it is not the default) and `color_corazon` (through the `--amw-firma-heart` CSS variable, only written when it differs from the default). The small stylesheet is enqueued only on pages that use the shortcode and flows onto one or two lines depending on the available width.
+* Head & Security: optional "Block the REST API for logged-out visitors" option (off by default). It returns a 401 for anonymous REST requests, keeps oEmbed allowed, and exposes the `amw_toolbox_rest_anon_allowed_routes` filter to allow more routes. Use with care: it can break front-end features that rely on the REST API.
+* Overlap notes for Yoast SEO and Shield Security: when either is active, the options it also covers show a note suggesting you manage them there and leave them off here. Yoast covers hiding the WordPress version, removing X-Powered-By, head cleanup, disabling RSS feeds and disabling emojis (its Crawl optimization settings); Shield covers both XML-RPC options, user enumeration, the file editor, Application Passwords, and the X-Content-Type-Options, X-Frame-Options and Referrer-Policy headers. Nothing is removed, and each note only shows when the matching plugin is active.
+
+### Changed
+* The settings header shows a plain-text list of the frameworks it detects (Divi, WooCommerce, Yoast SEO, Shield Security) and hides the line when none are present, instead of a coloured pill for every framework.
+* Internal: de-duplicated the settings sanitiser with a shared slug-list helper, removed dead code, hardened the config import (size cap) and normalised a couple of fallbacks. No change in behaviour.
+
+### Removed
+* The "Allow SVG uploads" option. It permitted SVG uploads but did not sanitise the files, which is a security risk; if you need SVG uploads, use a dedicated plugin that sanitises them. Removing the option changes nothing on sites that had it off (the default).
+
 ## [1.4.3] - 2026-10-26
 ### Added
 * Utilities: optional "Duplicate" row action for posts, pages and custom post types. The copy is created as a draft with the original title, content, taxonomies and custom fields, and only users who can create that post type see the link. Content and meta are slashed before saving, so Divi (and other builders that store shortcodes or JSON in the content and post meta) duplicate intact instead of breaking, which plain duplicate snippets get wrong. Off by default.
@@ -107,6 +122,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 * Multisite uninstall support.
 * All features disabled by default to prevent unexpected changes to existing installations.
 
+[1.4.4]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.4
 [1.4.3]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.3
 [1.4.2]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.2
 [1.4.1]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.1

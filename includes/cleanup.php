@@ -1028,15 +1028,41 @@ function amw_toolbox_firma_shortcode( $atts ) {
 		esc_html( $args['derechos'] )
 	);
 
+	// Estilo de la pastilla: 'clara' u 'oscura' usan un fondo fijo del CSS;
+	// 'personalizada' usa los colores elegidos en el panel, inyectados como
+	// variables CSS en el propio elemento.
+	$opciones    = amw_toolbox_get_options();
+	$badge_clase = 'amw-firma__badge';
+	$badge_style = '';
+	if ( 'oscura' === $opciones['firma_pastilla'] ) {
+		$badge_clase .= ' amw-firma__badge--oscura';
+	} elseif ( 'personalizada' === $opciones['firma_pastilla'] ) {
+		$badge_clase .= ' amw-firma__badge--personalizada';
+		$vars = array();
+		if ( ! empty( $opciones['firma_pastilla_bg'] ) ) {
+			$vars[] = '--amw-firma-badge-bg:' . $opciones['firma_pastilla_bg'];
+		}
+		if ( ! empty( $opciones['firma_pastilla_bg_hover'] ) ) {
+			$vars[] = '--amw-firma-badge-bg-hover:' . $opciones['firma_pastilla_bg_hover'];
+		}
+		if ( ! empty( $vars ) ) {
+			$badge_style = ' style="' . esc_attr( implode( ';', $vars ) ) . '"';
+		}
+	} else {
+		$badge_clase .= ' amw-firma__badge--clara';
+	}
+
 	// Credito: Hecho con (corazon) por + pastilla con el logo y el nombre, enlazada
 	// a la web del autor. El SVG del logo es markup de confianza del propio plugin.
 	$credito = sprintf(
-		'%1$s <span class="amw-firma__heart" aria-hidden="true">♥</span> %2$s <a class="amw-firma__badge" href="%3$s" target="_blank" rel="noopener">%4$s<span class="amw-firma__name">%5$s</span></a>',
+		'%1$s <span class="amw-firma__heart" aria-hidden="true">♥</span> %2$s <a class="%6$s"%7$s href="%3$s" target="_blank" rel="noopener">%4$s<span class="amw-firma__name">%5$s</span></a>',
 		esc_html( $args['hecho'] ),
 		esc_html( $args['por'] ),
 		esc_url( $args['url'] ),
 		amw_toolbox_firma_logo(),
-		esc_html( $args['autor'] )
+		esc_html( $args['autor'] ),
+		esc_attr( $badge_clase ),
+		$badge_style
 	);
 
 	// Clases: base + modificador de alineacion solo cuando NO es la de por defecto

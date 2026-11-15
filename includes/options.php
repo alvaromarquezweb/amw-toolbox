@@ -78,6 +78,9 @@ function amw_toolbox_defaults() {
 		'firma_autor'               => 'Álvaro Márquez',
 		'firma_url'                 => 'https://alvaromarquezweb.com',
 		'firma_corazon'             => '#b33a2b',
+		'firma_pastilla'            => 'clara', // clara | oscura | personalizada
+		'firma_pastilla_bg'         => '#ffffff', // fondo de la pastilla personalizada
+		'firma_pastilla_bg_hover'   => '#f0f0f0', // fondo al pasar el raton (personalizada)
 
 		// Head & security
 		'hide_wp_version'           => false,
@@ -332,6 +335,20 @@ function amw_toolbox_sanitize( $input ) {
 	}
 	// sanitize_hex_color devuelve '' si el hex no es valido; al pintar se usa el color por defecto.
 	$clean['firma_corazon'] = sanitize_hex_color( $firma_hex );
+	// Estilo de la pastilla: clara, oscura o personalizada (con colores propios).
+	$pastilla = isset( $input['firma_pastilla'] ) ? sanitize_key( $input['firma_pastilla'] ) : 'clara';
+	$clean['firma_pastilla'] = in_array( $pastilla, array( 'clara', 'oscura', 'personalizada' ), true ) ? $pastilla : 'clara';
+	// Colores de la pastilla personalizada (hex). Vacio si el valor no es valido.
+	$bg = isset( $input['firma_pastilla_bg'] ) ? sanitize_text_field( wp_unslash( $input['firma_pastilla_bg'] ) ) : '';
+	if ( '' !== $bg && '#' !== substr( $bg, 0, 1 ) ) {
+		$bg = '#' . $bg;
+	}
+	$clean['firma_pastilla_bg'] = sanitize_hex_color( $bg );
+	$bgh = isset( $input['firma_pastilla_bg_hover'] ) ? sanitize_text_field( wp_unslash( $input['firma_pastilla_bg_hover'] ) ) : '';
+	if ( '' !== $bgh && '#' !== substr( $bgh, 0, 1 ) ) {
+		$bgh = '#' . $bgh;
+	}
+	$clean['firma_pastilla_bg_hover'] = sanitize_hex_color( $bgh );
 
 	// Image sizes to skip generating (dynamic list; keep exact names).
 	$clean['disabled_image_sizes'] = amw_toolbox_sanitize_slug_list( isset( $input['disabled_image_sizes'] ) ? $input['disabled_image_sizes'] : array() );

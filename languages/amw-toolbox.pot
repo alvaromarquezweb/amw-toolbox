@@ -743,3 +743,36 @@ msgstr ""
 
 msgid "The REST API is restricted to logged-in users on this site."
 msgstr ""
+
+msgid "Pill style"
+msgstr ""
+
+msgid "Automatic (follows the footer color)"
+msgstr ""
+
+msgid "Light pill (for dark footers)"
+msgstr ""
+
+msgid "Dark pill (for light footers)"
+msgstr ""
+
+msgid "Background of the name pill. Choose a light or dark pill by hand if the automatic one does not fit your footer."
+msgstr ""
+
+msgid "Custom (choose the colors)"
+msgstr ""
+
+msgid "Background of the name pill: light, dark, or custom with your own colors."
+msgstr ""
+
+msgid "Pill background color"
+msgstr ""
+
+msgid "Only applies when the pill style is Custom."
+msgstr ""
+
+msgid "Pill hover color"
+msgstr ""
+
+msgid "Pill background when the pointer is over it. Only applies to the Custom style."
+msgstr ""

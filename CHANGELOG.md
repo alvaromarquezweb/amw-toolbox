@@ -2,6 +2,13 @@
 All notable changes to AMW Toolbox are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
+## [1.4.5] - 2026-11-15
+### Added
+* Signature "Pill style" option (Utilities): choose a light pill (for dark footers), a dark pill (for light footers), or a custom pill with your own background and hover colors (native WordPress color picker).
+
+### Changed
+* The signature name pill no longer tries to adapt its background to the footer color automatically; the previous `color-mix` detection did not fit every footer. You now pick the pill style explicitly, and sites updating from 1.4.4 fall back to the light pill.
+
 ## [1.4.4] - 2026-11-15
 ### Added
 * `[amw_firma]` shortcode: a centralized footer credit for client sites, so the signature lives in one place and updates on its own. By default it outputs a clean `<p class="amw-firma">` with the dynamic year (reusing `[amw_year]`), the site or client name, a rights line and a "Hecho con ♥ por" credit that links to the author, with the AMW logo (inline SVG that inherits the footer color) and the name shown together in a subtle pill.
@@ -122,6 +129,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 * Multisite uninstall support.
 * All features disabled by default to prevent unexpected changes to existing installations.
 
+[1.4.5]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.5
 [1.4.4]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.4
 [1.4.3]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.3
 [1.4.2]: https://github.com/alvaromarquezweb/amw-toolbox/releases/tag/v1.4.2

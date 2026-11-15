@@ -745,3 +745,36 @@ msgstr "Devuelve un 401 en las peticiones REST de visitantes sin sesión. Puede 
 
 msgid "The REST API is restricted to logged-in users on this site."
 msgstr "La REST API está restringida a usuarios con sesión en este sitio."
+
+msgid "Pill style"
+msgstr "Estilo de la pastilla"
+
+msgid "Automatic (follows the footer color)"
+msgstr "Automático (según el color del footer)"
+
+msgid "Light pill (for dark footers)"
+msgstr "Pastilla clara (para footers oscuros)"
+
+msgid "Dark pill (for light footers)"
+msgstr "Pastilla oscura (para footers claros)"
+
+msgid "Background of the name pill. Choose a light or dark pill by hand if the automatic one does not fit your footer."
+msgstr "Fondo de la pastilla del nombre. Elige a mano una pastilla clara u oscura si la automática no encaja con tu footer."
+
+msgid "Custom (choose the colors)"
+msgstr "Personalizada (elige los colores)"
+
+msgid "Background of the name pill: light, dark, or custom with your own colors."
+msgstr "Fondo de la pastilla del nombre: clara, oscura o personalizada con tus propios colores."
+
+msgid "Pill background color"
+msgstr "Color de fondo de la pastilla"
+
+msgid "Only applies when the pill style is Custom."
+msgstr "Solo se aplica cuando el estilo de la pastilla es Personalizada."
+
+msgid "Pill hover color"
+msgstr "Color al pasar el ratón"
+
+msgid "Pill background when the pointer is over it. Only applies to the Custom style."
+msgstr "Fondo de la pastilla al pasar el ratón por encima. Solo se aplica al estilo Personalizada."

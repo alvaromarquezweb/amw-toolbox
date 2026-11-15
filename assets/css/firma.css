@@ -42,16 +42,14 @@
 	gap: .45em;
 }
 
-/* Pastilla con el logo y el nombre del autor. Hereda el color del footer y el
-   fondo se adapta solo (claro u oscuro) con color-mix. Si el navegador no
-   entiende color-mix, la pastilla se ve sin fondo, sin romperse. */
+/* Pastilla con el logo y el nombre del autor. Hereda el color del texto del
+   footer; el fondo se elige en el panel (clara, oscura o personalizada). */
 .amw-firma__badge {
 	display: inline-flex;
 	align-items: center;
 	gap: .5em;
 	padding: .32em .72em;
 	border-radius: 999px;
-	background: color-mix(in srgb, currentColor 9%, transparent);
 	color: inherit;
 	font-weight: 600;
 	text-decoration: none;
@@ -59,9 +57,34 @@
 	transition: background-color .2s ease;
 }
 
-.amw-firma__badge:hover,
-.amw-firma__badge:focus {
-	background: color-mix(in srgb, currentColor 16%, transparent);
+/* Fondo de la pastilla segun el estilo elegido en el panel.
+   Clara: pensada para footers oscuros. Oscura: para footers claros.
+   Personalizada: usa los colores propios inyectados como variables CSS. */
+.amw-firma__badge--clara {
+	background: rgba(255, 255, 255, .14);
+}
+
+.amw-firma__badge--clara:hover,
+.amw-firma__badge--clara:focus {
+	background: rgba(255, 255, 255, .24);
+}
+
+.amw-firma__badge--oscura {
+	background: rgba(0, 0, 0, .07);
+}
+
+.amw-firma__badge--oscura:hover,
+.amw-firma__badge--oscura:focus {
+	background: rgba(0, 0, 0, .13);
+}
+
+.amw-firma__badge--personalizada {
+	background: var(--amw-firma-badge-bg, rgba(0, 0, 0, .07));
+}
+
+.amw-firma__badge--personalizada:hover,
+.amw-firma__badge--personalizada:focus {
+	background: var(--amw-firma-badge-bg-hover, var(--amw-firma-badge-bg, rgba(0, 0, 0, .13)));
 }
 
 /* Logo: hereda el color (fill: currentColor en el SVG) y escala con el texto. */

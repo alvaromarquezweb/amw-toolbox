@@ -817,6 +817,31 @@ function amw_toolbox_render_settings() {
 							<p class="description"><?php esc_html_e( 'Hex color of the heart, for example #b33a2b. Leave empty for the default red.', 'amw-toolbox' ); ?></p>
 						</td>
 					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Pill style', 'amw-toolbox' ); ?></th>
+						<td>
+							<select name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[firma_pastilla]' ); ?>">
+								<option value="clara" <?php selected( $o['firma_pastilla'], 'clara' ); ?>><?php esc_html_e( 'Light pill (for dark footers)', 'amw-toolbox' ); ?></option>
+								<option value="oscura" <?php selected( $o['firma_pastilla'], 'oscura' ); ?>><?php esc_html_e( 'Dark pill (for light footers)', 'amw-toolbox' ); ?></option>
+								<option value="personalizada" <?php selected( $o['firma_pastilla'], 'personalizada' ); ?>><?php esc_html_e( 'Custom (choose the colors)', 'amw-toolbox' ); ?></option>
+							</select>
+							<p class="description"><?php esc_html_e( 'Background of the name pill: light, dark, or custom with your own colors.', 'amw-toolbox' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Pill background color', 'amw-toolbox' ); ?></th>
+						<td>
+							<input type="text" class="amw-color-field" data-default-color="#ffffff" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[firma_pastilla_bg]' ); ?>" value="<?php echo esc_attr( $o['firma_pastilla_bg'] ); ?>">
+							<p class="description"><?php esc_html_e( 'Only applies when the pill style is Custom.', 'amw-toolbox' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Pill hover color', 'amw-toolbox' ); ?></th>
+						<td>
+							<input type="text" class="amw-color-field" data-default-color="#f0f0f0" name="<?php echo esc_attr( AMW_TOOLBOX_OPTION . '[firma_pastilla_bg_hover]' ); ?>" value="<?php echo esc_attr( $o['firma_pastilla_bg_hover'] ); ?>">
+							<p class="description"><?php esc_html_e( 'Pill background when the pointer is over it. Only applies to the Custom style.', 'amw-toolbox' ); ?></p>
+						</td>
+					</tr>
 					</table>
 				</div>
 
